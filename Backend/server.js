@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const reservationRoute = require('./routes/reservation-routes');
 
 dotenv.config();
 const app = express();
@@ -11,6 +12,8 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 8070;
 const MONGODB_URI = process.env.MONGODB_URI;
+
+app.use('/api/reservation',reservationRoute);
 
 mongoose.connect(MONGODB_URI,{
         useCreateIndex:true,
