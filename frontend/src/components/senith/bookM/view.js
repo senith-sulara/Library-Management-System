@@ -31,7 +31,14 @@ const Editable = (props) => {
       }, []);
   
     const [columns, setColumns] = useState([
-      { title: 'Image', field: 'file_path'},
+      { title: 'Image', field: 'file_path', 
+        render: rowData => (
+        <img
+          style={{ height: 36, borderRadius: '50%' }}
+          src={rowData.file_path}
+        />
+      ),
+      },
       { title: 'Title', field: 'title' },
       { title: 'Author', field: 'auther' },
       { title: 'Publisher', field: 'publisher' },

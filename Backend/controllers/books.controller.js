@@ -33,7 +33,7 @@ Router.post(
   upload.single('file'),
   async (req, res) => {
     try {
-      if(upload == null){
+      // if(upload == null){
       const { title, auther, publisher, refCode, rackNo, noOfCopies} = req.body;
       const { path, mimetype } = req.file;
       const file = new Books({
@@ -48,19 +48,19 @@ Router.post(
       });
     await file.save();
     res.send('Book details uploaded successfully.');
-  }else{
-    const {title, auther, publisher, refCode, rackNo, noOfCopies} = req.body;
-    const file = new Books({
-        title,  
-        auther, 
-        publisher,
-        refCode, 
-        rackNo,
-        noOfCopies
-    });
-  await file.save();
-  res.send('Book details uploaded successfully.');
-  }
+  // }else{
+  //   const {title, auther, publisher, refCode, rackNo, noOfCopies} = req.body;
+  //   const file = new Books({
+  //       title,  
+  //       auther, 
+  //       publisher,
+  //       refCode, 
+  //       rackNo,
+  //       noOfCopies
+  //   });
+  // await file.save();
+  // res.send('Book details uploaded successfully.');
+  // }
     } catch (error) {
       res.status(400).send('Error while uploading Book details. Try again later.');
     }
@@ -135,6 +135,20 @@ Router.get('/search/:search', async (req, res) =>{
     } catch (e) {
       res.status(400).json({ msg: e.message, success: false });
     }
+  });
+
+  Router.get('/files/:id', async (req, res) => {
+    //Setting Up GridFS-Stream
+  const db          = mongoose.connection.db;
+  const MongoDriver = mongoose.mongo;
+  const gfs         = new GridFS(db , MongoDriver);
+
+  const readstream = gfs.createReadStream({
+    _id: req.params.id,
+  });
+
+   //Reading to Response
+   readstream.pipe(res);
   });
 
 module.exports = Router;

@@ -12,9 +12,14 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import './addbook.css';
+import { API_URL } from '../../utils/constants';
 
 function AddBook() {
   return (
@@ -30,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
     width: '85%',
     margin: 'auto',
     marginTop: '20px'
+  },
+  alert: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2)
+    },
   },
   image: {
     backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -64,6 +75,16 @@ const InsertBook= (props) => {
   const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
   const dropRef = useRef(); // React ref for managing the hover state of droppable area
+  const [state, setState] = useState({
+    title: '',
+    auther: '',
+    publisher:'',
+    refCode:'',
+    rackNo: '',
+    noOfCopies: ''
+  });
+  const [errorMsg, setErrorMsg] = useState('');
+  const[successMsg, setSuccessMsg] = useState('');
 
   const onDrop = (files) => {
     const [uploadedFile] = files;
@@ -87,16 +108,68 @@ const InsertBook= (props) => {
   };
 
 
+  const handleOnSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const { title, auther, publisher, refCode, rackNo, noOfCopies } = state;
+      if (title.trim() !== '' && auther.trim() !== '' && publisher.trim() !== ''  && refCode.trim() !== '' && rackNo.trim() !== '' && noOfCopies.trim() !== '') {
+        if (file) {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('title', title);
+          formData.append('auther', auther);
+          formData.append('publisher', publisher);
+          formData.append('refCode', refCode);
+          formData.append('rackNo', rackNo);
+          formData.append('noOfCopies', noOfCopies);
+
+
+          setErrorMsg('');
+          await axios.post(`${API_URL}/BookDetails/insert`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          setSuccessMsg('upload Success')
+          // props.history.push('/home');
+        } else {
+          setErrorMsg('Please select a file to add.');
+        }
+      } else {
+        setErrorMsg('Please enter all the field values.');
+      }
+    } catch (error) {
+      error.response && setErrorMsg(error.response.data);
+    }
+  };
+
+  const handleInputChange = (event) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.value
+    });
+  };
+
+
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={6} className={classes.image} />
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
+        <div className={classes.paper} onSubmit={handleOnSubmit}>
           <Typography component="h1" variant="h5">
             Insert New Book
           </Typography>
           <form className={classes.form} noValidate>
+          <div className={classes.alert}>
+          {alert ?
+            <Alert severity="error">{errorMsg}</Alert>: <></> }
+          {alert ?
+            <Alert severity="success">{successMsg}</Alert> : <></>}
+          
+          </div>
             <TextField
               variant="outlined"
               margin="normal"
@@ -107,6 +180,8 @@ const InsertBook= (props) => {
               name="title"
               autoComplete="title"
               autoFocus
+              value={state.title || ''} 
+              onChange={handleInputChange}
             />
             <TextField
               variant="outlined"
@@ -118,6 +193,8 @@ const InsertBook= (props) => {
               name="auther"
               autoComplete="auther"
               autoFocus
+              value={state.auther || ''} 
+              onChange={handleInputChange}
             />
             <TextField
               variant="outlined"
@@ -129,6 +206,8 @@ const InsertBook= (props) => {
               name="publisher"
               autoComplete="publisher"
               autoFocus
+              value={state.publisher || ''} 
+              onChange={handleInputChange}
             />
             <TextField
               variant="outlined"
@@ -140,6 +219,8 @@ const InsertBook= (props) => {
               name="refCode"
               autoComplete="refCode"
               autoFocus
+              value={state.refCode || ''} 
+              onChange={handleInputChange}
             />
             <TextField
               variant="outlined"
@@ -151,6 +232,8 @@ const InsertBook= (props) => {
               name="rackNo"
               autoComplete="rackNo"
               autoFocus
+              value={state.rackNo || ''} 
+              onChange={handleInputChange}
             />
             <TextField
               variant="outlined"
@@ -162,6 +245,8 @@ const InsertBook= (props) => {
               name="noOfCopies"
               autoComplete="noOfCopies"
               autoFocus
+              value={state.noOfCopies || ''} 
+              onChange={handleInputChange}
             />
 
         <div className="upload-section">
@@ -208,7 +293,7 @@ const InsertBook= (props) => {
             >
               Save
             </Button> */}
-            <Grid container spacing={8}>
+            {/* <Grid container spacing={8}>
               <Grid item xs={4}>
               <Button
               type="back"
@@ -244,7 +329,23 @@ const InsertBook= (props) => {
               Clear
             </Button>
               </Grid>
-            </Grid>
+            </Grid> */}
+
+        <td>
+
+          <button className="btn btn-secondary btn-lg"
+            style={{ marginLeft: "130px" }}> BACK</button>
+
+          <button className="btn btn-danger btn-lg"
+            style={{ marginLeft: "20px" }}> CLEAR</button>
+
+          <button
+            className="btn btn-primary btn-lg"
+            style={{ marginLeft: "20px" }}
+          >
+            SAVE
+          </button>
+        </td>
           </form>
         </div>
       </Grid>

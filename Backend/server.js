@@ -29,6 +29,7 @@ mongoose.connection.once('open', () => {
 });
 
 app.use('/BookDetails', BookRoute);
+app.use(express.static("files"));
 
 app.listen(PORT, () =>{
     console.log(`Server is running on PORT ${PORT}`);
