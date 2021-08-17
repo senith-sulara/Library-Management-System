@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const BookRoute = require('./controllers/books.controller')
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ mongoose.connection.once('open', () => {
     console.log('Database Synced');
 });
 
+app.use('/BookDetails', BookRoute);
 
 app.listen(PORT, () =>{
     console.log(`Server is running on PORT ${PORT}`);
