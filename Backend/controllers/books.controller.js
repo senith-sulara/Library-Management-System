@@ -10,7 +10,7 @@ const upload = multer({
       cb(null, './files');
     },
     filename(req, file, cb) {
-      cb(null, `${new Date().getTime()}_${file.originalname}`);
+      cb(null, new Date().getTime().toString() + "_" + file.originalname);
     }
   }),
   limits: {
@@ -28,14 +28,16 @@ const upload = multer({
   }
 });
 
+
+
+
 Router.post(
   '/insert',
   upload.single('file'),
   async (req, res) => {
     try {
-      // if(upload == null){
       const { title, auther, publisher, refCode, rackNo, noOfCopies} = req.body;
-      const { path, mimetype } = req.file;
+      const { path, mimetype} = req.file;
       const file = new Books({
         title,  
         auther, 
@@ -48,19 +50,6 @@ Router.post(
       });
     await file.save();
     res.send('Book details uploaded successfully.');
-  // }else{
-  //   const {title, auther, publisher, refCode, rackNo, noOfCopies} = req.body;
-  //   const file = new Books({
-  //       title,  
-  //       auther, 
-  //       publisher,
-  //       refCode, 
-  //       rackNo,
-  //       noOfCopies
-  //   });
-  // await file.save();
-  // res.send('Book details uploaded successfully.');
-  // }
     } catch (error) {
       res.status(400).send('Error while uploading Book details. Try again later.');
     }
@@ -73,6 +62,65 @@ Router.post(
 );
 
 
+
+// var storage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//       cb(null, 'files/')
+//   },
+//   filename: function(req, file, cb) {
+//       let ext = path.extname(file.originalname)
+//       cb(null, Date.now() + ext)
+//   }
+  
+// })
+
+// var upload = multer ({
+//   storage: storage,
+//   fileFilter: function(req, file, callback) {
+//       const ext = path.extname(file.originalname)
+//       if ( ext == '.jpg' || ext == '.png') {
+//           callback(null, true)
+
+//       }else{
+//           console.log('Only jpg and png files are supported!')
+//           callback(null, false)
+//       }
+//   }
+// })
+
+// Router.route('/insert').post(upload.single('image'), (req, res) => {
+//   const title = req.body.title;
+//   const auther = req.body.auther;
+//   const publisher = req.body.publisher;
+//   const refCode = req.body.refCode;
+//   const rackNo = req.body.rackNo;
+//   const noOfCopies = req.body.noOfCopies;
+//   const image = req.body.image;
+
+//   console.log(req.body);
+
+//   let books = new Books({
+//     title,
+//     auther,
+//     publisher,
+//     refCode,
+//     rackNo,
+//     noOfCopies,
+//     image,
+//   });
+//   if (req.file) {
+//     books.image = req.file.path;
+//   }
+//   books
+//     .save()
+//     .then((books) => {
+//       res.status(200).json({ message: 'Books added Succefully' });
+//       console.log(books);
+//     })
+//     .catch((err) => {
+//       res.status(200).send({ message: 'Please try again' });
+//     });
+// });
 
 
 //////////////////////////////////////////
@@ -137,18 +185,16 @@ Router.get('/search/:search', async (req, res) =>{
     }
   });
 
-  Router.get('/files/:id', async (req, res) => {
-    //Setting Up GridFS-Stream
-  const db          = mongoose.connection.db;
-  const MongoDriver = mongoose.mongo;
-  const gfs         = new GridFS(db , MongoDriver);
-
-  const readstream = gfs.createReadStream({
-    _id: req.params.id,
-  });
-
-   //Reading to Response
-   readstream.pipe(res);
-  });
+  // Router.get('/file/:id', async (req, res) => {
+  //   try {
+  //     const file = await Books.findById(req.params.id);
+  //     res.set({
+  //       'Content-Type': "application/png"
+  //     });
+  //     res.sendFile(path.join(__dirname, '..', '..', file.file_path));
+  //   } catch (error) {
+  //     res.status(400).send('Error while Opening file. Try again later.');
+  //   }
+  // });
 
 module.exports = Router;

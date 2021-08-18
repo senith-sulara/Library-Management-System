@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link  } from "react-router-dom";
 import axios from 'axios';
 import { API_URL } from '../../utils/constants';
 import './viewBook.css'
 import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
+
 
 const Editable = (props) => {
     const { useState } = React;
@@ -29,12 +28,14 @@ const Editable = (props) => {
     
         console.log(data);
       }, []);
+    
   
     const [columns, setColumns] = useState([
       { title: 'Image', field: 'file_path', 
         render: rowData => (
         <img
-          style={{ height: 36, borderRadius: '50%' }}
+          style={{ height: 36, width:36, borderRadius: '50%' }}
+          // src={`http://localhost:8070/${rowData.file_path}`}
           src={rowData.file_path}
         />
       ),
@@ -50,7 +51,7 @@ const Editable = (props) => {
     return (
       <div>
         <h1 id="h12" align="center">Book Management</h1>
-        <div  >
+        <div>
         <Button id="btnAdd" variant="contained" color="primary" href="/insertBook" >
           Add new Book
         </Button>

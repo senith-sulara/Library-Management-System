@@ -21,6 +21,7 @@ import axios from 'axios';
 import './addbook.css';
 import { API_URL } from '../../utils/constants';
 
+
 function AddBook() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -39,11 +40,11 @@ const useStyles = makeStyles((theme) => ({
   alert: {
     width: '100%',
     '& > * + *': {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/random)',
+    backgroundImage: 'url(https://2wanderlust.files.wordpress.com/2013/11/slide_321715_3023940_free.jpg)',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -85,6 +86,7 @@ const InsertBook= (props) => {
   });
   const [errorMsg, setErrorMsg] = useState('');
   const[successMsg, setSuccessMsg] = useState('');
+  const [open, setOpen] = useState(false);
 
   const onDrop = (files) => {
     const [uploadedFile] = files;
@@ -110,7 +112,7 @@ const InsertBook= (props) => {
 
   const handleOnSubmit = async (event) => {
     event.preventDefault();
-
+    setOpen(true);
     try {
       const { title, auther, publisher, refCode, rackNo, noOfCopies } = state;
       if (title.trim() !== '' && auther.trim() !== '' && publisher.trim() !== ''  && refCode.trim() !== '' && rackNo.trim() !== '' && noOfCopies.trim() !== '') {
@@ -151,6 +153,17 @@ const InsertBook= (props) => {
     });
   };
 
+  // const handleClick = () => {
+  //   setOpen(true);
+  // };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
 
   return (
@@ -158,17 +171,18 @@ const InsertBook= (props) => {
       <CssBaseline />
       <Grid item xs={false} sm={4} md={6} className={classes.image} />
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
-        <div className={classes.paper} onSubmit={handleOnSubmit}>
+        <div className={classes.paper}>
           <Typography component="h1" variant="h5">
             Insert New Book
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
-          {alert ?
-            <Alert severity="error">{errorMsg}</Alert>: <></> }
-          {alert ?
-            <Alert severity="success">{successMsg}</Alert> : <></>}
-          
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="error">{errorMsg}</Alert>
+          </Snackbar>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success">{successMsg}</Alert>
+            </Snackbar>
           </div>
             <TextField
               variant="outlined"
@@ -284,17 +298,19 @@ const InsertBook= (props) => {
               )}
           </div>
 
-            {/* <Button
+            <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
+              
             >
               Save
-            </Button> */}
-            {/* <Grid container spacing={8}>
-              <Grid item xs={4}>
+            </Button>
+
+            {/* <Grid container>
+              <Grid item xs>
               <Button
               type="back"
 
@@ -305,8 +321,8 @@ const InsertBook= (props) => {
               Back
             </Button>
 
-              </Grid>
-              <Grid item xs={4}>
+              </Grid> */}
+              {/* <Grid item xs={4}>
               <Button
               type="submit"
               fullWidth
@@ -317,8 +333,8 @@ const InsertBook= (props) => {
               Save
             </Button>
 
-              </Grid>
-              <Grid item xs={4}>
+              </Grid> */}
+              {/* <Grid item>
               <Button
               type="clear"
               
@@ -331,9 +347,9 @@ const InsertBook= (props) => {
               </Grid>
             </Grid> */}
 
-        <td>
+        {/* <td>
 
-          <button className="btn btn-secondary btn-lg"
+          <button className="btn btn-secondary btn-lg" href="/book"
             style={{ marginLeft: "130px" }}> BACK</button>
 
           <button className="btn btn-danger btn-lg"
@@ -345,8 +361,35 @@ const InsertBook= (props) => {
           >
             SAVE
           </button>
-        </td>
+        </td> */}
           </form>
+          <div className={classes.form}>
+          <Grid container>
+              <Grid item xs>
+              <Button
+              type="back"
+              href="/book"
+              variant="contained"
+              color="primary"
+              className={classes.back}
+            >
+              Back
+            </Button>
+              </Grid>
+            
+            <Grid item>
+              <Button
+              type="clear"
+              
+              variant="contained"
+              color="primary"
+              className={classes.clear}
+            >
+              Clear
+            </Button>
+              </Grid>
+            </Grid>
+            </div>
         </div>
       </Grid>
     </Grid>
