@@ -6,6 +6,8 @@ import Home from './components/senith/home/home.js';
 import ViewBooks from './components/senith/bookM/viewBooks';
 import View from './components/senith/bookM/view';
 import AddBook from './components/senith/addBook/addBook';
+import AddStaff from './components/pasidu/staff/addStaff';
+import ViewStaff from './components/pasidu/staff/viewStaff';
 
 
 
@@ -20,6 +22,8 @@ function App() {
             <Route path="/" component={Home} exact />
             <Route path="/book" component={View}  />
             <Route path="/insertBook" component={AddBook}  />
+            <Route path="/staff" component={ViewStaff}  />
+            <Route path="/addStaff" component={AddStaff}  />
           </Switch>
         </section>
         {/* <Footer/>
