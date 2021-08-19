@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const multer = require('multer');
 const Staff = require('../models/staff');
+// const jwt = require("jsonwebtoken");
 const Router = express.Router();
 
 const upload = multer({
@@ -27,9 +28,36 @@ const upload = multer({
     cb(undefined, true); // continue with upload
   }
 });
+ 
 
+/**
+ * sign in controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
 
+ Router.post(  '/signin', async (req, res)=>{
+    const{eid,password} = req.body;
 
+    try{
+
+        //find user by email
+        const getUser =await  Staff.findOne({eid});
+        if (!getUser) return res.status(404).json({message:"Account not found"});
+        if(password != getUser.password) return res.status(404).json({message:"Invalid password"});
+
+        // //get user
+        // const token = jwt.sign({email: getUser.email,id:getUser.id},process.env.USERSTRING,{expiresIn:'1h'});
+
+        res.status(200).json({result:getUser});
+
+    }catch (e) {
+
+        res.status(500).json({message: "Server error" + e});
+
+    }
+});
 
 Router.post(  '/addStaff', upload.single('file'), async (req, res) => {
     try {
@@ -73,7 +101,21 @@ Router.get('/getAllStaff', async (req, res) => {
   }
 });
 
- 
+Router.put('/updateStaff/:id', async (req, res) =>{
+  const id = req.params.id;
+  const {status} = req.body;
+  const updateStaff = {
+      status
+  }
+  console.log("updateStaff: ", updateStaff);
+  const update = await Staff.findByIdAndUpdate(id, updateStaff)
+      .then(() => {
+          res.status(200).send({status: "Staff member details Updated"})
+      }).catch((err) => {
+          console.log(err);
+          res.status(500).send({status: " Error", error:err.message});
+      })
+});
 
 Router.get('/searchStaff/:key', async (req, res) =>{
   try{

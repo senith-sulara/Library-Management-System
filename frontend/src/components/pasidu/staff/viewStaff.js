@@ -35,7 +35,7 @@ const Editable = (props) => {
         render: rowData => (
         <img
           style={{ height: 50, width:50}} 
-          src={rowData.file_path}
+          src={rowData.proPic}
         />
       ),
       },
@@ -49,7 +49,7 @@ const Editable = (props) => {
       <div>
         <h1 id="h12" align="center">Staff Management</h1>
         <div>
-        <Button id="btnAdd" variant="contained" color="primary" href="/addStaff" >
+        <Button id="btnAdd" variant="contained" color="primary" href="/signin" >
           Add new staff member
         </Button>
         </div>
@@ -70,14 +70,29 @@ const Editable = (props) => {
           //   }),
           onRowUpdate: (newData, oldData) =>
             new Promise((resolve, reject) => {
+              const dataUpdate = [...data];
+              const index = oldData.tableData.id;
               setTimeout(() => {
-                const dataUpdate = [...data];
-                const index = oldData.tableData.id;
                 dataUpdate[index] = newData;
                 setData([...dataUpdate]);
-  
+                console.log(newData);
+                console.log(newData._id);
+                try {
+                  const { data } =  axios.put(`${API_URL}/staff/updateStaff/${newData._id}`,{
+                    method: "PUT",
+                    headers: {
+                        Accept: "application/json"
+                    },
+                    body: newData
+                }) 
+                  setErrorMsg('');
+                } catch (error) {
+                  error.response && setErrorMsg(error.response.data);
+                  console.log(error);
+          
+                }
                 resolve();
-              }, 1000)
+              }, 2000)
             }),
           onRowDelete: oldData =>
             new Promise((resolve, reject) => {
@@ -96,7 +111,7 @@ const Editable = (props) => {
                 }
                 console.log(oldData._id);
                 resolve()
-              }, 1000)
+              }, 2000)
             }),
         }}
         options={{
