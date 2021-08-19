@@ -48,13 +48,15 @@
   /*---------------------------------------------------------*/
    .card {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    max-height: 600px;
+    width: 400px;
+    height: 220px;
     margin: auto;
     text-align: center;
     font-family: arial;
     margin-top: 50px;
-    background-color: rgba(247, 246, 211, 0.644);
+    background-color: rgba(8, 9, 80, 0.5);
+    /* background-color: rgba(224, 191, 247, 0.733); */
+    margin-bottom: 10px;
   }
   
   .title {
@@ -83,4 +85,5 @@
   
   button:hover, a:hover {
     opacity: 0.7;
+    transition: all ease-in 200ms;
   }

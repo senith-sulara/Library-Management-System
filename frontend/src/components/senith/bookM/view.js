@@ -4,6 +4,7 @@ import { API_URL } from '../../utils/constants';
 import './viewBook.css'
 import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
+import { Grid } from '@material-ui/core';
 
 
 const Editable = (props) => {
@@ -17,6 +18,7 @@ const Editable = (props) => {
             const { data } = await axios.get(`${API_URL}/BookDetails/getAllBooks`);
             setErrorMsg('');
             setData(data);
+            console.log(data);
           } catch (error) {
             error.response && setErrorMsg(error.response.data);
             console.log(error);
@@ -51,15 +53,18 @@ const Editable = (props) => {
     return (
       <div>
         <h1 id="h12" align="center">Book Management</h1>
-        <div>
+        {/* <div>
         <Button id="btnAdd" variant="contained" color="primary" href="/insertBook" >
           Add new Book
         </Button>
-        </div>
+        </div> */}
         <div className="tbl">
         
       <MaterialTable
-        title=" "
+        title=
+        {<><Button id="btnAdd" variant="contained" color="primary" href="/insertBook" >
+        Add new Book
+      </Button></>}
         columns={columns}
         data={data}
         editable={{
@@ -84,6 +89,9 @@ const Editable = (props) => {
             }),
           onRowDelete: oldData =>
             new Promise((resolve, reject) => {
+              // const dataDelete = [...data];
+              // const index = oldData.tableData.id;
+              // dataDelete.splice(index, 1);
               setTimeout(() => {
                 const dataDelete = [...data];
                 const index = oldData.tableData.id;
@@ -96,12 +104,13 @@ const Editable = (props) => {
         }}
         options={{
           headerStyle: {
-            backgroundColor: '#01579b',
-            color: '#FFF'
+            backgroundColor: 'rgba(8, 9, 80, 0.363)',
+            color: 'rgba(0, 0, 0)'
           },
-          searchFieldStyle:{
-            backgroundColor: '#2398f846'
-          }
+          // searchFieldStyle:{
+          //   backgroundColor: '#2398f846'
+          // },
+          actionsColumnIndex: -1
         }}
       />
       </div>

@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  NavColor: {
+    backgroundColor: "rgb(2, 3, 43)",
+  }
 }));
 
 export default function NavBar() {
@@ -41,7 +44,7 @@ export default function NavBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" className={classes.NavColor}>
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" href="/">
             <LocalLibraryIcon />

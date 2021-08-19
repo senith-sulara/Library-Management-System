@@ -1,4 +1,4 @@
-import React, { useState, useRef} from 'react';
+import React, { useState, useRef, Component} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,7 +20,9 @@ import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import './addbook.css';
 import { API_URL } from '../../utils/constants';
-
+import { ButtonGroup } from '@material-ui/core';
+import { spacing } from '@material-ui/system';
+import dummy from '../images/dummy.png'
 
 function AddBook() {
   return (
@@ -29,6 +31,7 @@ function AddBook() {
     </Typography>
   );
 }
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,6 +71,12 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  btnGroup:{
+    display: 'flex',
+    '& > *': {
+      margin: theme.spacing(2),
+    },
+  }
 }));
 
 const InsertBook= (props) => {
@@ -156,6 +165,15 @@ const InsertBook= (props) => {
   // const handleClick = () => {
   //   setOpen(true);
   // };
+
+//  const clearState = () => {
+//   Array.from(document.querySelectorAll("input")).forEach(
+//     input => (input.value = "")
+//   );
+//   this.setState({
+//     itemvalues: [{}]
+//   });
+// }
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -281,10 +299,11 @@ const InsertBook= (props) => {
                 </div>
               )}
           </Dropzone>
+          <div className="prew">
           {previewSrc ? (
             isPreviewAvailable ? (
               <div className="image-preview">
-               <img className="preview-image" src={previewSrc} alt="Preview" width="300"/>
+               <img className="preview-image" src={previewSrc} alt="Preview" width="200px" style={{maxHeight: '200', maxWidth: '200'}} align-item="center"/>
               </div>
             ) : (
                <div className="preview-message">
@@ -293,12 +312,13 @@ const InsertBook= (props) => {
                )
             ) : (
                 <div className="preview-message">
-                  <p>Image preview will be shown here after selection</p>
+                  {/* <p>Image preview will be shown here after selection</p> */}
+                  <img src={dummy} alt="John" style={{ width: '250px', height: '200px', margin: '5px'}}/>
                 </div>
               )}
           </div>
-
-            <Button
+          </div>
+            {/* <Button
               type="submit"
               fullWidth
               variant="contained"
@@ -307,13 +327,13 @@ const InsertBook= (props) => {
               
             >
               Save
-            </Button>
+            </Button> */}
 
-            {/* <Grid container>
-              <Grid item xs>
+            <div className={classes.btnGroup}>
               <Button
-              type="back"
-
+              type="button"
+              href="/book"
+              fullWidth
               variant="contained"
               color="primary"
               className={classes.back}
@@ -321,8 +341,6 @@ const InsertBook= (props) => {
               Back
             </Button>
 
-              </Grid> */}
-              {/* <Grid item xs={4}>
               <Button
               type="submit"
               fullWidth
@@ -333,19 +351,16 @@ const InsertBook= (props) => {
               Save
             </Button>
 
-              </Grid> */}
-              {/* <Grid item>
               <Button
-              type="clear"
-              
+              type="reset"
+              fullWidth
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.clear}
             >
               Clear
             </Button>
-              </Grid>
-            </Grid> */}
+            </div>
 
         {/* <td>
 
@@ -363,7 +378,7 @@ const InsertBook= (props) => {
           </button>
         </td> */}
           </form>
-          <div className={classes.form}>
+          {/* <div className={classes.form}>
           <Grid container>
               <Grid item xs>
               <Button
@@ -380,7 +395,7 @@ const InsertBook= (props) => {
             <Grid item>
               <Button
               type="clear"
-              
+              // onClick={clearState}
               variant="contained"
               color="primary"
               className={classes.clear}
@@ -389,7 +404,7 @@ const InsertBook= (props) => {
             </Button>
               </Grid>
             </Grid>
-            </div>
+            </div> */}
         </div>
       </Grid>
     </Grid>
@@ -397,4 +412,3 @@ const InsertBook= (props) => {
   }
 
   export default InsertBook;
-  

@@ -185,16 +185,16 @@ Router.get('/search/:search', async (req, res) =>{
     }
   });
 
-  // Router.get('/file/:id', async (req, res) => {
-  //   try {
-  //     const file = await Books.findById(req.params.id);
-  //     res.set({
-  //       'Content-Type': "application/png"
-  //     });
-  //     res.sendFile(path.join(__dirname, '..', '..', file.file_path));
-  //   } catch (error) {
-  //     res.status(400).send('Error while Opening file. Try again later.');
-  //   }
-  // });
+  Router.get('/images/:id', async (req, res) => {
+    try {
+      const file = await Books.findById(req.params.id);
+      res.set({
+        'Content-Type': "application/png"
+      });
+      res.sendFile(path.join(__dirname, '..', '..', file.file_path));
+    } catch (error) {
+      res.status(400).send('Error while Opening file. Try again later.');
+    }
+  });
 
 module.exports = Router;

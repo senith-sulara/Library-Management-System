@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const BookRoute = require('./controllers/books.controller')
 
+
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -29,7 +30,8 @@ mongoose.connection.once('open', () => {
 });
 
 app.use('/BookDetails', BookRoute);
-app.use(express.static("files"));
+// app.use('/files', express.static(path.join(__dirname, './public/files')));
+
 
 app.listen(PORT, () =>{
     console.log(`Server is running on PORT ${PORT}`);
