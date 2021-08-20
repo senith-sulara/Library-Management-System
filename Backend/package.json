@@ -9,6 +9,7 @@
   "author": "2021S2_REG_WE_36",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^1.26.3",
     "config": "^3.3.6",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import NavBar from './components/senith/navBar/navBar.js';
 import Home from './components/senith/home/home.js';
-import ViewBooks from './components/senith/bookM/viewBooks';
 import View from './components/senith/bookM/view';
 import AddBook from './components/senith/addBook/addBook';
 

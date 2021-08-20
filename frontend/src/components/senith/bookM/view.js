@@ -15,7 +15,7 @@ const Editable = (props) => {
     useEffect(() => {
         const getFileList = async () => {
           try {
-            const { data } = await axios.get(`${API_URL}/BookDetails/getAllBooks`);
+            const { data } = await axios.get(`${API_URL}/bookDetails/getAllBooks`);
             setErrorMsg('');
             setData(data);
             console.log(data);
@@ -33,22 +33,23 @@ const Editable = (props) => {
     
   
     const [columns, setColumns] = useState([
-      { title: 'Image', field: 'file_path', 
+      { title: 'Image', field: 'avatar', 
         render: rowData => (
         <img
           style={{ height: 36, width:36, borderRadius: '50%' }}
           // src={`http://localhost:8070/${rowData.file_path}`}
-          src={rowData.file_path}
+          src={rowData.avatar}
         />
       ),
       },
       { title: 'Title', field: 'title' },
-      { title: 'Author', field: 'auther' },
+      { title: 'Author', field: 'author' },
       { title: 'Publisher', field: 'publisher' },
       { title: 'Reference Code', field: 'refCode' },
       { title: 'Rack Number', field: 'rackNo', type: 'numeric' },
       { title: 'Number Of Copies', field: 'noOfCopies',type: 'numeric'  },
     ]);
+
   
     return (
       <div>

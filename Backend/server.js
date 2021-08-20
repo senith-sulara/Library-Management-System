@@ -29,9 +29,7 @@ mongoose.connection.once('open', () => {
     console.log('Database Synced');
 });
 
-app.use('/BookDetails', BookRoute);
-// app.use('/files', express.static(path.join(__dirname, './public/files')));
-
+app.use('/bookDetails', BookRoute);
 
 app.listen(PORT, () =>{
     console.log(`Server is running on PORT ${PORT}`);

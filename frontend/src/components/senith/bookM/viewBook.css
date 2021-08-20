@@ -23,7 +23,8 @@
   margin-bottom: 10px;
   top: 200;
   left: 5px;
-  background: linear-gradient(45deg, #030b58 30%, #021633 90%);
+  /* background: linear-gradient(45deg, #030b58 30%, #021633 90%); */
+  background: #05275a;
   border-radius: 0;
   border: 0;
   color: 'white';

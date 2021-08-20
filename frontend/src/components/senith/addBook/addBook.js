@@ -1,27 +1,17 @@
 import React, { useState, useRef, Component} from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from "@material-ui/core/InputAdornment";
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import './addbook.css';
 import { API_URL } from '../../utils/constants';
-import { ButtonGroup } from '@material-ui/core';
-import { spacing } from '@material-ui/system';
 import dummy from '../images/dummy.png'
 
 function AddBook() {
@@ -81,13 +71,13 @@ const useStyles = makeStyles((theme) => ({
 
 const InsertBook= (props) => {
   const classes = useStyles();
-  const [file, setFile] = useState(null); // state for storing actual image
+  const [image, setImage] = useState(null); // state for storing actual image
   const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
   const dropRef = useRef(); // React ref for managing the hover state of droppable area
   const [state, setState] = useState({
     title: '',
-    auther: '',
+    author: '',
     publisher:'',
     refCode:'',
     rackNo: '',
@@ -97,9 +87,9 @@ const InsertBook= (props) => {
   const[successMsg, setSuccessMsg] = useState('');
   const [open, setOpen] = useState(false);
 
-  const onDrop = (files) => {
-    const [uploadedFile] = files;
-    setFile(uploadedFile);
+  const onDrop = (images) => {
+    const [uploadedFile] = images;
+    setImage(uploadedFile);
   
     const fileReader = new FileReader();
     fileReader.onload = () => {
@@ -123,13 +113,13 @@ const InsertBook= (props) => {
     event.preventDefault();
     setOpen(true);
     try {
-      const { title, auther, publisher, refCode, rackNo, noOfCopies } = state;
-      if (title.trim() !== '' && auther.trim() !== '' && publisher.trim() !== ''  && refCode.trim() !== '' && rackNo.trim() !== '' && noOfCopies.trim() !== '') {
-        if (file) {
+      const { title, author, publisher, refCode, rackNo, noOfCopies } = state;
+      if (title.trim() !== '' && author.trim() !== '' && publisher.trim() !== ''  && refCode.trim() !== '' && rackNo.trim() !== '' && noOfCopies.trim() !== '') {
+        if (image) {
           const formData = new FormData();
-          formData.append('file', file);
+          formData.append('image', image);
           formData.append('title', title);
-          formData.append('auther', auther);
+          formData.append('author', author);
           formData.append('publisher', publisher);
           formData.append('refCode', refCode);
           formData.append('rackNo', rackNo);
@@ -143,9 +133,10 @@ const InsertBook= (props) => {
             }
           });
           setSuccessMsg('upload Success')
+
           // props.history.push('/home');
         } else {
-          setErrorMsg('Please select a file to add.');
+          setErrorMsg('Please select a image to add.');
         }
       } else {
         setErrorMsg('Please enter all the field values.');
@@ -162,18 +153,6 @@ const InsertBook= (props) => {
     });
   };
 
-  // const handleClick = () => {
-  //   setOpen(true);
-  // };
-
-//  const clearState = () => {
-//   Array.from(document.querySelectorAll("input")).forEach(
-//     input => (input.value = "")
-//   );
-//   this.setState({
-//     itemvalues: [{}]
-//   });
-// }
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -182,6 +161,7 @@ const InsertBook= (props) => {
 
     setOpen(false);
   };
+
 
 
   return (
@@ -193,7 +173,7 @@ const InsertBook= (props) => {
           <Typography component="h1" variant="h5">
             Insert New Book
           </Typography>
-          <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
+          <form className={classes.form} Validate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="error">{errorMsg}</Alert>
@@ -220,12 +200,12 @@ const InsertBook= (props) => {
               margin="normal"
               required
               fullWidth
-              id="auther"
+              id="author"
               label="Author"
-              name="auther"
-              autoComplete="auther"
+              name="author"
+              autoComplete="author"
               autoFocus
-              value={state.auther || ''} 
+              value={state.author || ''} 
               onChange={handleInputChange}
             />
             <TextField
@@ -290,10 +270,10 @@ const InsertBook= (props) => {
              {({ getRootProps, getInputProps }) => (
                <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
                   <input {...getInputProps()} />
-                     <p>Drag and drop a file OR click here to select a file</p>
-                        {file && (
+                     <p>Drag and drop a image OR click here to select a image</p>
+                        {image && (
                      <div>
-                       <strong>Selected file:</strong> {file.name}
+                       <strong>Selected image:</strong> {image.name}
                      </div>
                     )}
                 </div>
@@ -307,7 +287,7 @@ const InsertBook= (props) => {
               </div>
             ) : (
                <div className="preview-message">
-                 <p>No preview available for this file</p>
+                 <p>No preview available for this image</p>
                 </div>
                )
             ) : (
@@ -318,19 +298,10 @@ const InsertBook= (props) => {
               )}
           </div>
           </div>
-            {/* <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              
-            >
-              Save
-            </Button> */}
 
             <div className={classes.btnGroup}>
               <Button
+              id="btnBack"
               type="button"
               href="/book"
               fullWidth
@@ -342,6 +313,7 @@ const InsertBook= (props) => {
             </Button>
 
               <Button
+              id="btnSave"
               type="submit"
               fullWidth
               variant="contained"
@@ -362,49 +334,7 @@ const InsertBook= (props) => {
             </Button>
             </div>
 
-        {/* <td>
-
-          <button className="btn btn-secondary btn-lg" href="/book"
-            style={{ marginLeft: "130px" }}> BACK</button>
-
-          <button className="btn btn-danger btn-lg"
-            style={{ marginLeft: "20px" }}> CLEAR</button>
-
-          <button
-            className="btn btn-primary btn-lg"
-            style={{ marginLeft: "20px" }}
-          >
-            SAVE
-          </button>
-        </td> */}
           </form>
-          {/* <div className={classes.form}>
-          <Grid container>
-              <Grid item xs>
-              <Button
-              type="back"
-              href="/book"
-              variant="contained"
-              color="primary"
-              className={classes.back}
-            >
-              Back
-            </Button>
-              </Grid>
-            
-            <Grid item>
-              <Button
-              type="clear"
-              // onClick={clearState}
-              variant="contained"
-              color="primary"
-              className={classes.clear}
-            >
-              Clear
-            </Button>
-              </Grid>
-            </Grid>
-            </div> */}
         </div>
       </Grid>
     </Grid>
