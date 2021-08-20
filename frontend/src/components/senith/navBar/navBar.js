@@ -9,6 +9,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import {Link} from "react-router-dom";
+import {useHistory} from "react-router-dom"; 
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NavBar() {
+  let history = useHistory();
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -39,6 +41,13 @@ export default function NavBar() {
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const logOut = () => {    
+    localStorage.clear();
+    user=null;
+    history.push('/signin');
+    window.location.reload();
+    setAnchorEl(null);
   };
 
   const handleClose = () => {
@@ -85,7 +94,8 @@ export default function NavBar() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose} component={Link} to="/profile">Profile</MenuItem>
-                {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
+                <hr></hr>
+                <MenuItem onClick={logOut}>Log Out</MenuItem>
               </Menu>
             </div>
           )}

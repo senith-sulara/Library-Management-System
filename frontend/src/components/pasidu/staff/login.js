@@ -54,6 +54,8 @@ const SignIn = () =>{
            // setSuccessMsg('upload Success')
            localStorage.setItem('user',JSON.stringify({formData}));
            history.push('/');
+           window.location.reload();
+           
         } catch (error) {
            // error.response && setErrorMsg(error.response.data);
            console.log(error);
