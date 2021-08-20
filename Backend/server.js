@@ -2,7 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const BookRoute = require('./controllers/books.controller')
+const BookRoute = require('./controllers/books.controller');
+const StaffRoute = require('./controllers/staffController ')
 
 
 dotenv.config();
@@ -29,7 +30,10 @@ mongoose.connection.once('open', () => {
     console.log('Database Synced');
 });
 
-app.use('/bookDetails', BookRoute);
+app.use('/BookDetails', BookRoute);
+app.use('/staff', StaffRoute);
+app.use(express.static("files"));
+app.use(express.static("proPic"));
 
 app.listen(PORT, () =>{
     console.log(`Server is running on PORT ${PORT}`);
