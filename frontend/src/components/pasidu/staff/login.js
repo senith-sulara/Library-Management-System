@@ -5,11 +5,14 @@ import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import React,{useState} from "react";   
 import loginStyle from './loginStyle';
 import './backStyle.css';
+import axios from 'axios';
+import { API_URL } from '../../utils/constants'; 
+
 /**
  * inisial form input state
  * @type {{firstName: string, lastName: string, password: string, conPass: string, type: string, email: string}}
  */
-const initialState ={eid:'',password:'',conPass:''};
+const initialState ={eid:'',password:'' };
 
 
 /**
@@ -24,6 +27,7 @@ const SignIn = () =>{
      * @type {*}
      */  
      const classes = loginStyle();
+     let history = useHistory();
 
     /**
      * states
@@ -41,9 +45,19 @@ const SignIn = () =>{
      * form submit
      * @param e
      */
-    const onSubmit=(e) =>{
+    const onSubmit= async (e) =>{
         e.preventDefault();
         console.log(formData); 
+        try{
+            //setErrorMsg('');
+            await axios.post(`${API_URL}/staff/signin`, formData);
+           // setSuccessMsg('upload Success')
+           localStorage.setItem('user',JSON.stringify({formData}));
+           history.push('/');
+        } catch (error) {
+           // error.response && setErrorMsg(error.response.data);
+           console.log(error);
+          }
     }
 
     /**

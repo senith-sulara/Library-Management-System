@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../utils/constants';
-import './viewBook.css'
+import '../../senith/bookM/viewBook.css'
 import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
 
 const Editable = (props) => {
+    
     const { useState } = React;
     const [data, setData] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
@@ -48,15 +49,13 @@ const Editable = (props) => {
     return (
       <div>
         <h1 id="h12" align="center">Staff Management</h1>
-        <div>
-        <Button id="btnAdd" variant="contained" color="primary" href="/signin" >
-          Add new staff member
-        </Button>
-        </div>
+        
         <div className="tbl">
         
       <MaterialTable
-        title=" "
+        title={<Button id="btnAdd" variant="contained" color="primary" href="/addstaff" >
+        Add new  
+      </Button>}
         columns={columns}
         data={data}
         editable={{
@@ -116,12 +115,10 @@ const Editable = (props) => {
         }}
         options={{
           headerStyle: {
-            backgroundColor: '#01579b',
-            color: '#FFF'
+            backgroundColor: 'rgba(8, 9, 80, 0.363)',
+            color: 'rgba(0, 0, 0)'
           },
-          searchFieldStyle:{
-            backgroundColor: '#2398f846'
-          },
+          
           actionsColumnIndex: -1
         }}
       />

@@ -8,6 +8,7 @@ import AddBook from './components/senith/addBook/addBook';
 import AddStaff from './components/pasidu/staff/addStaff';
 import ViewStaff from './components/pasidu/staff/viewStaff';
 import SignIn from './components/pasidu/staff/login';
+import Profile from './components/pasidu/staff/userProfile';
 
 
 
@@ -25,6 +26,7 @@ function App() {
             <Route path="/staff" component={ViewStaff}  />
             <Route path="/addStaff" component={AddStaff}  />
             <Route path="/signin" component={SignIn}  />
+            <Route path="/profile" component={Profile}  />
           </Switch>
         </section>
         {/* <Footer/>

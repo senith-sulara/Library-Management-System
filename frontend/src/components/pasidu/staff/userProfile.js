@@ -20,59 +20,61 @@ import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import './addbook.css';
 import { API_URL } from '../../utils/constants';
+import {Row,Container, Col} from'react-bootstrap';
+import {  } from '@material-ui/core';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useHistory } from "react-router-dom";
 
 
-function AddStaff() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-     
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-    width: '85%',
-    margin: 'auto',
-    marginTop: '20px'
+info:{
+    display:'flex',
+    alignContent:'center',   
+    justifyContent:'center',
+    marginBottom:'30px',
+},
+ dataContainer:{
+     backgroundColor:'#ffffff', 
+     margin:'60px 0px 20px 0px',
+ },
+  imageContainer:{
+    height: '500px',
+    width: '300px',
+    margin: 'auto auto 0px auto ',
+    margin:'0px',
+    padding:'0px',
   },
-  alert: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
+  btnGroup:{
+    display: 'flex',
+    '& > *': {
+      margin: theme.spacing(2),
     },
-  },
+    },
+    textField:{
+        height:'40px',
+        margin:'10px'
+    },
+    textarea:{
+        height:'80px',
+        margin:'10px', 
+    },
   image: {
-    backgroundImage: 'url(https://2wanderlust.files.wordpress.com/2013/11/slide_321715_3023940_free.jpg)',
+    backgroundImage: 'url(https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlicmFyeXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80)',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    height:'250px',
   },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '90%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+  
 }));
 
-const InsertStaff= (props) => {
+const Profile= (props) => {
+  let history = useHistory();
   const classes = useStyles();
-  const [images, setFile] = useState(null); // state for storing actual image
+  const [file, setFile] = useState(null); // state for storing actual image
   const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
   const dropRef = useRef(); // React ref for managing the hover state of droppable area
@@ -86,10 +88,11 @@ const InsertStaff= (props) => {
   });
   const [errorMsg, setErrorMsg] = useState('');
   const[successMsg, setSuccessMsg] = useState('');
-  const [open, setOpen] = useState(false);
+  const [openErr, setOpenErr] = useState(false);
+  const [openSucc, setOpenSucc] = useState(false);
 
-  const onDrop = (images) => {
-    const [uploadedFile] = images;
+  const onDrop = (files) => {
+    const [uploadedFile] = files;
     setFile(uploadedFile);
   
     const fileReader = new FileReader();
@@ -112,13 +115,12 @@ const InsertStaff= (props) => {
 
   const handleOnSubmit = async (event) => {
     event.preventDefault();
-    setOpen(true);
     try {
       const { eid, name, email, address, contact, password } = state;
       if (eid.trim() !== '' && name.trim() !== '' && email.trim() !== ''  && address.trim() !== '' && contact.trim() !== '' && password.trim() !== '') {
-        if (images) {
+        if (file) {
           const formData = new FormData();
-          formData.append('images', images);
+          formData.append('file', file);
           formData.append('eid', eid);
           formData.append('name', name);
           formData.append('email', email);
@@ -135,14 +137,19 @@ const InsertStaff= (props) => {
           });
           setSuccessMsg('upload Success')
           // props.history.push('/home');
+          
+            setOpenSucc(true);
         } else {
           setErrorMsg('Please select a file to add.');
+          setOpenErr(true);
         }
       } else {
         setErrorMsg('Please enter all the field values.');
+        setOpenErr(true);
       }
     } catch (error) {
       error.response && setErrorMsg(error.response.data);
+      setOpenErr(true);
     }
   };
 
@@ -162,44 +169,44 @@ const InsertStaff= (props) => {
       return;
     }
 
-    setOpen(false);
+    setOpenErr(false);
+    setOpenSucc(false);
   };
 
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={6} className={classes.image} />
-      <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            Insert New Staff Member
-          </Typography>
-          <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
-          <div className={classes.alert}>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Container className={classes.image}> 
+          <Container className={classes.image}>
+            <Row >
+                <Col md="4"></Col>
+                <Col md="4" className="mt-5 ml-5 align-items-center text-white">
+                    <Row className={classes.imageContainer}>
+                        <img  className="rounded-circle border border-4" src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlicmFyeXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80" width="250px" height="250px"></img>
+                    </Row> 
+                </Col>             
+                <Col md="3"></Col>
+            </Row>
+         </Container>
+        <Container >
+        <div  className={classes.dataContainer}>
+            <div className={classes.info}>
+                <Typography component="h1" variant="h5">
+                 Member ID : 1231
+                </Typography> 
+            </div>
+         
+          <form  Validate onSubmit={handleOnSubmit}>
+          <div  >
+          <Snackbar open={openErr} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="error">{errorMsg}</Alert>
           </Snackbar>
-          {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Snackbar open={openSucc} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="success">{successMsg}</Alert>
-            </Snackbar> */}
+            </Snackbar>
           </div>
-
+          <div className={classes.info}> 
             <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="eid"
-              label="Employee ID"
-              name="eid"
-              autoComplete="eid"
-              autoFocus
-              value={state.eid || ''} 
-              onChange={handleInputChange}
-            />
-
-            <TextField
+            className={classes.textField}
               variant="outlined"
               margin="normal"
               required
@@ -211,9 +218,9 @@ const InsertStaff= (props) => {
               autoFocus
               value={state.name || ''} 
               onChange={handleInputChange}
-            />
-
+            /> 
             <TextField
+            className={classes.textField}
               variant="outlined"
               margin="normal"
               required
@@ -226,8 +233,12 @@ const InsertStaff= (props) => {
               value={state.email || ''} 
               onChange={handleInputChange}
             />
+            </div>
+            <div className={classes.info}>
+         
 
             <TextField
+            className={classes.textField}
               variant="outlined"
               margin="normal"
               required
@@ -240,22 +251,8 @@ const InsertStaff= (props) => {
               value={state.contact || ''} 
               onChange={handleInputChange}
             />
-
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="address"
-              label="address"
-              name="address"
-              autoComplete="address"
-              autoFocus
-              value={state.address || ''} 
-              onChange={handleInputChange}
-            />      
-
-            <TextField
+         <TextField
+              className={classes.textField}
               variant="outlined"
               margin="normal"
               required
@@ -268,6 +265,28 @@ const InsertStaff= (props) => {
               value={state.password || ''} 
               onChange={handleInputChange}
             />
+         </div>
+         <div className={classes.info}>
+         <TextField
+            className={classes.textarea}
+              style={{margin:'10 20 10 20'}}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              multiline
+              id="address"
+              label="address"
+              name="address"
+              autoComplete="address"
+              autoFocus
+              value={state.address || ''} 
+              onChange={handleInputChange}
+            />      
+         </div>
+            
+
+            
             
 
         <div className="upload-section">
@@ -280,9 +299,9 @@ const InsertStaff= (props) => {
                <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
                   <input {...getInputProps()} />
                      <p>Drag and drop a file OR click here to select a file</p>
-                        {images && (
+                        {file && (
                      <div>
-                       <strong>Selected file:</strong> {images.name}
+                       <strong>Selected file:</strong> {file.name}
                      </div>
                     )}
                 </div>
@@ -305,50 +324,51 @@ const InsertStaff= (props) => {
               )}
           </div>
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit} 
-            >
-              Save
-            </Button>
-
-             
-          </form>
-          <div className={classes.form}>
-          <Grid container>
-              <Grid item xs>
+          <div className={classes.btnGroup}>
               <Button
-              type="back"
-              href="/staff"
+              id="btnBack"
+              type="button"
+              onClick={history.goBack}
+              fullWidth
               variant="contained"
               color="primary"
               className={classes.back}
             >
               Back
             </Button>
-              </Grid>
-            
-            <Grid item>
+
               <Button
-              type="reset"
-              
+              id="btnSave"
+              type="submit"
+              fullWidth
               variant="contained"
               color="primary"
+              className={classes.sub}
+            >
+              Save
+            </Button>
+
+              <Button
+              type="reset"
+              fullWidth
+              variant="contained"
+              color="secondary"
               className={classes.clear}
             >
               Clear
             </Button>
-              </Grid>
-            </Grid>
             </div>
+
+             
+          </form>
+          
         </div>
-      </Grid>
-    </Grid>
+        </Container>
+      </Container>
+      
+   
   );
   }
 
-  export default InsertStaff;
+  export default Profile;
   

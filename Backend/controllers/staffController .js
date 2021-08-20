@@ -3,33 +3,10 @@ const express = require('express');
 const multer = require('multer');
 const Staff = require('../models/staff');
 // const jwt = require("jsonwebtoken");
+const cloudinary = require("../utils/cloudinary"); 
+const upload = require("../utils/multer");
 const Router = express.Router();
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, cb) {
-      cb(null, './proPic');
-    },
-    filename(req, file, cb) {
-      cb(null, new Date().getTime().toString() + "_" + file.originalname);
-    }
-  }),
-  limits: {
-    fileSize: 3000000 // max file size 3MB = 3000000 bytes
-  },
-  fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(jpeg|jpg|png)$/)) {
-      return cb(
-        new Error(
-          'only upload files with jpg, jpeg, png format.'
-        )
-      );
-    }
-    cb(undefined, true); // continue with upload
-  }
-});
  
-
 /**
  * sign in controller
  * @param req
@@ -37,7 +14,7 @@ const upload = multer({
  * @returns {Promise<any>}
  */
 
- Router.post(  '/signin', async (req, res)=>{
+ Router.post('/signin', async (req, res)=>{
     const{eid,password} = req.body;
 
     try{
@@ -59,10 +36,10 @@ const upload = multer({
     }
 });
 
-Router.post(  '/addStaff', upload.single('file'), async (req, res) => {
+Router.post(  '/addStaff', upload.single('images'), async (req, res) => {
     try {
+      const result = await cloudinary.uploader.upload(req.file.path);
       const { eid,name, email, address, contact, password} = req.body;
-      const { path, mimetype} = req.file;
       const staff = new Staff({
         eid,
         name,  
@@ -70,8 +47,8 @@ Router.post(  '/addStaff', upload.single('file'), async (req, res) => {
         address,
         contact, 
         password,   
-        proPic: path,
-        file_mimetype: mimetype
+        proPic:result.secure_url, 
+        cloudinary_id: result.public_id
       });
     await staff.save();
     res.send('successfully new staff member added to the system.');

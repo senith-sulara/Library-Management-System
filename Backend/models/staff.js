@@ -8,8 +8,8 @@ let Staff = new Schema({
     address: { type: String},
     contact: { type: Number},
     password: { type: String}, 
-    proPic: {type: String},
-    file_mimetype: {type: String}
+    proPic: {type: String}, 
+    cloudinary_id: {type: String}
   },
    { 
     timestamps: true 
