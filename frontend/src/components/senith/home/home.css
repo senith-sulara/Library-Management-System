@@ -1,4 +1,10 @@
 /* Float four columns side by side */
+body::-webkit-scrollbar {
+  display: none; ;
+}
+body{
+  overflow-x: hidden;
+}
 .column1 {
     float: left;
     width: 32%;
@@ -84,6 +90,5 @@
   } */
   
   button:hover, a:hover {
-    opacity: 0.7;
-    transition: all ease-in 200ms;
+    opacity: 0.7; 
   }
