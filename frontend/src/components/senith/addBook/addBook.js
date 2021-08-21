@@ -13,14 +13,39 @@ import axios from 'axios';
 import './addbook.css';
 import { API_URL } from '../../utils/constants';
 import dummy from '../images/dummy.png'
+import {useHistory} from 'react-router-dom';
+import LocalLibraryIcon from '@material-ui/icons/LocalLibrary'; 
+import CheckIcon from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import { Dropdown } from 'semantic-ui-react'
 
-function AddBook() {
+
+//dialog box import
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Draggable from 'react-draggable';
+
+/**
+ * draggable dialog component
+ * @param {*} props 
+ * @returns 
+ */
+function PaperComponent(props) {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-     
-    </Typography>
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
   );
 }
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -66,11 +91,29 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(2),
     },
-  }
+  },
+  formControl: {
+    marginTop: theme.spacing(1),
+    width: '90%',
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
+
+const initialState={
+  title: '',
+  author: '',
+  publisher:'',
+  refCode:'',
+  rackNo: '',
+  noOfCopies: '',
+  avatar:''
+};
 
 const InsertBook= (props) => {
   const classes = useStyles();
+  let history = useHistory();
   const [image, setImage] = useState(null); // state for storing actual image
   const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
@@ -85,6 +128,8 @@ const InsertBook= (props) => {
   });
   const [errorMsg, setErrorMsg] = useState('');
   const[successMsg, setSuccessMsg] = useState('');
+  // const [openErr, setOpenErr] = useState(false);
+  // const [openSucc, setOpenSucc] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onDrop = (images) => {
@@ -133,18 +178,31 @@ const InsertBook= (props) => {
             }
           });
           setSuccessMsg('upload Success')
-
+          // setOpenSucc(true);
           // props.history.push('/home');
         } else {
           setErrorMsg('Please select a image to add.');
+          // setOpenErr(true);
         }
       } else {
         setErrorMsg('Please enter all the field values.');
+        // setOpenErr(true);
       }
     } catch (error) {
       error.response && setErrorMsg(error.response.data);
+      // setOpenErr(true);
     }
   };
+
+  const reload = () =>{ 
+    setState(initialState);
+ };
+
+  const validateData=formData=>{
+    let temp={}
+
+    temp.title=this.title?"": "This field is required."
+  }
 
   const handleInputChange = (event) => {
     setState({
@@ -160,9 +218,36 @@ const InsertBook= (props) => {
     }
 
     setOpen(false);
+    // setOpenErr(false);
+    // setOpenSucc(false);
   };
 
+//   function random(length){
+//     let result ='';
+//     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+//     let charactersLength = characters.length;
+//     for ( let i = 0; i < length; i++ ) {
+//       result += characters.charAt(Math.floor(Math.random() * 
+//  charactersLength));
+//    }
+//    return result;
+//   }
+//   console.log(random(5));
 
+  // function uniqueRandom(minimum, maximum) {
+  //   let previousValue;
+  
+  //   return function random() {
+  //     const number = Math.floor(
+  //       (Math.random() * (maximum - minimum + 1)) + minimum
+  //     );
+  
+  //     previousValue = number === previousValue && minimum !== maximum ? random() : number;
+  //     const random = uniqueRandom(1, 10);
+  //     return previousValue;
+  //     console.log(random);
+  //   };
+  // }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -175,12 +260,47 @@ const InsertBook= (props) => {
           </Typography>
           <form className={classes.form} Validate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          {/* <Snackbar open={openErr} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="error">{errorMsg}</Alert>
           </Snackbar>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Snackbar open={openSucc} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="success">{successMsg}</Alert>
-            </Snackbar>
+            </Snackbar> */}
+              <Dialog
+            open={open}
+            onClose={handleClose}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
+          >
+        <DialogTitle style={{ cursor: 'move',backgroundColor:'#02032b',color:'#ffffff' }} id="draggable-dialog-title">
+        <LocalLibraryIcon /> LMS
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {successMsg!=''?(
+             <>
+              <div style={{color:'#008000'}}>
+                  <CheckIcon  />
+                  {successMsg}
+                </div>
+             </>
+            ):(
+              <>
+              <div style={{color:'#aa202b'}}>
+                  <ClearIcon  />
+                  {errorMsg}
+                </div>
+             </>
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions> 
+          <Button onClick={handleClose} color="primary">
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+
           </div>
             <TextField
               variant="outlined"
@@ -191,11 +311,14 @@ const InsertBook= (props) => {
               label="Book Title"
               name="title"
               autoComplete="title"
+              validateData
               autoFocus
               value={state.title || ''} 
               onChange={handleInputChange}
             />
             <TextField
+              // error
+              // helperText="Incorrect entry."
               variant="outlined"
               margin="normal"
               required
@@ -232,8 +355,10 @@ const InsertBook= (props) => {
               autoComplete="refCode"
               autoFocus
               value={state.refCode || ''} 
+
               onChange={handleInputChange}
             />
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -247,7 +372,17 @@ const InsertBook= (props) => {
               value={state.rackNo || ''} 
               onChange={handleInputChange}
             />
+
+{/* <select onChange={handleInputChange} >
+  <option selected disabled>select</option>
+  <option value={state.rackNo || 'L01'}>L01</option>
+  <option value={state.rackNo || 'L02'}>L02</option>
+  <option value={state.rackNo || 'L03'}>L03</option>
+</select>
+
+         */}
             <TextField
+              type="Number"
               variant="outlined"
               margin="normal"
               required
@@ -303,7 +438,8 @@ const InsertBook= (props) => {
               <Button
               id="btnBack"
               type="button"
-              href="/book"
+              // href="/book"
+              onClick={history.goBack}
               fullWidth
               variant="contained"
               color="primary"
@@ -329,15 +465,18 @@ const InsertBook= (props) => {
               variant="contained"
               color="secondary"
               className={classes.clear}
+              onClick={reload}
             >
               Clear
             </Button>
             </div>
 
           </form>
+          
         </div>
       </Grid>
     </Grid>
+    
   );
   }
 

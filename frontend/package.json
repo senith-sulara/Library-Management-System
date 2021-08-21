@@ -16,13 +16,18 @@
     "material-ui": "^1.0.0-beta.47",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-draggable": "^4.4.3",
     "react-dropdown-select": "^4.7.4",
     "react-dropzone": "^11.3.4",
     "react-hook-form": "^7.12.2",
     "react-icons": "^4.2.0",
+    "react-material-ui-form-validator": "^2.1.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-select": "^4.3.1",
     "react-use": "^17.2.4",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.3",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
