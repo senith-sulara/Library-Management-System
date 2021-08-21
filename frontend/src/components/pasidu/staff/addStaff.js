@@ -10,6 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import CheckIcon from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -17,17 +19,31 @@ import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import Dropzone from 'react-dropzone';
+import LocalLibraryIcon from '@material-ui/icons/LocalLibrary'; 
 import axios from 'axios';
 import './addbook.css';
 import { API_URL } from '../../utils/constants';
 import { useHistory } from "react-router-dom";
 import dummy from '../../senith/images/dummy.png';
 
-function AddStaff() {
+//dialog box import
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Draggable from 'react-draggable';
+
+/**
+ * draggable dialog component
+ * @param {*} props 
+ * @returns 
+ */
+function PaperComponent(props) {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-     
-    </Typography>
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
   );
 }
 
@@ -77,6 +93,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const initialState={
+  eid:'',
+  name: '',
+  address: '',
+  email:'',
+  contact:'',
+  password: '',
+  proPic:''
+};
 const InsertStaff= (props) => {
   let history = useHistory();
   const classes = useStyles();
@@ -153,7 +178,9 @@ const InsertStaff= (props) => {
       error.response && setErrorMsg(error.response.data);
     }
   };
-
+const reload = () =>{ 
+   setState(initialState);
+};
   const handleInputChange = (event) => {
     setState({
       ...state,
@@ -185,12 +212,42 @@ const InsertStaff= (props) => {
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="error">{errorMsg}</Alert>
-          </Snackbar>
-          {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="success">{successMsg}</Alert>
-            </Snackbar> */}
+
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
+          >
+        <DialogTitle style={{ cursor: 'move',backgroundColor:'#02032b',color:'#ffffff' }} id="draggable-dialog-title">
+        <LocalLibraryIcon /> LMS
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {successMsg!=''?(
+             <>
+              <div style={{color:'#008000'}}>
+                  <CheckIcon  />
+                  {successMsg}
+                </div>
+             </>
+            ):(
+              <>
+              <div style={{color:'#aa202b'}}>
+                  <ClearIcon  />
+                  {errorMsg}
+                </div>
+             </>
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions> 
+          <Button onClick={handleClose} color="primary">
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+ 
           </div>
 
             <TextField
@@ -343,6 +400,7 @@ const InsertStaff= (props) => {
               fullWidth
               variant="contained"
               color="secondary"
+              onClick={reload}
               className={classes.clear}
             >
               Clear

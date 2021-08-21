@@ -9,6 +9,7 @@ import AddStaff from './components/pasidu/staff/addStaff';
 import ViewStaff from './components/pasidu/staff/viewStaff';
 import SignIn from './components/pasidu/staff/login';
 import Profile from './components/pasidu/staff/userProfile';
+import Footer from './components/pasidu/comman/footer';
 
 
 
@@ -29,8 +30,8 @@ function App() {
             <Route path="/profile" component={Profile}  />
           </Switch>
         </section>
-        {/* <Footer/>
-        </userContext.Provider> */}
+        <Footer/>
+        {/* </userContext.Provider> */}
       </Router>
     </div>
   );

@@ -29,6 +29,13 @@ import dummy from '../../senith/images/dummy.png';
 
 
 const useStyles = makeStyles((theme) => ({
+  leftMinus:{
+    marginLeft:"-20",
+    display:'flex',
+    alignContent:'center',   
+    justifyContent:'center',
+    marginBottom:'30px',
+  },
 info:{
     display:'flex',
     alignContent:'center',   
@@ -42,8 +49,7 @@ info:{
   imageContainer:{
     height: '500px',
     width: '300px',
-    margin: 'auto auto 0px auto ',
-    margin:'0px',
+    margin: 'auto auto 20px auto ', 
     padding:'0px',
   },
   btnGroup:{
@@ -51,6 +57,8 @@ info:{
     '& > *': {
       margin: theme.spacing(2),
     },
+    marginBottom:'100px',
+    paddingBottom:'100px'
     },
     textField:{
         height:'40px',
@@ -153,6 +161,7 @@ const Profile= (props) => {
 
 
   return (
+    <div style={{height:'100%'}}>
       <Container className={classes.image}> 
           <Container className={classes.image}>
             <Row >
@@ -167,7 +176,7 @@ const Profile= (props) => {
          </Container>
         <Container >
         <div  className={classes.dataContainer}>
-            <div className={classes.info}>
+            <div className={classes.leftMinus}>
                 <Typography component="h1" variant="h5">
                  Member ID : {user.formData.eid}
                 </Typography> 
@@ -345,7 +354,7 @@ const Profile= (props) => {
         </div>
         </Container>
       </Container>
-      
+      </div>
    
   );
   }

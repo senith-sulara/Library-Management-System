@@ -10,9 +10,9 @@ import { API_URL } from '../../utils/constants';
 
 /**
  * inisial form input state
- * @type {{firstName: string, lastName: string, password: string, conPass: string, type: string, email: string}}
+ * @type {{ eid: string, password: string}}
  */
-const initialState ={eid:'',password:'' };
+const initialState ={eid:'',password:'',name:'',proPic:'' };
 
 
 /**
@@ -35,6 +35,7 @@ const SignIn = () =>{
     const [showPassword,setShowpassword]= useState(false);
     const [isSignUp,setSignUp] =useState(false)
     const [formData,setFormData]=useState(initialState);
+    const [data, setData] = useState([]); 
 
     /**
      * password visibility togle
@@ -48,13 +49,26 @@ const SignIn = () =>{
     const onSubmit= async (e) =>{
         e.preventDefault();
         console.log(formData); 
-        try{
-            //setErrorMsg('');
-            await axios.post(`${API_URL}/staff/signin`, formData);
-           // setSuccessMsg('upload Success')
-           localStorage.setItem('user',JSON.stringify({formData}));
-           history.push('/');
-           window.location.reload();
+        try{ 
+            await axios.post(`${API_URL}/staff/signin`, formData);  
+           try { 
+            const {data}  = await axios.get(`${API_URL}/staff/getstaffmember/${formData.eid}`); 
+            setData(data);
+            setFormData({
+                eid:formData.eid,
+                password:formData.password,
+                name:data[0].name,
+                proPic:data[0].proPic
+            });
+            console.log(data[0]);
+            setFormData(data[0]);
+            localStorage.setItem('user',JSON.stringify({formData}));
+            history.push('/');
+            window.location.reload();
+          } catch (error) {
+            console.log(error);
+    
+          }
            
         } catch (error) {
            // error.response && setErrorMsg(error.response.data);

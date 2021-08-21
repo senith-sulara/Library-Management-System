@@ -28,6 +28,9 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DescriptionIcon from '@material-ui/icons/Description';
 import HouseIcon from '@material-ui/icons/House';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import {Row,Container, Col} from'react-bootstrap';
+import {  } from '@material-ui/core';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Drawer, List } from '@material-ui/core';
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -171,7 +174,8 @@ export default function NavBar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                {!user.formData.proPic?(<AccountCircle />):(<img src={user.formData.proPic} className='rounded-circle' width='40px' height='40px'></img>)}&nbsp;
+                <Typography>{user.formData.name}</Typography>
               </IconButton>
               <Menu
                 style={{marginTop:'50px',width:'500px'}}
