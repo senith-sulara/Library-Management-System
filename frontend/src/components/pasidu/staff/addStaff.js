@@ -20,7 +20,8 @@ import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import './addbook.css';
 import { API_URL } from '../../utils/constants';
-
+import { useHistory } from "react-router-dom";
+import dummy from '../../senith/images/dummy.png';
 
 function AddStaff() {
   return (
@@ -68,9 +69,16 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  btnGroup:{
+    display: 'flex',
+    '& > *': {
+      margin: theme.spacing(2),
+    },
+  }
 }));
 
 const InsertStaff= (props) => {
+  let history = useHistory();
   const classes = useStyles();
   const [images, setFile] = useState(null); // state for storing actual image
   const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
@@ -156,7 +164,7 @@ const InsertStaff= (props) => {
   // const handleClick = () => {
   //   setOpen(true);
   // };
-
+ 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -250,6 +258,7 @@ const InsertStaff= (props) => {
               label="address"
               name="address"
               autoComplete="address"
+              multiline
               autoFocus
               value={state.address || ''} 
               onChange={handleInputChange}
@@ -291,59 +300,58 @@ const InsertStaff= (props) => {
           {previewSrc ? (
             isPreviewAvailable ? (
               <div className="image-preview">
-               <img className="preview-image" src={previewSrc} alt="Preview" width="300"/>
+               <img className="preview-image" src={previewSrc} alt="Preview" width="200px" style={{maxHeight: '200', maxWidth: '200'}} align-item="center"/>
               </div>
             ) : (
                <div className="preview-message">
-                 <p>No preview available for this file</p>
+                 <p>No preview available for this image</p>
                 </div>
                )
             ) : (
                 <div className="preview-message">
-                  <p>Image preview will be shown here after selection</p>
+                  {/* <p>Image preview will be shown here after selection</p> */}
+                  <img src={dummy} alt="John" style={{ width: '250px', height: '200px', margin: '5px'}}/>
                 </div>
               )}
           </div>
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit} 
-            >
-              Save
-            </Button>
-
-             
-          </form>
-          <div className={classes.form}>
-          <Grid container>
-              <Grid item xs>
+          <div className={classes.btnGroup}>
               <Button
-              type="back"
-              href="/staff"
+              id="btnBack"
+              type="button"
+              onClick={history.goBack}
+              fullWidth
               variant="contained"
               color="primary"
               className={classes.back}
             >
               Back
             </Button>
-              </Grid>
-            
-            <Grid item>
+
               <Button
-              type="reset"
-              
+              id="btnSave"
+              type="submit"
+              fullWidth
               variant="contained"
               color="primary"
+              className={classes.sub}
+            >
+              Save
+            </Button>
+
+              <Button
+              type="reset"
+              fullWidth
+              variant="contained"
+              color="secondary"
               className={classes.clear}
             >
               Clear
             </Button>
-              </Grid>
-            </Grid>
             </div>
+
+             
+          </form>
+           
         </div>
       </Grid>
     </Grid>

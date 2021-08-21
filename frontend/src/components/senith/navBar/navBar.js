@@ -1,19 +1,89 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
+import LocalLibraryIcon from '@material-ui/icons/LocalLibrary'; 
+import SettingsPower from '@material-ui/icons/SettingsPower';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import {Link} from "react-router-dom";
 import {useHistory} from "react-router-dom"; 
-
+import Divider from '@material-ui/core/Divider'; 
+import clsx from 'clsx';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+import GroupIcon from '@material-ui/icons/Group';
+import StorageIcon from '@material-ui/icons/Storage';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+import DescriptionIcon from '@material-ui/icons/Description';
+import HouseIcon from '@material-ui/icons/House';
+import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
+import { Drawer, List } from '@material-ui/core';
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  hide: {
+    display: 'none',
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -32,9 +102,18 @@ export default function NavBar() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const localUser = JSON.parse(localStorage.getItem('user')) || null;
-  let [user,setUser] = useState(localUser);
-  const open = Boolean(anchorEl);
+  let [user,setUser] = useState(localUser); 
+  const [open, setOpen] = React.useState(false);
+  const theme = useTheme();
+  const openMenu = Boolean(anchorEl);
 
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
   const handleChange = (event) => {
     setAuth(event.target.checked);
   };
@@ -52,6 +131,7 @@ export default function NavBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    console.log(user.eid);
   };
 
   return (
@@ -60,6 +140,21 @@ export default function NavBar() {
         <Toolbar>
         {user&&(
           <>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, open && classes.hide)}
+          > 
+          <MenuIcon /></IconButton>
+          <IconButton
+            color="inherit"
+            aria-label="Back"
+            onClick={history.goBack}
+            edge="start" 
+          > 
+          <ChevronLeftIcon /></IconButton>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" href="/">
             <LocalLibraryIcon />
           </IconButton>
@@ -79,23 +174,24 @@ export default function NavBar() {
                 <AccountCircle />
               </IconButton>
               <Menu
+                style={{marginTop:'50px',width:'500px'}}
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: 'top',
+                  vertical: 'bottom',
                   horizontal: 'right',
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
+                  vertical: 'bottom',
                   horizontal: 'right',
                 }}
-                open={open}
+                open={openMenu}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose} component={Link} to="/profile">Profile</MenuItem>
+                <MenuItem onClick={handleClose} component={Link} to="/profile"><AccountCircle/> &nbsp; Profile</MenuItem>
                 <hr></hr>
-                <MenuItem onClick={logOut}>Log Out</MenuItem>
+                <MenuItem  className="text-danger" onClick={logOut}><SettingsPower/> &nbsp; Log Out</MenuItem>
               </Menu>
             </div>
           )}
@@ -103,6 +199,61 @@ export default function NavBar() {
           )}
         </Toolbar>
       </AppBar>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            <Typography>Back</Typography>
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+        <ListItem button component={Link} to='/'>
+              <ListItemIcon><HouseIcon /></ListItemIcon>
+              <ListItemText>Home</ListItemText>
+            </ListItem>  
+        <Divider />
+            <ListItem button component={Link} to='/member'>
+              <ListItemIcon><GroupIcon /></ListItemIcon>
+              <ListItemText>Member Management</ListItemText>
+            </ListItem>  
+        <Divider />
+        <ListItem button component={Link} to='/borrow'>
+              <ListItemIcon><MenuBookIcon /></ListItemIcon>
+              <ListItemText>Barrow Management</ListItemText>
+            </ListItem>  
+        <Divider />
+        <ListItem button component={Link} to='/book'>
+              <ListItemIcon><StorageIcon /></ListItemIcon>
+              <ListItemText>Book Management</ListItemText>
+            </ListItem>  
+        <Divider />
+        <ListItem button component={Link} to='/staff'>
+              <ListItemIcon><PeopleOutlineIcon /></ListItemIcon>
+              <ListItemText>Staff Management</ListItemText>
+            </ListItem>  
+        <Divider />
+        <ListItem button component={Link} to='/res'>
+              <ListItemIcon><DateRangeIcon /></ListItemIcon>
+              <ListItemText>Reservation Management</ListItemText>
+            </ListItem>  
+        <Divider />
+        <ListItem button component={Link} to='/reports'>
+              <ListItemIcon><DescriptionIcon /></ListItemIcon>
+              <ListItemText>Report</ListItemText>
+            </ListItem>  
+        <Divider />
+        </List>
+         
+      </Drawer>
     </div>
   );
 }

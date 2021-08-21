@@ -4,6 +4,7 @@ import { API_URL } from '../../utils/constants';
 import '../../senith/bookM/viewBook.css'
 import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
+import SideBar from '../comman/sideBar';
 
 const Editable = (props) => {
     
@@ -47,7 +48,10 @@ const Editable = (props) => {
     ]);
   
     return (
+      
       <div>
+        
+        
         <h1 id="h12" align="center">Staff Management</h1>
         
         <div className="tbl">

@@ -116,6 +116,42 @@ Router.get('/searchStaff/:key', async (req, res) =>{
   }
 });
 
+Router.get('/getstaffmember/:id', async (req, res) => {
+  try {
+    let id = req.params.id; 
+    console.log(id)
+    const member = await Staff.find({eid:id});
+    res.send(member);
+  } catch (error) {
+    res.status(400).send('Error while getting list of staff members. Try again later.');
+  }
+});
+
+// Router.get('/getstaffmember/:id', async (req, res) =>{
+//   try{
+//     let id = req.params.id;
+//     console.log(id);
+//     const member = await Staff.find(eid,id)
+//     .then(() => { 
+//         if (err) {
+//           return next(err);
+//         }
+    
+//         data = {
+//           status: "success",
+//           code: 200,
+//           data: member,
+//         };
+//         res.json(data);
+//     }).catch((err) => {
+//         console.log(err);
+//         res.status(500).send({status: " Error", error:err.message});
+//     })
+//   }catch (error) {
+//     res.status(400).send('Error while getting staff member Details. Try again later.');
+//   }
+// });
+
 
   Router.delete('/deleteStaff/:id', async (req, res) => {
     try {

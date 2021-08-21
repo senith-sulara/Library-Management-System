@@ -1,4 +1,4 @@
-import React, { useState, useRef} from 'react';
+import React, { useState, useRef,useEffect} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -23,7 +23,8 @@ import { API_URL } from '../../utils/constants';
 import {Row,Container, Col} from'react-bootstrap';
 import {  } from '@material-ui/core';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import dummy from '../../senith/images/dummy.png';
 
 
 
@@ -72,20 +73,45 @@ info:{
 }));
 
 const Profile= (props) => {
-  let history = useHistory();
+  let history = useHistory(); 
+  const location = useLocation();
+  const { useState } = React;
+  const [data, setData] = useState([]); 
   const classes = useStyles();
+  const localUser = JSON.parse(localStorage.getItem('user')) || null;
+  let [user,setUser] = useState(localUser);
   const [file, setFile] = useState(null); // state for storing actual image
   const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
   const dropRef = useRef(); // React ref for managing the hover state of droppable area
-  const [state, setState] = useState({
-    eid:'',
-    name: '',
-    address: '',
-    email:'',
-    contact:'',
-    password: ''
-  });
+  const [userData,setUserData] = useState(null);
+
+  useEffect(()=>{ 
+    setUser(JSON.parse(localStorage.getItem('user')));
+    console.log("data " + user.formData.eid);
+  },[location]);
+  
+  useEffect(()=>{ 
+    const getUser = async () => {
+      try {
+        const eid = user.formData.eid;
+        const {data}  = await axios.get(`${API_URL}/staff/getstaffmember/${eid}`);
+        setErrorMsg('');
+        setData(data); 
+        setUserData(data[0]); 
+
+      } catch (error) {
+        error.response && setErrorMsg(error.response.data);
+        console.log(error);
+
+      }
+    };
+    getUser();
+  },[location]);
+    
+  
+
+
   const [errorMsg, setErrorMsg] = useState('');
   const[successMsg, setSuccessMsg] = useState('');
   const [openErr, setOpenErr] = useState(false);
@@ -111,55 +137,7 @@ const Profile= (props) => {
       dropRef.current.style.border = '2px dashed #e9ebeb';
     }
   };
-
-
-  const handleOnSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const { eid, name, email, address, contact, password } = state;
-      if (eid.trim() !== '' && name.trim() !== '' && email.trim() !== ''  && address.trim() !== '' && contact.trim() !== '' && password.trim() !== '') {
-        if (file) {
-          const formData = new FormData();
-          formData.append('file', file);
-          formData.append('eid', eid);
-          formData.append('name', name);
-          formData.append('email', email);
-          formData.append('address', address);
-          formData.append('contact', contact);
-          formData.append('password', password);
-
-
-          setErrorMsg('');
-          await axios.post(`${API_URL}/staff/addStaff`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          setSuccessMsg('upload Success')
-          // props.history.push('/home');
-          
-            setOpenSucc(true);
-        } else {
-          setErrorMsg('Please select a file to add.');
-          setOpenErr(true);
-        }
-      } else {
-        setErrorMsg('Please enter all the field values.');
-        setOpenErr(true);
-      }
-    } catch (error) {
-      error.response && setErrorMsg(error.response.data);
-      setOpenErr(true);
-    }
-  };
-
-  const handleInputChange = (event) => {
-    setState({
-      ...state,
-      [event.target.name]: event.target.value
-    });
-  };
-
+ 
   // const handleClick = () => {
   //   setOpen(true);
   // };
@@ -181,7 +159,7 @@ const Profile= (props) => {
                 <Col md="4"></Col>
                 <Col md="4" className="mt-5 ml-5 align-items-center text-white">
                     <Row className={classes.imageContainer}>
-                        <img  className="rounded-circle border border-4" src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlicmFyeXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80" width="250px" height="250px"></img>
+                        <img  className="rounded-circle  " src={userData ?userData.proPic:' '} width="250px" height="250px"></img>
                     </Row> 
                 </Col>             
                 <Col md="3"></Col>
@@ -191,11 +169,11 @@ const Profile= (props) => {
         <div  className={classes.dataContainer}>
             <div className={classes.info}>
                 <Typography component="h1" variant="h5">
-                 Member ID : 1231
+                 Member ID : {user.formData.eid}
                 </Typography> 
             </div>
          
-          <form  Validate onSubmit={handleOnSubmit}>
+          <form  validate >
           <div  >
           <Snackbar open={openErr} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="error">{errorMsg}</Alert>
@@ -216,8 +194,8 @@ const Profile= (props) => {
               name="name"
               autoComplete="name"
               autoFocus
-              value={state.name || ''} 
-              onChange={handleInputChange}
+              value={userData ?userData.name:'' || ''} 
+               
             /> 
             <TextField
             className={classes.textField}
@@ -230,8 +208,8 @@ const Profile= (props) => {
               name="email"
               autoComplete="email"
               autoFocus
-              value={state.email || ''} 
-              onChange={handleInputChange}
+              value={userData ?userData.email:'' || ''} 
+               
             />
             </div>
             <div className={classes.info}>
@@ -248,8 +226,8 @@ const Profile= (props) => {
               name="contact"
               autoComplete="contact"
               autoFocus
-              value={state.contact || ''} 
-              onChange={handleInputChange}
+              value={userData ?userData.contact:'' || ''} 
+               
             />
          <TextField
               className={classes.textField}
@@ -262,11 +240,12 @@ const Profile= (props) => {
               name="password"
               autoComplete="password"
               autoFocus
-              value={state.password || ''} 
-              onChange={handleInputChange}
+              value={userData ?userData.password:'' || ''} 
+               
             />
          </div>
          <div className={classes.info}>
+           
          <TextField
             className={classes.textarea}
               style={{margin:'10 20 10 20'}}
@@ -280,8 +259,8 @@ const Profile= (props) => {
               name="address"
               autoComplete="address"
               autoFocus
-              value={state.address || ''} 
-              onChange={handleInputChange}
+              value={userData ?userData.address:'' || ''} 
+               
             />      
          </div>
             
@@ -310,16 +289,17 @@ const Profile= (props) => {
           {previewSrc ? (
             isPreviewAvailable ? (
               <div className="image-preview">
-               <img className="preview-image" src={previewSrc} alt="Preview" width="300"/>
+               <img className="preview-image" src={previewSrc} alt="Preview" width="200px" style={{maxHeight: '200', maxWidth: '200'}} align-item="center"/>
               </div>
             ) : (
                <div className="preview-message">
-                 <p>No preview available for this file</p>
+                 <p>No preview available for this image</p>
                 </div>
                )
             ) : (
                 <div className="preview-message">
-                  <p>Image preview will be shown here after selection</p>
+                  {/* <p>Image preview will be shown here after selection</p> */}
+                  <img src={userData ? userData.proPic:''} alt="John" style={{ width: '250px', height: '200px', margin: '5px'}}/>
                 </div>
               )}
           </div>
