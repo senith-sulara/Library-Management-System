@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const BookRoute = require('./controllers/books.controller');
 const StaffRoute = require('./controllers/staffController ')
+const reservationRoute = require('./routes/reservation-routes');
 
 
 dotenv.config();
@@ -14,6 +15,8 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 8070;
 const MONGODB_URI = process.env.MONGODB_URI;
+
+app.use('/api/reservation',reservationRoute);
 
 mongoose.connect(MONGODB_URI,{
         useCreateIndex:true,

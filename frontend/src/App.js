@@ -10,8 +10,8 @@ import ViewStaff from './components/pasidu/staff/viewStaff';
 import SignIn from './components/pasidu/staff/login';
 import Profile from './components/pasidu/staff/userProfile';
 import Footer from './components/pasidu/comman/footer';
-
-
+import AddReservation from "./components/nirasha/reservation-component/addReservation";
+import ViewReservations from "./components/nirasha/reservation-component/viewResrvations";
 
 function App() {
   return (
@@ -28,11 +28,14 @@ function App() {
             <Route path="/addStaff" component={AddStaff}  />
             <Route path="/signin" component={SignIn}  />
             <Route path="/profile" component={Profile}  />
+            <Route path="/addReservation" component={AddReservation} />
+            <Route path="/viewReservation" component={ViewReservations} />
           </Switch>
         </section>
         <Footer/>
         {/* </userContext.Provider> */}
       </Router>
+           
     </div>
   );
 }
