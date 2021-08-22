@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -103,13 +103,21 @@ export default function NavBar() {
   let history = useHistory();
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const localUser = JSON.parse(localStorage.getItem('user')) || null;
-  let [user,setUser] = useState(localUser); 
+  const [anchorEl, setAnchorEl] = React.useState(null); 
+  let [user,setUser] = useState(null); 
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const openMenu = Boolean(anchorEl);
 
+  
+  useEffect(()=>{ 
+    const getUserData=()=>{
+      setUser(JSON.parse(localStorage.getItem('user')));  
+    };
+    getUserData();
+  },[]);
+  
+ 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -141,7 +149,7 @@ export default function NavBar() {
     <div className={classes.root}>
       <AppBar position="static" className={classes.NavColor}>
         <Toolbar>
-        {user&&(
+        {user != null?(
           <>
           <IconButton
             color="inherit"
@@ -200,7 +208,7 @@ export default function NavBar() {
             </div>
           )}
           </>
-          )}
+          ):null}
         </Toolbar>
       </AppBar>
       <Drawer

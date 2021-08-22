@@ -99,8 +99,7 @@ const initialState={
   address: '',
   email:'',
   contact:'',
-  password: '',
-  proPic:''
+  password: '', 
 };
 const InsertStaff= (props) => {
   let history = useHistory();

@@ -63,13 +63,13 @@ const SignIn = () =>{
             console.log(data[0]);
             setFormData(data[0]);
             localStorage.setItem('user',JSON.stringify({formData}));
-            history.push('/');
-            window.location.reload();
+            
           } catch (error) {
             console.log(error);
     
           }
-           
+            history.push('/'); 
+          console.log(formData); 
         } catch (error) {
            // error.response && setErrorMsg(error.response.data);
            console.log(error);
