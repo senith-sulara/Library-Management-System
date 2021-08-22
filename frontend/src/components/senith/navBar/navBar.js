@@ -109,6 +109,7 @@ export default function NavBar() {
   const theme = useTheme();
   const openMenu = Boolean(anchorEl);
 
+  // };
   
   useEffect(()=>{ 
     const getUserData=()=>{

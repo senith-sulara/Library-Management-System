@@ -10,6 +10,8 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/styles": "^4.11.4",
+    "@progress/kendo-licensing": "^1.2.0",
+    "@progress/kendo-react-form": "^4.8.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -27,9 +29,13 @@
     "react-dropzone": "^11.3.4",
     "react-hook-form": "^7.12.2",
     "react-icons": "^4.2.0",
+    "react-material-ui-form-validator": "^2.1.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-select": "^4.3.1",
     "react-use": "^17.2.4",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.3",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

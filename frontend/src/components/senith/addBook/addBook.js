@@ -13,14 +13,39 @@ import axios from 'axios';
 import './addbook.css';
 import { API_URL } from '../../utils/constants';
 import dummy from '../images/dummy.png'
+import {useHistory} from 'react-router-dom';
+import LocalLibraryIcon from '@material-ui/icons/LocalLibrary'; 
+import CheckIcon from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import { Dropdown } from 'semantic-ui-react'
 
-function AddBook() {
+
+//dialog box import
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Draggable from 'react-draggable';
+
+/**
+ * draggable dialog component
+ * @param {*} props 
+ * @returns 
+ */
+function PaperComponent(props) {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-     
-    </Typography>
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
   );
 }
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -66,11 +91,37 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(2),
     },
-  }
+  },
+  formControl: {
+    marginTop: theme.spacing(1),
+    width: '90%',
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
 }));
+
+const initialState={
+  title: '',
+  author: '',
+  publisher:'',
+  refCode:'',
+  rackNo: '',
+  noOfCopies: '',
+  avatar:'',
+  errors: {
+    title: '',
+    author: '',
+    publisher:'',
+    refCode:'',
+    rackNo: '',
+    noOfCopies: '',
+  }
+};
 
 const InsertBook= (props) => {
   const classes = useStyles();
+  let history = useHistory();
   const [image, setImage] = useState(null); // state for storing actual image
   const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
   const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
@@ -81,7 +132,15 @@ const InsertBook= (props) => {
     publisher:'',
     refCode:'',
     rackNo: '',
-    noOfCopies: ''
+    noOfCopies: '',
+    errors: {
+      title: '',
+      author: '',
+      publisher:'',
+      refCode:'',
+      rackNo: '',
+      noOfCopies: '',
+    }
   });
   const [errorMsg, setErrorMsg] = useState('');
   const[successMsg, setSuccessMsg] = useState('');
@@ -114,6 +173,8 @@ const InsertBook= (props) => {
     setOpen(true);
     try {
       const { title, author, publisher, refCode, rackNo, noOfCopies } = state;
+    if(validateForm(state.errors)){
+      console.info('Valid Form')
       if (title.trim() !== '' && author.trim() !== '' && publisher.trim() !== ''  && refCode.trim() !== '' && rackNo.trim() !== '' && noOfCopies.trim() !== '') {
         if (image) {
           const formData = new FormData();
@@ -133,26 +194,100 @@ const InsertBook= (props) => {
             }
           });
           setSuccessMsg('upload Success')
-
+          // setOpenSucc(true);
           // props.history.push('/home');
         } else {
           setErrorMsg('Please select a image to add.');
+          // setOpenErr(true);
         }
       } else {
         setErrorMsg('Please enter all the field values.');
+        // setOpenErr(true);
       }
+    }else{
+      setErrorMsg('Please enter valid field values.');
+    }
     } catch (error) {
       error.response && setErrorMsg(error.response.data);
+      // setOpenErr(true);
     }
   };
 
-  const handleInputChange = (event) => {
+  const reload = () =>{ 
+    setState(initialState);
+ };
+
+
+
+ const validateForm = (errors) => {
+  let valid = true;
+  Object.values(errors).forEach(
+    (val) => val.length > 0 && (valid = false)
+  );
+  return valid;
+}
+
+  // const handleInputChange = (event) => {
+  //   setState({
+  //     ...state,
+  //     [event.target.name]: event.target.value
+  //   });
+  // };
+
+  const validRefCodeRegex = RegExp(/^[A-Za-z][A-Za-z0-9 -]*$/);
+
+  const handleChange = (event) =>{
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = state.errors;
+
+    switch (name) {
+      case 'title': 
+        errors.title = 
+          value.length < 4
+            ? 'Title must be 4 characters long!'
+            : '';
+        break;
+      case 'author': 
+        errors.author = 
+          value.length < 4
+            ? 'Author must be 4 characters long!'
+            : '';
+        break;
+        case 'publisher': 
+        errors.publisher = 
+          value.length < 4
+            ? 'Publisher must be 4 characters long!'
+            : '';
+        break;
+      // case 'refCode': 
+      //   errors.refCode = 
+      //   validRefCodeRegex.test(value)
+      //       ? ''
+      //       : 'Reference code must start with Letter';
+      //   break;
+      case 'refCode': 
+        errors.refCode = 
+        value.length < 4
+            ? 'Reference code must be 4 digits'
+            : '';
+        break;
+        case 'rackNo': 
+        errors.rackNo = 
+          value.length < 3
+            ? 'Rack Number must be 3 characters long!'
+            : '';
+        break;
+      default:
+        break;
+    }
     setState({
       ...state,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
+      errors, [name]: value
+      
     });
-  };
-
+  }
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -163,7 +298,23 @@ const InsertBook= (props) => {
   };
 
 
+//   const random = (length) =>{
+    
+//     let result ='';
+//     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+//     let charactersLength = characters.length;
+//     for ( let i = 0; i < length; i++ ) {
+//       result += characters.charAt(Math.floor(Math.random() * 
+//  charactersLength));
+//    }
+//    return result;
+//   }
+//   console.log(random(5));
 
+
+
+
+  const {errors} = state;
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -173,14 +324,43 @@ const InsertBook= (props) => {
           <Typography component="h1" variant="h5">
             Insert New Book
           </Typography>
-          <form className={classes.form} Validate onSubmit={handleOnSubmit}>
+          <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="error">{errorMsg}</Alert>
-          </Snackbar>
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="success">{successMsg}</Alert>
-            </Snackbar>
+              <Dialog
+            open={open}
+            onClose={handleClose}
+            PaperComponent={PaperComponent}
+            aria-labelledby="draggable-dialog-title"
+          >
+        <DialogTitle style={{ cursor: 'move',backgroundColor:'#02032b',color:'#ffffff' }} id="draggable-dialog-title">
+        <LocalLibraryIcon /> LMS
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {successMsg!=''?(
+             <>
+              <div style={{color:'#008000'}}>
+                  <CheckIcon  />
+                  {successMsg}
+                </div>
+             </>
+            ):(
+              <>
+              <div style={{color:'#aa202b'}}>
+                  <ClearIcon  />
+                  {errorMsg}
+                </div>
+             </>
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions> 
+          <Button onClick={handleClose} color="primary">
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+
           </div>
             <TextField
               variant="outlined"
@@ -193,8 +373,12 @@ const InsertBook= (props) => {
               autoComplete="title"
               autoFocus
               value={state.title || ''} 
-              onChange={handleInputChange}
+              onChange={handleChange}
+              // onChange={handleInputChange} 
+              
             />
+            {errors.title.length > 0 && 
+                <span className='error'>{errors.title}</span>}
             <TextField
               variant="outlined"
               margin="normal"
@@ -206,8 +390,11 @@ const InsertBook= (props) => {
               autoComplete="author"
               autoFocus
               value={state.author || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.author.length > 0 && 
+                <span className='error'>{errors.author}</span>}
             <TextField
               variant="outlined"
               margin="normal"
@@ -219,21 +406,29 @@ const InsertBook= (props) => {
               autoComplete="publisher"
               autoFocus
               value={state.publisher || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.publisher.length > 0 && 
+                <span className='error'>{errors.publisher}</span>}
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
+              // disabled
               id="refCode"
               label="Book Reference Code"
               name="refCode"
               autoComplete="refCode"
               autoFocus
               value={state.refCode || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.refCode.length > 0 && 
+                <span className='error'>{errors.refCode}</span>}
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -245,11 +440,35 @@ const InsertBook= (props) => {
               autoComplete="rackNo"
               autoFocus
               value={state.rackNo || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+             {errors.rackNo.length > 0 && 
+                <span className='error'>{errors.rackNo}</span>}
+{/* <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-outlined-label">Rack</InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          option={state.rackNo}
+          onChange={OnRackSelect}
+          label="Age"
+        >
+          <MenuItem options="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem option="L01">L01</MenuItem>
+          <MenuItem option="L02">L02</MenuItem>
+          <MenuItem option="L03">L03</MenuItem>
+        </Select>
+      </FormControl> */}
+
+
             <TextField
+              type="number"
               variant="outlined"
               margin="normal"
+              InputProps={{ inputProps: { min: 0} }}
               required
               fullWidth
               id="noOfCopies"
@@ -258,8 +477,11 @@ const InsertBook= (props) => {
               autoComplete="noOfCopies"
               autoFocus
               value={state.noOfCopies || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+             {/* {errors.noOfCopies.length > 0 && 
+                <span className='error'>{errors.noOfCopies}</span>} */}
 
         <div className="upload-section">
           <Dropzone 
@@ -303,7 +525,8 @@ const InsertBook= (props) => {
               <Button
               id="btnBack"
               type="button"
-              href="/book"
+              // href="/book"
+              onClick={history.goBack}
               fullWidth
               variant="contained"
               color="primary"
@@ -329,15 +552,18 @@ const InsertBook= (props) => {
               variant="contained"
               color="secondary"
               className={classes.clear}
+              onClick={reload}
             >
               Clear
             </Button>
             </div>
 
           </form>
+          
         </div>
       </Grid>
     </Grid>
+    
   );
   }
 

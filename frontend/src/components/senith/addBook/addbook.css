@@ -30,3 +30,7 @@
 #btnBack{
     background: rgb(10, 46, 204);
 }
+
+.error{
+    color: crimson;
+}
