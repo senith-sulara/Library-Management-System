@@ -108,7 +108,15 @@ const initialState={
   refCode:'',
   rackNo: '',
   noOfCopies: '',
-  avatar:''
+  avatar:'',
+  errors: {
+    title: '',
+    author: '',
+    publisher:'',
+    refCode:'',
+    rackNo: '',
+    noOfCopies: '',
+  }
 };
 
 const InsertBook= (props) => {
@@ -124,12 +132,18 @@ const InsertBook= (props) => {
     publisher:'',
     refCode:'',
     rackNo: '',
-    noOfCopies: ''
+    noOfCopies: '',
+    errors: {
+      title: '',
+      author: '',
+      publisher:'',
+      refCode:'',
+      rackNo: '',
+      noOfCopies: '',
+    }
   });
   const [errorMsg, setErrorMsg] = useState('');
   const[successMsg, setSuccessMsg] = useState('');
-  // const [openErr, setOpenErr] = useState(false);
-  // const [openSucc, setOpenSucc] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onDrop = (images) => {
@@ -159,6 +173,8 @@ const InsertBook= (props) => {
     setOpen(true);
     try {
       const { title, author, publisher, refCode, rackNo, noOfCopies } = state;
+    if(validateForm(state.errors)){
+      console.info('Valid Form')
       if (title.trim() !== '' && author.trim() !== '' && publisher.trim() !== ''  && refCode.trim() !== '' && rackNo.trim() !== '' && noOfCopies.trim() !== '') {
         if (image) {
           const formData = new FormData();
@@ -188,6 +204,9 @@ const InsertBook= (props) => {
         setErrorMsg('Please enter all the field values.');
         // setOpenErr(true);
       }
+    }else{
+      setErrorMsg('Please enter valid field values.');
+    }
     } catch (error) {
       error.response && setErrorMsg(error.response.data);
       // setOpenErr(true);
@@ -198,19 +217,77 @@ const InsertBook= (props) => {
     setState(initialState);
  };
 
-  const validateData=formData=>{
-    let temp={}
 
-    temp.title=this.title?"": "This field is required."
-  }
 
-  const handleInputChange = (event) => {
+ const validateForm = (errors) => {
+  let valid = true;
+  Object.values(errors).forEach(
+    (val) => val.length > 0 && (valid = false)
+  );
+  return valid;
+}
+
+  // const handleInputChange = (event) => {
+  //   setState({
+  //     ...state,
+  //     [event.target.name]: event.target.value
+  //   });
+  // };
+
+  const validRefCodeRegex = RegExp(/^[A-Za-z][A-Za-z0-9 -]*$/);
+
+  const handleChange = (event) =>{
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = state.errors;
+
+    switch (name) {
+      case 'title': 
+        errors.title = 
+          value.length < 4
+            ? 'Title must be 4 characters long!'
+            : '';
+        break;
+      case 'author': 
+        errors.author = 
+          value.length < 4
+            ? 'Author must be 4 characters long!'
+            : '';
+        break;
+        case 'publisher': 
+        errors.publisher = 
+          value.length < 4
+            ? 'Publisher must be 4 characters long!'
+            : '';
+        break;
+      // case 'refCode': 
+      //   errors.refCode = 
+      //   validRefCodeRegex.test(value)
+      //       ? ''
+      //       : 'Reference code must start with Letter';
+      //   break;
+      case 'refCode': 
+        errors.refCode = 
+        value.length < 4
+            ? 'Reference code must be 4 digits'
+            : '';
+        break;
+        case 'rackNo': 
+        errors.rackNo = 
+          value.length < 3
+            ? 'Rack Number must be 3 characters long!'
+            : '';
+        break;
+      default:
+        break;
+    }
     setState({
       ...state,
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
+      errors, [name]: value
+      
     });
-  };
-
+  }
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -218,11 +295,11 @@ const InsertBook= (props) => {
     }
 
     setOpen(false);
-    // setOpenErr(false);
-    // setOpenSucc(false);
   };
 
-//   function random(length){
+
+//   const random = (length) =>{
+    
 //     let result ='';
 //     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 //     let charactersLength = characters.length;
@@ -234,21 +311,10 @@ const InsertBook= (props) => {
 //   }
 //   console.log(random(5));
 
-  // function uniqueRandom(minimum, maximum) {
-  //   let previousValue;
-  
-  //   return function random() {
-  //     const number = Math.floor(
-  //       (Math.random() * (maximum - minimum + 1)) + minimum
-  //     );
-  
-  //     previousValue = number === previousValue && minimum !== maximum ? random() : number;
-  //     const random = uniqueRandom(1, 10);
-  //     return previousValue;
-  //     console.log(random);
-  //   };
-  // }
 
+
+
+  const {errors} = state;
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -258,14 +324,8 @@ const InsertBook= (props) => {
           <Typography component="h1" variant="h5">
             Insert New Book
           </Typography>
-          <form className={classes.form} Validate onSubmit={handleOnSubmit}>
+          <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
-          {/* <Snackbar open={openErr} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="error">{errorMsg}</Alert>
-          </Snackbar>
-          <Snackbar open={openSucc} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="success">{successMsg}</Alert>
-            </Snackbar> */}
               <Dialog
             open={open}
             onClose={handleClose}
@@ -311,14 +371,15 @@ const InsertBook= (props) => {
               label="Book Title"
               name="title"
               autoComplete="title"
-              validateData
               autoFocus
               value={state.title || ''} 
-              onChange={handleInputChange}
+              onChange={handleChange}
+              // onChange={handleInputChange} 
+              
             />
+            {errors.title.length > 0 && 
+                <span className='error'>{errors.title}</span>}
             <TextField
-              // error
-              // helperText="Incorrect entry."
               variant="outlined"
               margin="normal"
               required
@@ -329,8 +390,11 @@ const InsertBook= (props) => {
               autoComplete="author"
               autoFocus
               value={state.author || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.author.length > 0 && 
+                <span className='error'>{errors.author}</span>}
             <TextField
               variant="outlined"
               margin="normal"
@@ -342,22 +406,28 @@ const InsertBook= (props) => {
               autoComplete="publisher"
               autoFocus
               value={state.publisher || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.publisher.length > 0 && 
+                <span className='error'>{errors.publisher}</span>}
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
+              // disabled
               id="refCode"
               label="Book Reference Code"
               name="refCode"
               autoComplete="refCode"
               autoFocus
               value={state.refCode || ''} 
-
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.refCode.length > 0 && 
+                <span className='error'>{errors.refCode}</span>}
 
             <TextField
               variant="outlined"
@@ -370,21 +440,35 @@ const InsertBook= (props) => {
               autoComplete="rackNo"
               autoFocus
               value={state.rackNo || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+             {errors.rackNo.length > 0 && 
+                <span className='error'>{errors.rackNo}</span>}
+{/* <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-outlined-label">Rack</InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          option={state.rackNo}
+          onChange={OnRackSelect}
+          label="Age"
+        >
+          <MenuItem options="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem option="L01">L01</MenuItem>
+          <MenuItem option="L02">L02</MenuItem>
+          <MenuItem option="L03">L03</MenuItem>
+        </Select>
+      </FormControl> */}
 
-{/* <select onChange={handleInputChange} >
-  <option selected disabled>select</option>
-  <option value={state.rackNo || 'L01'}>L01</option>
-  <option value={state.rackNo || 'L02'}>L02</option>
-  <option value={state.rackNo || 'L03'}>L03</option>
-</select>
 
-         */}
             <TextField
-              type="Number"
+              type="number"
               variant="outlined"
               margin="normal"
+              InputProps={{ inputProps: { min: 0} }}
               required
               fullWidth
               id="noOfCopies"
@@ -393,8 +477,11 @@ const InsertBook= (props) => {
               autoComplete="noOfCopies"
               autoFocus
               value={state.noOfCopies || ''} 
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
+              onChange={handleChange}
             />
+             {/* {errors.noOfCopies.length > 0 && 
+                <span className='error'>{errors.noOfCopies}</span>} */}
 
         <div className="upload-section">
           <Dropzone 
