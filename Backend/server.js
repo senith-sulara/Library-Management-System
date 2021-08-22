@@ -6,6 +6,7 @@ const BookRoute = require('./controllers/books.controller');
 const StaffRoute = require('./controllers/staffController ')
 const reservationRoute = require('./routes/reservation-routes');
 
+const MembRoute = require('./controllers/member.controller')
 
 dotenv.config();
 const app = express();
@@ -15,8 +16,6 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 8070;
 const MONGODB_URI = process.env.MONGODB_URI;
-
-app.use('/api/reservation',reservationRoute);
 
 mongoose.connect(MONGODB_URI,{
         useCreateIndex:true,
@@ -35,8 +34,12 @@ mongoose.connection.once('open', () => {
 
 app.use('/BookDetails', BookRoute);
 app.use('/staff', StaffRoute);
+app.use('/api/reservation',reservationRoute);
+
 app.use(express.static("files"));
 app.use(express.static("proPic"));
+app.use('/member', MembRoute);
+
 
 app.listen(PORT, () =>{
     console.log(`Server is running on PORT ${PORT}`);
