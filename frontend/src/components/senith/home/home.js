@@ -16,7 +16,7 @@ export default function Home() {
       <div className="row1">
       <div className="column1">
               <div className="card">
-  <a href="/member">
+  <a href="/viewMember">
   <img src={member} alt="John" style={{ width: '200px', height: '200px', margin: '5px'}}/>
   <button id="btnH">Member Management</button></a>
 </div>
@@ -60,7 +60,7 @@ export default function Home() {
 {/*----------------- */}
 <div className="column1">
     <div className="card">
-    <a href="/res">
+    <a href="/viewReservation">
   <img src={res} alt="John" style={{ width: '200px', height: '200px', margin: '5px'}}/>
   <button id="btnH">Reservation Management</button></a>
 </div>
