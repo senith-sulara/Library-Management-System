@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as  Router, Route } from "react-router-dom";
 
+import AddMember from "./components/kaveena/addMember";
+import MemberTable from "./components/kaveena/viewMember";
+import AddBook from "./components/senith/senith";
+import NavBar from './components/kaveena/navBar/navBar.js';
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-           React
-        </a>
-      </header>
+    <div>
+      <Router>
+      <NavBar/>
+    <Route path="/addMember" component={AddMember} />
+    <Route path="/viewMember" component={MemberTable} />
+    <Route path="/addBook" component={AddBook} />
+      </Router>
     </div>
   );
 }
+
 
 export default App;

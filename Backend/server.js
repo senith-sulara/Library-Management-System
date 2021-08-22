@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
+const MembRoute = require('./controllers/member.controller')
+
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -26,6 +28,8 @@ mongoose.connect(MONGODB_URI,{
 mongoose.connection.once('open', () => {
     console.log('Database Synced');
 });
+
+app.use('/member', MembRoute);
 
 
 app.listen(PORT, () =>{
