@@ -12,6 +12,8 @@ import Profile from './components/pasidu/staff/userProfile';
 import Footer from './components/pasidu/comman/footer';
 import AddReservation from "./components/nirasha/reservation-component/addReservation";
 import ViewReservations from "./components/nirasha/reservation-component/viewResrvations";
+import AddMember from "./components/kaveena/addMember";
+import MemberTable from "./components/kaveena/viewMember";
 
 function App() {
   return (
@@ -30,14 +32,18 @@ function App() {
             <Route path="/profile" component={Profile}  />
             <Route path="/addReservation" component={AddReservation} />
             <Route path="/viewReservation" component={ViewReservations} />
+            <Route path="/addMember" component={AddMember} />
+            <Route path="/viewMember" component={MemberTable} />
           </Switch>
         </section>
         <Footer/>
         {/* </userContext.Provider> */}
       </Router>
            
+
     </div>
   );
 }
+
 
 export default App;
