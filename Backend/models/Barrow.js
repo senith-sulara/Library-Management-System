@@ -5,11 +5,11 @@ let Barrow = new Schema({
     eid: {type: String},
     mid: {type: String},
     books: [{
-        isbn:String,
+        bookId:String,
     }],
     borrowDate: { type: String},
-    returnDate: { type: Number}, 
-    note: { type: Number},
+    returnDate: { type: String}, 
+    note: { type: String},
   },
    { 
     timestamps: true 

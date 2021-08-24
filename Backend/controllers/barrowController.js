@@ -6,15 +6,17 @@ const Router = express.Router();
 Router.post(  '/addBarrow' , async (req, res) => {
     try { 
       const { eid,mid, books, barrowDate, returnDate,note} = req.body;
-      const Barrow = new Barrow({
+      const barrow = new Barrow({
         eid,
         mid,  
-        books, 
         barrowDate,
         returnDate,
-        note
+        note,
+        books
       });
-    await Barrow.save();
+      console.log(req.body);
+      console.log(req.body.books);
+    await barrow.save().then
     res.send('successfully borrow book details added to the system.');
     } catch (error) {
       res.status(400).send('Error while uploading borrow book details. Try again later.');

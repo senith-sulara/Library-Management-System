@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
+import PluseIcon from '@material-ui/icons/Add';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -54,6 +55,9 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto',
     marginTop: '20px'
   },
+  btn:{
+    
+  },
   alert: {
     width: '100%',
     '& > * + *': {
@@ -95,81 +99,46 @@ const useStyles = makeStyles((theme) => ({
 
 const initialState={
   eid:'',
-  name: '',
-  address: '',
-  email:'',
-  contact:'',
-  password: '', 
+  mid: '',
+  books: [],
+  borrowDate:'',
+  returnDate:'',
+  note: '', 
 };
 const InsertBaroow= (props) => {
   let history = useHistory();
-  const classes = useStyles();
-  const [images, setFile] = useState(null); // state for storing actual image
-  const [previewSrc, setPreviewSrc] = useState(''); // state for storing previewImage
-  const [isPreviewAvailable, setIsPreviewAvailable] = useState(false); // state to show preview only for images
-  const dropRef = useRef(); // React ref for managing the hover state of droppable area
-  const [state, setState] = useState({
-    eid:'',
-    name: '',
-    address: '',
-    email:'',
-    contact:'',
-    password: ''
-  });
+  const classes = useStyles();    
+  const [state, setState] = useState(initialState);
   const [errorMsg, setErrorMsg] = useState('');
   const[successMsg, setSuccessMsg] = useState('');
   const [open, setOpen] = useState(false);
-
-  const onDrop = (images) => {
-    const [uploadedFile] = images;
-    setFile(uploadedFile);
-  
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      setPreviewSrc(fileReader.result);
-    };
-    fileReader.readAsDataURL(uploadedFile);
-    setIsPreviewAvailable(uploadedFile.name.match(/\.(jpeg|jpg|png)$/));
-    dropRef.current.style.border = '2px dashed #e9ebeb';
-  };
-
-  const updateBorder = (dragState) => {
-    if (dragState === 'over') {
-      dropRef.current.style.border = '2px solid #000';
-    } else if (dragState === 'leave') {
-      dropRef.current.style.border = '2px dashed #e9ebeb';
-    }
-  };
-
-
+  const [inputList, setInputList] = useState([{ bookId: "" }]);
+ 
   const handleOnSubmit = async (event) => {
     event.preventDefault();
     setOpen(true);
     try {
-      const { eid, name, email, address, contact, password } = state;
-      if (eid.trim() !== '' && name.trim() !== '' && email.trim() !== ''  && address.trim() !== '' && contact.trim() !== '' && password.trim() !== '') {
-        if (images) {
-          const formData = new FormData();
-          formData.append('images', images);
+      const { eid, mid, borrowDate, returnDate, note } = state;
+      if (eid.trim() !== '' && mid.trim() !== '' && borrowDate.trim() !== ''  && returnDate.trim() !== '' && note.trim() !== '' ){
+         
+          const formData = new FormData(); 
           formData.append('eid', eid);
-          formData.append('name', name);
-          formData.append('email', email);
-          formData.append('address', address);
-          formData.append('contact', contact);
-          formData.append('password', password);
-
-
+          formData.append('mid', mid);
+          formData.append('books', inputList);
+          formData.append('borrowDate', borrowDate);
+          formData.append('returnDate', returnDate);
+          formData.append('note', note);
+          state.books = inputList;
+          console.log(state);
           setErrorMsg('');
-          await axios.post(`${API_URL}/staff/addStaff`, formData, {
+          await axios.post(`${API_URL}/barrow/addBarrow`, state, {
             headers: {
-              'Content-Type': 'multipart/form-data'
+              'Content-Type': 'application/json'
             }
           });
           setSuccessMsg('upload Success')
           // props.history.push('/home');
-        } else {
-          setErrorMsg('Please select a file to add.');
-        }
+       
       } else {
         setErrorMsg('Please enter all the field values.');
       }
@@ -199,7 +168,25 @@ const reload = () =>{
     setOpen(false);
   };
 
-
+  // handle input change
+  const handleInput = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...inputList];
+    list[index][name] = value;
+    setInputList(list); 
+  };
+ 
+  // handle click event of the Remove button
+  const handleRemoveClick = index => {
+    const list = [...inputList];
+    list.splice(index, 1);
+    setInputList(list);
+  };
+ 
+  // handle click event of the Add button
+  const handleAddClick = () => {
+    setInputList([...inputList, { bookId: "" }]);
+  };
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -207,7 +194,7 @@ const reload = () =>{
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Insert New Staff Member
+            Barrow Book
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
@@ -248,8 +235,42 @@ const reload = () =>{
       </Dialog>
  
           </div>
-
-            <TextField
+          {inputList.map((x, i) => {
+            return (
+            <div className={classes.btnGroup}>
+              <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="bookId"
+              label="Book ID"
+              name="bookId"
+              autoComplete="bookId"
+              autoFocus
+              value={x.bookId}
+              onChange={e => handleInput(e, i)}
+            />
+            
+                <div className={classes.btnGroup}>
+                  {inputList.length !== 1 && <Button
+                    className={classes.btn} 
+                    color="secondary"
+                    fullWidth
+                    variant="contained"
+                    onClick={() => handleRemoveClick(i)}><ClearIcon/></Button>}
+                  {inputList.length - 1 === i && <Button
+                  className={classes.btn}
+                  color="primary"
+                  fullWidth
+                  variant="contained"
+                  onClick={handleAddClick}><PluseIcon/></Button>}
+                </div> 
+              </div>
+            );
+      })} 
+      
+       <TextField
               variant="outlined"
               margin="normal"
               required
@@ -268,12 +289,12 @@ const reload = () =>{
               margin="normal"
               required
               fullWidth
-              id="name"
-              label="Employee Name"
-              name="name"
-              autoComplete="name"
+              id="mid"
+              label="Member ID"
+              name="mid"
+              autoComplete="mid"
               autoFocus
-              value={state.name || ''} 
+              value={state.mid || ''} 
               onChange={handleInputChange}
             />
 
@@ -282,12 +303,13 @@ const reload = () =>{
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="E- mail address"
-              name="email"
-              autoComplete="email"
+              id="borrowDate"
+              label="Borrow date"
+              name="borrowDate"
+              autoComplete="borrowDate"
+              type="date"
               autoFocus
-              value={state.email || ''} 
+              value={state.borrowDate || ' '} 
               onChange={handleInputChange}
             />
 
@@ -296,12 +318,13 @@ const reload = () =>{
               margin="normal"
               required
               fullWidth
-              id="contact"
-              label="Contact Number"
-              name="contact"
-              autoComplete="contact"
+              id="returnDate"
+              type="date"
+              label="Return date"
+              name="returnDate"
+              autoComplete="returnDate"
               autoFocus
-              value={state.contact || ''} 
+              value={state.returnDate || ' '} 
               onChange={handleInputChange}
             />
 
@@ -310,66 +333,18 @@ const reload = () =>{
               margin="normal"
               required
               fullWidth
-              id="address"
-              label="address"
-              name="address"
-              autoComplete="address"
+              id="note"
+              label="Note"
+              name="note"
+              autoComplete="note"
               multiline
               autoFocus
-              value={state.address || ''} 
+              value={state.note || ''} 
               onChange={handleInputChange}
             />      
-
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="password"
-              label="Password"
-              name="password"
-              autoComplete="password"
-              autoFocus
-              value={state.password || ''} 
-              onChange={handleInputChange}
-            />
+ 
             
 
-        <div className="upload-section">
-          <Dropzone 
-            onDrop={onDrop}
-            onDragEnter={() => updateBorder('over')}
-            onDragLeave={() => updateBorder('leave')}
-          >
-             {({ getRootProps, getInputProps }) => (
-               <div {...getRootProps({ className: 'drop-zone' })} ref={dropRef}>
-                  <input {...getInputProps()} />
-                     <p>Drag and drop a file OR click here to select a file</p>
-                        {images && (
-                     <div>
-                       <strong>Selected file:</strong> {images.name}
-                     </div>
-                    )}
-                </div>
-              )}
-          </Dropzone>
-          {previewSrc ? (
-            isPreviewAvailable ? (
-              <div className="image-preview">
-               <img className="preview-image" src={previewSrc} alt="Preview" width="200px" style={{maxHeight: '200', maxWidth: '200'}} align-item="center"/>
-              </div>
-            ) : (
-               <div className="preview-message">
-                 <p>No preview available for this image</p>
-                </div>
-               )
-            ) : (
-                <div className="preview-message">
-                  {/* <p>Image preview will be shown here after selection</p> */}
-                  <img src={dummy} alt="John" style={{ width: '250px', height: '200px', margin: '5px'}}/>
-                </div>
-              )}
-          </div>
           <div className={classes.btnGroup}>
               <Button
               id="btnBack"

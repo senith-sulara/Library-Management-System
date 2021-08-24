@@ -15,6 +15,7 @@ import ViewReservations from "./components/nirasha/reservation-component/viewRes
 import AddMember from "./components/kaveena/addMember";
 import MemberTable from "./components/kaveena/viewMember";
 import AddBarrow from "./components/pasidu/barrow/addBarrow";
+import Barrow from "./components/pasidu/barrow/barrowHome";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path="/addMember" component={AddMember} />
             <Route path="/viewMember" component={MemberTable} />
             <Route path="/addBarrow" component={AddBarrow} />
+            <Route path="/barrow" component={Barrow} />
           </Switch>
         </section>
         <Footer/>
