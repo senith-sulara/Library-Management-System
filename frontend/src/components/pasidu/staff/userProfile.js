@@ -45,11 +45,12 @@ info:{
  dataContainer:{
      backgroundColor:'#ffffff', 
      margin:'60px 0px 20px 0px',
+     width:'100%'
  },
   imageContainer:{
     height: '500px',
     width: '300px',
-    margin: 'auto auto 20px auto ', 
+    margin: 'auto auto auto auto ', 
     padding:'0px',
   },
   btnGroup:{
@@ -76,6 +77,10 @@ info:{
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     height:'250px',
+    width:'100%',
+  },
+  formContainer:{
+    width:'100%'
   },
   
 }));
@@ -174,7 +179,7 @@ const Profile= (props) => {
                 <Col md="3"></Col>
             </Row>
          </Container>
-        <Container >
+        <Container className={classes.formContainer}>
         <div  className={classes.dataContainer}>
             <div className={classes.leftMinus}>
                 <Typography component="h1" variant="h5">

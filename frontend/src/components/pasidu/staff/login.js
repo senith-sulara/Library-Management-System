@@ -2,11 +2,11 @@ import {useHistory} from "react-router-dom";
 import InputField from "./password";
 import {Avatar ,Button,Paper,Select,IconButton,Grid,Typography,InputAdornment,Container,TextField} from "@material-ui/core";
 import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
-import React,{useState} from "react";   
+import React,{useEffect, useState} from "react";   
 import loginStyle from './loginStyle';
 import './backStyle.css';
 import axios from 'axios';
-import { API_URL } from '../../utils/constants'; 
+import { API_URL } from '../../utils/constants';  
 
 /**
  * inisial form input state
@@ -27,7 +27,7 @@ const SignIn = () =>{
      * @type {*}
      */  
      const classes = loginStyle();
-     let history = useHistory();
+     let history = useHistory(); 
 
     /**
      * states
@@ -53,23 +53,17 @@ const SignIn = () =>{
             await axios.post(`${API_URL}/staff/signin`, formData);  
            try { 
             const {data}  = await axios.get(`${API_URL}/staff/getstaffmember/${formData.eid}`); 
-            setData(data);
-            setFormData({
-                eid:formData.eid,
-                password:formData.password,
-                name:data[0].name,
-                proPic:data[0].proPic
-            });
-            console.log(data[0]);
-            setFormData(data[0]);
-            localStorage.setItem('user',JSON.stringify({formData}));
-            
+            setData(data[0]);
+            console.log(data[0].name);  
+            localStorage.setItem('user',JSON.stringify({'formData':data[0]}));
+            setData(null);
           } catch (error) {
             console.log(error);
     
           }
             history.push('/'); 
           console.log(formData); 
+          window.location.reload();
         } catch (error) {
            // error.response && setErrorMsg(error.response.data);
            console.log(error);
@@ -83,7 +77,8 @@ const SignIn = () =>{
     const onchange =(e)=>{
         setFormData({...formData,[e.target.name]:e.target.value});
     }
- 
+
+    
   
     return (
         <Container component="main" className="container"   maxWidth="md">
