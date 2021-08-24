@@ -239,9 +239,9 @@ export default function NavBar() {
               <ListItemText>Member Management</ListItemText>
             </ListItem>  
         <Divider />
-        <ListItem button component={Link} to='/borrow'>
+        <ListItem button component={Link} to='/barrow'>
               <ListItemIcon><MenuBookIcon /></ListItemIcon>
-              <ListItemText>Barrow Management</ListItemText>
+              <ListItemText>Borrow Management</ListItemText>
             </ListItem>  
         <Divider />
         <ListItem button component={Link} to='/book'>

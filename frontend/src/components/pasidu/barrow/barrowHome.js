@@ -12,14 +12,14 @@ export default function Home() {
     return (
       <div>
       <div className="row1 center-text">
-        <Typography variant='h4'>Barrow Managment</Typography>
+        <Typography variant='h4'>Borrow Managment</Typography>
       </div>
       <div className="row1">
       <div className="column1">
               <div className="card">
   <a href="/addBarrow">
   <img src={BarrowBook} alt="John" style={{ width: '200px', height: '200px', margin: '5px'}}/>
-  <button id="btnH">Barrow Book</button></a>
+  <button id="btnH">Borrow Book</button></a>
 </div>
 </div>     
 
@@ -29,7 +29,7 @@ export default function Home() {
     <div className="card">
     <a href="/book">
   <img src={BarrowList} alt="John" style={{ width: '200px', height: '200px', margin: '5px'}}/>
-  <button id="btnH">Barrow Book List</button></a>
+  <button id="btnH">Borrow Book List</button></a>
 </div>
     </div> 
 {/*----------------- */}

@@ -101,8 +101,8 @@ const initialState={
   eid:'',
   mid: '',
   books: [],
-  borrowDate:'',
-  returnDate:'',
+  borrowDate:' ',
+  returnDate:' ',
   note: '', 
 };
 const InsertBaroow= (props) => {
@@ -119,7 +119,7 @@ const InsertBaroow= (props) => {
     setOpen(true);
     try {
       const { eid, mid, borrowDate, returnDate, note } = state;
-      if (eid.trim() !== '' && mid.trim() !== '' && borrowDate.trim() !== ''  && returnDate.trim() !== '' && note.trim() !== '' ){
+      if (eid.trim() !== '' && mid.trim() !== '' && borrowDate.trim() !== ' '  && returnDate.trim() !== ' ' && note.trim() !== '' ){
          
           const formData = new FormData(); 
           formData.append('eid', eid);
@@ -194,7 +194,7 @@ const reload = () =>{
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Barrow Book
+            Borrow Book
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
