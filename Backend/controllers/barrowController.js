@@ -5,11 +5,11 @@ const Router = express.Router();
   
 Router.post(  '/addBarrow' , async (req, res) => {
     try { 
-      const { eid,mid, books, barrowDate, returnDate,note} = req.body;
+      const { eid,mid, books, borrowDate, returnDate,note} = req.body;
       const barrow = new Barrow({
         eid,
         mid,  
-        barrowDate,
+        borrowDate,
         returnDate,
         note,
         books
