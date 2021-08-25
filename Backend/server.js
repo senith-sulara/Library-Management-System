@@ -5,6 +5,7 @@ const cors = require('cors');
 const BookRoute = require('./controllers/books.controller');
 const StaffRoute = require('./controllers/staffController ')
 const reservationRoute = require('./routes/reservation-routes');
+const barrowRoute = require('./controllers/barrowController');
 
 const MembRoute = require('./controllers/member.controller')
 
@@ -35,10 +36,11 @@ mongoose.connection.once('open', () => {
 app.use('/BookDetails', BookRoute);
 app.use('/staff', StaffRoute);
 app.use('/api/reservation',reservationRoute);
+app.use('/barrow',barrowRoute);
+app.use('/member', MembRoute);
 
 app.use(express.static("files"));
 app.use(express.static("proPic"));
-app.use('/member', MembRoute);
 
 
 app.listen(PORT, () =>{

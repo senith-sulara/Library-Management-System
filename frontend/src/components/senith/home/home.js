@@ -24,7 +24,7 @@ export default function Home() {
 {/*----------------- */}
     <div className="column1">
     <div className="card">
-    <a href="/borrow">
+    <a href="/barrow">
   <img src={borrow} alt="John" style={{ width: '200px', height: '200px', margin: '5px'}}/>
   <button id="btnH">Borrow Management</button></a>
 </div>
