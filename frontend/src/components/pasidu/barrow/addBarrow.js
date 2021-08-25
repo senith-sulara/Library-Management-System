@@ -1,4 +1,4 @@
-import React, { useState, useRef} from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -104,6 +104,13 @@ const initialState={
   borrowDate:' ',
   returnDate:' ',
   note: '', 
+  errors: { 
+    mid: '', 
+    borrowDate:' ',
+    books: [],
+    returnDate:' ',
+    note: '',
+  }
 };
 const InsertBaroow= (props) => {
   let history = useHistory();
@@ -113,7 +120,14 @@ const InsertBaroow= (props) => {
   const[successMsg, setSuccessMsg] = useState('');
   const [open, setOpen] = useState(false);
   const [inputList, setInputList] = useState([{ bookId: "" }]);
+  const localUser = JSON.parse(localStorage.getItem('user')) || null;
+  let [user,setUser] = useState(localUser); 
  
+  useEffect(()=>{ 
+    setUser(JSON.parse(localStorage.getItem('user')));
+    console.log("data " + user.formData.eid);
+  },[]);
+
   const handleOnSubmit = async (event) => {
     event.preventDefault();
     setOpen(true);
@@ -123,7 +137,7 @@ const InsertBaroow= (props) => {
          
           const formData = new FormData(); 
           formData.append('eid', eid);
-          formData.append('mid', mid);
+          formData.append('mid', user.mid);
           formData.append('books', inputList);
           formData.append('borrowDate', borrowDate);
           formData.append('returnDate', returnDate);
@@ -150,12 +164,46 @@ const reload = () =>{
    setState(initialState);
 };
   const handleInputChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = state.errors;
+
+    switch (name) {
+      case 'mid': 
+        errors.mid = 
+          value.length < 6
+            ? 'Member Id must be 6 characters long! ex :- LM0000'
+            : '';
+        break;
+      case 'borrowDate': 
+        errors.borrowDate = 
+          value.length <= 0
+            ? 'Borrow date can not be empty! ex :- 20202.20.20'
+            : '';
+        break;
+        case 'returnDate': 
+        errors.returnDate = 
+          value.length <= 0
+            ? 'Return date can not be empty! ex :- 20202.20.20'
+            : '';
+        break; 
+      case 'note': 
+        errors.note = 
+        value.length <= 0
+            ? 'Enter barrow note'
+            : '';
+        break; 
+      default:
+        break;
+    }
+
     setState({
       ...state,
       [event.target.name]: event.target.value
     });
   };
 
+  const {errors} = state;
   // const handleClick = () => {
   //   setOpen(true);
   // };
@@ -170,7 +218,7 @@ const reload = () =>{
 
   // handle input change
   const handleInput = (e, index) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; 
     const list = [...inputList];
     list[index][name] = value;
     setInputList(list); 
@@ -252,6 +300,7 @@ const reload = () =>{
               onChange={e => handleInput(e, i)}
             />
             
+            
                 <div className={classes.btnGroup}>
                   {inputList.length !== 1 && <Button
                     className={classes.btn} 
@@ -270,17 +319,15 @@ const reload = () =>{
             );
       })} 
       
-       <TextField
-              variant="outlined"
+       <TextField 
               margin="normal"
               required
               fullWidth
-              id="eid"
-              label="Employee ID"
+              id="eid" 
               name="eid"
-              autoComplete="eid"
-              autoFocus
-              value={state.eid || ''} 
+              autoComplete="eid" 
+              type="hidden"
+              value={user.formData.eid || ''} 
               onChange={handleInputChange}
             />
 
@@ -297,6 +344,9 @@ const reload = () =>{
               value={state.mid || ''} 
               onChange={handleInputChange}
             />
+            {errors.mid.length > 0 && 
+                <span className='error'>{errors.mid}</span>}
+            
 
             <TextField
               variant="outlined"
@@ -312,7 +362,9 @@ const reload = () =>{
               value={state.borrowDate || ' '} 
               onChange={handleInputChange}
             />
-
+            {errors.borrowDate.length > 0 && 
+                <span className='error'>{errors.borrowDate}</span>}
+            
             <TextField
               variant="outlined"
               margin="normal"
@@ -327,6 +379,9 @@ const reload = () =>{
               value={state.returnDate || ' '} 
               onChange={handleInputChange}
             />
+            {errors.returnDate.length > 0 && 
+                <span className='error'>{errors.returnDate}</span>}
+            
 
             <TextField
               variant="outlined"
@@ -341,7 +396,10 @@ const reload = () =>{
               autoFocus
               value={state.note || ''} 
               onChange={handleInputChange}
-            />      
+            />   
+            {errors.note.length > 0 && 
+                <span className='error'>{errors.note}</span>}
+               
  
             
 
