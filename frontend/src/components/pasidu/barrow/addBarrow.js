@@ -242,7 +242,7 @@ const reload = () =>{
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Borrow Book
+            Add borrow book details
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
@@ -347,14 +347,15 @@ const reload = () =>{
             {errors.mid.length > 0 && 
                 <span className='error'>{errors.mid}</span>}
             
-
+            <br/>
+            <br/>
+                <span  >Borrow date</span>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="borrowDate"
-              label="Borrow date"
+              id="borrowDate" 
               name="borrowDate"
               autoComplete="borrowDate"
               type="date"
@@ -365,14 +366,16 @@ const reload = () =>{
             {errors.borrowDate.length > 0 && 
                 <span className='error'>{errors.borrowDate}</span>}
             
+            <br/>
+            <br/>
+                <span  >Return date</span>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="returnDate"
-              type="date"
-              label="Return date"
+              type="date" 
               name="returnDate"
               autoComplete="returnDate"
               autoFocus
