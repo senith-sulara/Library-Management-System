@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     backgroundImage:
-      "url(https://2wanderlust.files.wordpress.com/2013/11/slide_321715_3023940_free.jpg)",
+      "url(https://2wanderlust.files.wordpress.com/2013/11/slide_321715_3023935_free.jpg)",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -88,13 +88,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const initialState = {
-  eid: "",
-  name: "",
-  address: "",
+  Fname: "",
   email: "",
-  contact: "",
-  password: "",
-  proPic: "",
+  Lname: "",
+  nic: "",
+  phone: "",
+  address: "",
+  avatar: "",
+  errors: {
+    Fname: "",
+    email: "",
+    Lname: "",
+    nic: "",
+    phone: "",
+    address: "",
+  },
 };
 
 const InsertMember = (props) => {
@@ -111,8 +119,16 @@ const InsertMember = (props) => {
     nic: "",
     phone: "",
     address: "",
+    errors: {
+      Fname: "",
+      email: "",
+      Lname: "",
+      nic: "",
+      phone: "",
+      address: "",
+    },
   });
-
+  const [memberCode, setMemberCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   // const [openErr, setOpenErr] = useState(false);
@@ -140,6 +156,10 @@ const InsertMember = (props) => {
     }
   };
 
+  const generateCode = () => {
+    return Math.floor((1 + Math.random()) * 1000);
+  };
+
   const handleOnSubmit = async (event) => {
     event.preventDefault();
     setOpen(true);
@@ -154,6 +174,8 @@ const InsertMember = (props) => {
         address.trim() !== ""
       ) {
         if (image) {
+          let mCode = generateCode();
+          setMemberCode("LM" + mCode);
           const formData = new FormData();
           formData.append("image", image);
           formData.append("Fname", Fname);
@@ -162,6 +184,7 @@ const InsertMember = (props) => {
           formData.append("nic", nic);
           formData.append("phone", phone);
           formData.append("address", address);
+          formData.append("memberCode", memberCode);
 
           setErrorMsg("");
           await axios.post(`${API_URL}/member/insert`, formData, {
@@ -169,7 +192,7 @@ const InsertMember = (props) => {
               "Content-Type": "multipart/form-data",
             },
           });
-          setSuccessMsg("upload Success");
+          setSuccessMsg("User added Successfully. Member Code is LM" + mCode);
         } else {
           setErrorMsg("Please select a image to add.");
         }
@@ -186,10 +209,58 @@ const InsertMember = (props) => {
     setState(initialState);
   };
 
-  const handleInputChange = (event) => {
+  const validateForm = (errors) => {
+    let valid = true;
+    Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
+    return valid;
+  };
+
+  // const handleInputChange = (event) => {
+  //   setState({
+  //     ...state,
+  //     [event.target.name]: event.target.value,
+  //   });
+  // };
+
+  const validRefCodeRegex = RegExp(/^[A-Za-z][A-Za-z0-9 -]*$/);
+
+  const handleChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = state.errors;
+
+    switch (name) {
+      case "Fname":
+        errors.Fname =
+          value.length < 4 ? "First Name must be 4 characters long!" : "";
+        break;
+      case "Lname":
+        errors.Lname =
+          value.length < 4 ? "Last Name must be 4 characters long!" : "";
+        break;
+      case "phone":
+        errors.phone =
+          value.length < 10 ? "Phone No must be 10 numbers long!" : "";
+        break;
+      case "email":
+        errors.email =
+          value.length < 4 ? "Email must be 4 characters long" : "";
+        break;
+      case "address":
+        errors.address =
+          value.length < 4 ? "Address must be 4 characters long!" : "";
+        break;
+      case "nic":
+        errors.nic = value.length < 10 ? " NIC must be 9 numbers long!" : "";
+        break;
+      default:
+        break;
+    }
     setState({
       ...state,
       [event.target.name]: event.target.value,
+      errors,
+      [name]: value,
     });
   };
 
@@ -201,6 +272,7 @@ const InsertMember = (props) => {
     setOpen(false);
   };
 
+  const { errors } = state;
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -265,8 +337,11 @@ const InsertMember = (props) => {
               autoComplete="Fname"
               autoFocus
               value={state.Fname || ""}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.Fname.length > 0 && (
+              <span className="error">{errors.Fname}</span>
+            )}
             <TextField
               variant="outlined"
               margin="normal"
@@ -278,8 +353,11 @@ const InsertMember = (props) => {
               autoComplete="Lname"
               autoFocus
               value={state.Lname || ""}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.Lname.length > 0 && (
+              <span className="error">{errors.Lname}</span>
+            )}
             <TextField
               variant="outlined"
               margin="normal"
@@ -291,8 +369,11 @@ const InsertMember = (props) => {
               autoComplete="email"
               autoFocus
               value={state.email || ""}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.email.length > 0 && (
+              <span className="error">{errors.email}</span>
+            )}
             <TextField
               variant="outlined"
               margin="normal"
@@ -304,8 +385,11 @@ const InsertMember = (props) => {
               autoComplete="nic"
               autoFocus
               value={state.nic || ""}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.nic.length > 0 && (
+              <span className="error">{errors.nic}</span>
+            )}
             <TextField
               variant="outlined"
               margin="normal"
@@ -317,8 +401,11 @@ const InsertMember = (props) => {
               autoComplete="phone"
               autoFocus
               value={state.phone || ""}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.phone.length > 0 && (
+              <span className="error">{errors.phone}</span>
+            )}
             <TextField
               variant="outlined"
               margin="normal"
@@ -330,8 +417,11 @@ const InsertMember = (props) => {
               autoComplete="address"
               autoFocus
               value={state.address || ""}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
+            {errors.address.length > 0 && (
+              <span className="error">{errors.address}</span>
+            )}
 
             <div className="upload-section">
               <Dropzone

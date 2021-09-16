@@ -4,7 +4,7 @@ import { API_URL } from "../utils/constants";
 import "./Member.css";
 import MaterialTable from "material-table";
 import Button from "@material-ui/core/Button";
-
+import Footer from "./../../components/pasidu/comman/footer";
 const Editable = (props) => {
   const { useState } = React;
   const [data, setData] = useState([]);
@@ -34,7 +34,7 @@ const Editable = (props) => {
       field: "avatar",
       render: (rowData) => (
         <img
-          style={{ height: 50, width: 50, borderRadius: "50%" }}
+          style={{ height: 50, width: 50, borderRadius: "10%" }}
           src={rowData.avatar}
         />
       ),
@@ -44,6 +44,7 @@ const Editable = (props) => {
     { title: "Phone", field: "phone" },
     { title: "Email ", field: "email" },
     { title: "Address ", field: "address" },
+    { title: "Member Code", field: "memberCode" },
   ]);
 
   return (
@@ -105,6 +106,7 @@ const Editable = (props) => {
           }}
         />
       </div>
+      <Footer />
     </div>
   );
 };
