@@ -10,7 +10,8 @@ import { Grid } from '@material-ui/core';
 const Editable = (props) => {
     const { useState } = React;
     const [data, setData] = useState([]);
-    const [errorMsg, setErrorMsg] = useState('');
+    const [errorMsg, setErrorMsg] = useState([]);
+    const [iserror, setIserror] = useState(false)
 
     useEffect(() => {
         const getFileList = async () => {
@@ -50,6 +51,52 @@ const Editable = (props) => {
       { title: 'Number Of Copies', field: 'noOfCopies',type: 'numeric'  },
     ]);
 
+
+    /////////////////////////update rows
+    const api = axios.create({
+      baseURL: `http://localhost:8070`
+    })
+
+    const handleRowUpdate = (newData, oldData, resolve) => {
+      //validation
+      let errorList = []
+    if(newData.title === ""){
+      errorList.push("Please enter title")
+    }
+    if(newData.author === ""){
+      errorList.push("Please enter author")
+    }
+    if(newData.publisher === ""){
+      errorList.push("Please enter publisher")
+    }
+    if(newData.noOfCopies === ""){
+      errorList.push("Please enter noOfCopies")
+    }
+
+    if(errorList.length < 1){
+  
+        api.put("/bookDetails/"+newData._id, newData)
+        .then(res => {
+          const dataUpdate = [...data];
+          const index = oldData.tableData.id;
+          dataUpdate[index] = newData;
+          setData([...dataUpdate]);
+          resolve()
+          setIserror(false)
+        })
+        .catch(error => {
+          setErrorMsg(["Update failed! Server error"])
+          setIserror(true)
+          resolve()
+          
+        })  
+    }else{
+      setErrorMsg(errorList)
+      setIserror(true)
+      resolve()
+
+    }
+  }
   
     return (
       <div>
@@ -64,40 +111,11 @@ const Editable = (props) => {
         columns={columns}
         data={data}
         editable={{
-          // onRowAdd: newData =>
-          //   new Promise((resolve, reject) => {
-          //     setTimeout(() => {
-          //       setData([...data, newData]);
-                
-          //       resolve();
-          //     }, 1000)
-          //   }),
           onRowUpdate: (newData, oldData) =>
             new Promise((resolve, reject) => {
-              const dataUpdate = [...data];
-              const index = oldData.tableData.id;
-              setTimeout(() => {
-                dataUpdate[index] = newData;
-                setData([...dataUpdate]);
-                console.log(newData);
-                console.log(newData._id);
-                try {
-                  const { data } =  axios.put(`${API_URL}/bookDetails/update/${newData._id}`,{
-                    method: "PUT",
-                    headers: {
-                        Accept: "application/json"
-                    },
-                    body: newData
-                }) 
-                  setErrorMsg('');
-                } catch (error) {
-                  error.response && setErrorMsg(error.response.data);
-                  console.log(error);
-          
-                }
-                resolve();
-              }, 1000)
+              handleRowUpdate(newData, oldData, resolve);
             }),
+
           onRowDelete: oldData =>
             new Promise((resolve, reject) => {
               const dataDelete = [...data];
