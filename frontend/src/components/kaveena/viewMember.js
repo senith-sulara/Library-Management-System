@@ -86,11 +86,21 @@ const Editable = (props) => {
               }),
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
+                const dataDelete = [...data];
+                const index = oldData.tableData.id;
+                dataDelete.splice(index, 1);
                 setTimeout(() => {
-                  const dataDelete = [...data];
-                  const index = oldData.tableData.id;
-                  dataDelete.splice(index, 1);
                   setData([...dataDelete]);
+                  try {
+                    const { data } = axios.delete(
+                      `${API_URL}/member/${oldData._id}`
+                    );
+                    setErrorMsg("");
+                  } catch (error) {
+                    error.response && setErrorMsg(error.response.data);
+                    console.log(error);
+                  }
+                  console.log(oldData._id);
 
                   resolve();
                 }, 1000);
