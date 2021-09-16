@@ -101,6 +101,28 @@ const Editable = (props) => {
     }
   }
   
+////////////Delete Row
+
+  const handleRowDelete = (oldData, resolve) => {
+    
+    api.delete("/bookDetails/"+oldData._id)
+      .then(res => {
+        const dataDelete = [...data];
+        const index = oldData.tableData.id;
+        dataDelete.splice(index, 1);
+        setData([...dataDelete]);
+        resolve()
+        setSuccessMsg(["Delete success"])
+        setIssucc(true)
+      })
+      .catch(error => {
+        setErrorMsg(["Delete failed! Server error"])
+        setIserror(true)
+        resolve()
+      })
+  }
+
+
     return (
       <div>
         <h1 id="h12" align="center">Book Management</h1>
@@ -115,7 +137,7 @@ const Editable = (props) => {
                 })}
             </Alert>      
           }   
-          
+
           {issucc && 
             <Alert severity="success">
                 {successMsg.map((msg, i) => {
@@ -140,23 +162,7 @@ const Editable = (props) => {
 
           onRowDelete: oldData =>
             new Promise((resolve, reject) => {
-              const dataDelete = [...data];
-              const index = oldData.tableData.id;
-              dataDelete.splice(index, 1);
-              setTimeout(() => {
-                setData([...dataDelete]);
-                try {
-                  const { data } =  axios.delete(`${API_URL}/bookDetails/${oldData._id}`);
-                  setErrorMsg('');
-                } catch (error) {
-                  error.response && setErrorMsg(error.response.data);
-                  console.log(error);
-          
-                }
-                console.log(oldData._id);
-                
-                resolve()
-              }, 1000)
+              handleRowDelete(oldData, resolve)
             }),
         }}
         options={{
@@ -164,9 +170,6 @@ const Editable = (props) => {
             backgroundColor: 'rgba(8, 9, 80, 0.363)',
             color: 'rgba(0, 0, 0)'
           },
-          // searchFieldStyle:{
-          //   backgroundColor: '#2398f846'
-          // },
           actionsColumnIndex: -1
         }}
       />
