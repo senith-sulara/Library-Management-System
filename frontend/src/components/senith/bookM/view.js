@@ -6,12 +6,15 @@ import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
 import { Grid } from '@material-ui/core';
 // import SideBar from '../comman/sideBar';
+import Alert from '@material-ui/lab/Alert';
 
 const Editable = (props) => {
     const { useState } = React;
     const [data, setData] = useState([]);
     const [errorMsg, setErrorMsg] = useState([]);
     const [iserror, setIserror] = useState(false)
+    const [successMsg, setSuccessMsg] = useState([])
+    const [issucc, setIssucc] = useState(false)
 
     useEffect(() => {
         const getFileList = async () => {
@@ -102,6 +105,25 @@ const Editable = (props) => {
       <div>
         <h1 id="h12" align="center">Book Management</h1>
         <div className="tbl">
+
+        <div>
+
+          {iserror &&    
+            <Alert severity="error">
+                {errorMsg.map((msg, i) => {
+                    return <div key={i}>{msg}</div>
+                })}
+            </Alert>      
+          }   
+          
+          {issucc && 
+            <Alert severity="success">
+                {successMsg.map((msg, i) => {
+                   return <div key={i}>{msg}</div>
+               })}
+            </Alert>
+          }     
+        </div>
         
       <MaterialTable
         title=
