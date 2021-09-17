@@ -8,7 +8,9 @@ import Footer from "./../../components/pasidu/comman/footer";
 const Editable = (props) => {
   const { useState } = React;
   const [data, setData] = useState([]);
-  const [errorMsg, setErrorMsg] = useState("");
+  // const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState([]);
+  const [iserror, setIserror] = useState(false);
 
   useEffect(() => {
     const getFileList = async () => {
@@ -47,6 +49,53 @@ const Editable = (props) => {
     { title: "Member Code", field: "memberCode" },
   ]);
 
+  /////////////////////////update rows
+  const api = axios.create({
+    baseURL: `http://localhost:8070`,
+  });
+
+  const handleRowUpdate = (newData, oldData, resolve) => {
+    //validation
+    let errorList = [];
+    if (newData.Fname === "") {
+      errorList.push("Please enter Name");
+    }
+    if (newData.nic === "") {
+      errorList.push("Please enter NIC");
+    }
+    if (newData.phone === "") {
+      errorList.push("Please enter phone number");
+    }
+    if (newData.email === "") {
+      errorList.push("Please enter email");
+    }
+    if (newData.address === "") {
+      errorList.push("Please enter address");
+    }
+
+    if (errorList.length < 1) {
+      api
+          .put("/member/" + newData._id, newData)
+          .then((res) => {
+            const dataUpdate = [...data];
+            const index = oldData.tableData.id;
+            dataUpdate[index] = newData;
+            setData([...dataUpdate]);
+            resolve();
+            setIserror(false);
+          })
+          .catch((error) => {
+            setErrorMsg(["Update failed! Server error"]);
+            setIserror(true);
+            resolve();
+          });
+      } else {
+        setErrorMsg(errorList);
+        setIserror(true);
+        resolve();
+    }
+  };
+
   return (
     <div>
       <h3 className="h12">
@@ -75,14 +124,7 @@ const Editable = (props) => {
           editable={{
             onRowUpdate: (newData, oldData) =>
               new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  const dataUpdate = [...data];
-                  const index = oldData.tableData.id;
-                  dataUpdate[index] = newData;
-                  setData([...dataUpdate]);
-
-                  resolve();
-                }, 1000);
+                handleRowUpdate(newData, oldData, resolve);
               }),
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
@@ -110,9 +152,7 @@ const Editable = (props) => {
             headerStyle: {
               backgroundColor: "rgba(8, 9, 80, 0.363)",
               color: "rgba(0, 0, 0)",
-            },
-
-            actionsColumnIndex: -1,
+            },actionsColumnIndex: -1,
           }}
         />
       </div>
