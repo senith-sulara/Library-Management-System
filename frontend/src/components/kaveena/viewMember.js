@@ -8,7 +8,6 @@ import Footer from "./../../components/pasidu/comman/footer";
 const Editable = (props) => {
   const { useState } = React;
   const [data, setData] = useState([]);
-  // const [errorMsg, setErrorMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState([]);
   const [iserror, setIserror] = useState(false);
 
@@ -75,24 +74,24 @@ const Editable = (props) => {
 
     if (errorList.length < 1) {
       api
-          .put("/member/" + newData._id, newData)
-          .then((res) => {
-            const dataUpdate = [...data];
-            const index = oldData.tableData.id;
-            dataUpdate[index] = newData;
-            setData([...dataUpdate]);
-            resolve();
-            setIserror(false);
-          })
-          .catch((error) => {
-            setErrorMsg(["Update failed! Server error"]);
-            setIserror(true);
-            resolve();
-          });
-      } else {
-        setErrorMsg(errorList);
-        setIserror(true);
-        resolve();
+        .put("/member/" + newData._id, newData)
+        .then((res) => {
+          const dataUpdate = [...data];
+          const index = oldData.tableData.id;
+          dataUpdate[index] = newData;
+          setData([...dataUpdate]);
+          resolve();
+          setIserror(false);
+        })
+        .catch((error) => {
+          setErrorMsg(["Update failed! Server error"]);
+          setIserror(true);
+          resolve();
+        });
+    } else {
+      setErrorMsg(errorList);
+      setIserror(true);
+      resolve();
     }
   };
 
@@ -152,7 +151,8 @@ const Editable = (props) => {
             headerStyle: {
               backgroundColor: "rgba(8, 9, 80, 0.363)",
               color: "rgba(0, 0, 0)",
-            },actionsColumnIndex: -1,
+            },
+            actionsColumnIndex: -1,
           }}
         />
       </div>
