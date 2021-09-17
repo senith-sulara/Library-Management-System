@@ -234,14 +234,14 @@ export default function NavBar() {
               <ListItemText>Home</ListItemText>
             </ListItem>  
         <Divider />
-            <ListItem button component={Link} to='/member'>
+            <ListItem button component={Link} to='/viewMember'>
               <ListItemIcon><GroupIcon /></ListItemIcon>
               <ListItemText>Member Management</ListItemText>
             </ListItem>  
         <Divider />
-        <ListItem button component={Link} to='/borrow'>
+        <ListItem button component={Link} to='/barrow'>
               <ListItemIcon><MenuBookIcon /></ListItemIcon>
-              <ListItemText>Barrow Management</ListItemText>
+              <ListItemText>Borrow Management</ListItemText>
             </ListItem>  
         <Divider />
         <ListItem button component={Link} to='/book'>
@@ -254,7 +254,7 @@ export default function NavBar() {
               <ListItemText>Staff Management</ListItemText>
             </ListItem>  
         <Divider />
-        <ListItem button component={Link} to='/res'>
+        <ListItem button component={Link} to='/viewReservation'>
               <ListItemIcon><DateRangeIcon /></ListItemIcon>
               <ListItemText>Reservation Management</ListItemText>
             </ListItem>  
