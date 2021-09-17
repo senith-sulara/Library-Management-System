@@ -2,7 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const BookRoute = require('./controllers/books.controller');
+const StaffRoute = require('./controllers/staffController ')
 const reservationRoute = require('./routes/reservation-routes');
+const returnBRoute = require('./routes/returnB-routes');
+const fineRoute =  require('./routes/fine-routes');
+const barrowRoute = require('./controllers/barrowController');
+
+const MembRoute = require('./controllers/member.controller')
 
 dotenv.config();
 const app = express();
@@ -12,8 +19,6 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 8070;
 const MONGODB_URI = process.env.MONGODB_URI;
-
-app.use('/api/reservation',reservationRoute);
 
 mongoose.connect(MONGODB_URI,{
         useCreateIndex:true,
@@ -29,6 +34,17 @@ mongoose.connect(MONGODB_URI,{
 mongoose.connection.once('open', () => {
     console.log('Database Synced');
 });
+
+app.use('/BookDetails', BookRoute);
+app.use('/staff', StaffRoute);
+app.use('/api/reservation',reservationRoute);
+app.use('/api/return',returnBRoute);
+app.use('/api/fine',fineRoute);
+app.use('/barrow',barrowRoute);
+app.use('/member', MembRoute);
+
+app.use(express.static("files"));
+app.use(express.static("proPic"));
 
 
 app.listen(PORT, () =>{

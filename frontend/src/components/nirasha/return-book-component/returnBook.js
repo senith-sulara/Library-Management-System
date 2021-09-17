@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     backgroundImage:
-      "url(https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_%28Lunon%29.jpg/1024px-Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_%28Lunon%29.jpg)",
+      "url(http://scrippsvoice.com/wp-content/uploads/2018/11/Scripps-Denison-Library.jpg)",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -82,37 +82,52 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddReservation() {
+export default function AddReturnBook() {
   let history = useHistory();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [memberName, setMemberName] = useState("");
   const [memberCode, setMemberCode] = useState("");
-  const [email, setEmail] = useState("");
-  const [bookName, setBookName] = useState("");
+  const [borrowDate, setBorrowDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
   const [bookCode, setBookCode] = useState("");
+  const [fine, setFine] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [errors, setErrors] = useState({email:'', memberCode:'', bookCode:''});
-
-  const handleMemberName = (e) => {
-    setMemberName(e.target.value);
-  };
+  const [errors, setErrors] = useState({ memberCode: "", bookCode:"" });
 
   const handleMemberCode = (e) => {
     setMemberCode(e.target.value);
   };
 
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
+  const handleBorrowDate = (e) => {
+    setBorrowDate(e.target.value);
   };
 
-  const handleBookName = (e) => {
-    setBookName(e.target.value);
+  const handleReturnDate = (e) => {
+    setReturnDate(e.target.value);
   };
 
   const handleBookCode = (e) => {
     setBookCode(e.target.value);
+  };
+
+  const handleFine = (e) => {
+    setFine(e.target.value);
+  };
+
+  const diffDays = (date, otherDate) =>
+    Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24));
+
+  const calFine = () => {
+    var dif = diffDays(new Date(borrowDate), new Date(returnDate));
+    console.log(dif);
+    let tot;
+    if (dif > 10) {
+      tot = (dif-10) * 10;
+    } else {
+      tot = 0;
+    }
+    setFine(tot);
   };
 
   const handleClose = (event, reason) => {
@@ -121,70 +136,83 @@ export default function AddReservation() {
     }
     setOpen(false);
   };
+
   const clear = () => {
-    setMemberName("");
     setMemberCode("");
-    setBookName("");
     setBookCode("");
-    setEmail("");
+    setBorrowDate("");
+    setReturnDate("");
+    setFine("");
   };
-  const validate = () =>{
+
+  const validate = () => {
     let errors = {};
     let isValid = true;
+    console.log(memberCode);
 
     if (memberCode.length !== 6) {
       isValid = false;
-       errors["memberCode"] = "Please enter valid member code";
+      errors["memberCode"] = "Invalid Member Code or Invalid Book Code";
     }
-
     if (bookCode.length !== 6) {
       isValid = false;
-       errors["bookCode"] = "Please enter valid book code";
-    }
-
-    if (typeof email !== "undefined") {
-        
-      var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-      if (!pattern.test(email)) {
-        isValid = false;
-        errors["email"] = "Please enter valid email address.";
-      }
+      errors["bookCode"] = "Invalid Member Code or Invalid Book Code";
     }
     setErrors(errors);
 
     return isValid;
-}
+  };
 
   const onSubmit = () => {
-    if(validate()){
-    setOpen(true);
-    const reservation = {
-      memberName: memberName,
-      memberCode: memberCode,
-      email: email,
-      bookName: bookName,
-      bookCode: bookCode,
-    };
-    axios
-      .post("http://localhost:8070/api/reservation/add", reservation)
-      .then((res) => {
-        if (res.data.success) {
-          setMemberName("");
-          setMemberCode("");
-          setBookName("");
-          setBookCode("");
-          setEmail("");
-          setSuccessMsg("Successfully inserted");
-        } else {
-          setErrorMsg("Please try again");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (validate()) {
+      setOpen(true);
+      const returnB = {
+        memberCode: memberCode,
+        bookCode: bookCode,
+        borrowDate: borrowDate,
+        returnDate: returnDate,
+        fine: fine,
+      };
+      axios
+        .post("http://localhost:8070/api/return/add", returnB)
+        .then((res) => {
+          if (res.data.success) {
+            setMemberCode("");
+            setBookCode("");
+            setBorrowDate("");
+            setReturnDate("");
+            setFine("");
+            setSuccessMsg("Successfully inserted");
+          } else {
+            setErrorMsg("Please try again");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
+  const checkDates = () => {
+    if (validate()) {
+      const object = {
+        memberCode: memberCode,
+        bookCode: bookCode,
+      };
+
+      axios
+        .post("http://localhost:8070/api/return/getDate", object)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data === {}) {
+            setOpen(true);
+            setErrorMsg("Please check member code and book code again.");
+          } else {
+            setBorrowDate(res.data.borrowDate);
+          }
+        });
+    }
+  };
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -192,7 +220,7 @@ export default function AddReservation() {
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Insert New Reservation
+            Add Return Books Details
           </Typography>
           <div className={classes.alert}>
             <Dialog
@@ -237,77 +265,103 @@ export default function AddReservation() {
               </DialogActions>
             </Dialog>
           </div>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="memberName"
-            label="Member Name"
-            name="memberName"
-            autoComplete="memberName"
-            value={memberName}
-            onChange={(e) => handleMemberName(e)}
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="memberCode"
-            label="Member Code"
-            name="memberCode"
-            autoComplete="memberCode"
-            value={memberCode}
-            onChange={(e) => handleMemberCode(e)}
-            autoFocus
-          />
+
+          <div className={classes.btnGroup}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="memberCode"
+              label="Member Code"
+              name="memberCode"
+              autoComplete="memberCode"
+              value={memberCode}
+              onChange={(e) => handleMemberCode(e)}
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="bookCode"
+              label="Book Code"
+              name="bookCode"
+              autoComplete="bookCode"
+              value={bookCode}
+              onChange={(e) => handleBookCode(e)}
+              autoFocus
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ width: 50, height: 40 }}
+              className={classes.button}
+              title="Check"
+              onClick={() => checkDates()}
+            >
+              <CheckCircleIcon />
+            </Button>
+          </div>
           {errors.memberCode ? (
-                <span className='error'>{errors.memberCode}</span>):(<></>)}
+              <span className="error">{errors.memberCode}</span>
+            ):(<></>)}
+            {/* {errors.bookCode.length > 0 && (
+              <span className="error">{errors.bookCode}</span>
+            )} */}
+          <TextField
+            variant="outlined"
+            type="date"
+            margin="normal"
+            required
+            fullWidth
+            id="borrowDate"
+            label="Borrow Date"
+            name="borrowDate"
+            autoComplete="borrowDate"
+            InputLabelProps={{ shrink: true, required: true }}
+            value={borrowDate}
+            onChange={(e) => handleBorrowDate(e)}
+            autoFocus
+          />
+          <TextField
+            variant="outlined"
+            type="date"
+            margin="normal"
+            required
+            fullWidth
+            id="returnDate"
+            label="Return Date"
+            name="returnDate"
+            autoComplete="returnDate"
+            InputLabelProps={{ shrink: true, required: true }}
+            value={returnDate}
+            onChange={(e) => handleReturnDate(e)}
+            autoFocus
+          />
+          <Button
+            id="btnBack"
+            type="button"
+            variant="contained"
+            color="primary"
+            onClick={() => calFine()}
+          >
+            Calculate Fine
+          </Button>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => handleEmail(e)}
+            id="fine"
+            label="Fine"
+            name="Fine"
+            autoComplete="Fine"
+            value={fine}
+            onChange={(e) => handleFine(e)}
             autoFocus
           />
-          {errors.email ? (
-                <span className='error'>{errors.email}</span>):(<></>)}
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="bookName"
-            label="Book Name"
-            name="bookName"
-            autoComplete="bookName"
-            value={bookName}
-            onChange={(e) => handleBookName(e)}
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="bookCode"
-            label="Book Code"
-            name="bookCode"
-            autoComplete="bookCode"
-            value={bookCode}
-            onChange={(e) => handleBookCode(e)}
-            autoFocus
-          />
-          {errors.bookCode? ( 
-                <span className='error'>{errors.bookCode}</span>):(<></>)}
 
           <div className={classes.btnGroup}>
             <Button
