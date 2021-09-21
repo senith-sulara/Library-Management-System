@@ -63,8 +63,15 @@ const Reports = (props) => {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
   const [fineDetails, setFineDetails] = useState([]);
+  const [returnDate, setReturnDate] = useState(null);
+  const [filteredDateData, setFilteredDateData] = useState([]);
 
   useEffect(() => {
+    retrieveFineDetails();
+  }, []);
+
+  const retrieveFineDetails = () => {
+    setFineDetails([]);
     axios.get(`${API_URL}/api/fine/getFineDetails`).then((res) => {
       console.log(res.data);
       res.data.forEach((item) => {
@@ -78,11 +85,24 @@ const Reports = (props) => {
       });
       setFineDetails(fineDetails);
     });
-  }, []);
+  };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  const handleReturnDate = (e) => {
+    setReturnDate(e.target.value);
+  };
+
+  const generateDateReport = () => {
+    console.log(fineDetails);
+    var filteredData = fineDetails.filter(function (obj) {
+      return obj.ReturnDate <= returnDate;
+    });
+    setFilteredDateData(filteredData);
+  };
+
   return (
     <div>
       <h1 id="h12" align="center">
@@ -467,21 +487,22 @@ const Reports = (props) => {
             <Typography className={classes.heading}>
               Fine List Reports
             </Typography>
-            {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
           <AccordionDetails>
             <Typography>
               <Grid container>
                 <Grid item>
                   <TextField
-                    className={classes.text}
                     variant="outlined"
+                    type="date"
                     margin="normal"
                     fullWidth
-                    id="Repoauthor"
-                    label="Book Author"
-                    name="Repoauthor"
-                    autoComplete="Repoauthor"
+                    id="borrowDate"
+                    label="Return Date"
+                    name="borrowDate"
+                    autoComplete="borrowDate"
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => handleReturnDate(e)}
                     autoFocus
                   />
                 </Grid>
@@ -494,39 +515,24 @@ const Reports = (props) => {
                       fullWidth
                       variant="contained"
                       color="primary"
+                      onClick={() => generateDateReport()}
                     >
-                      Generate
+                      Filter
                     </Button>
                   </div>
                 </Grid>
-              </Grid>
-
-              <Grid container>
-                <Grid item>
-                  <TextField
-                    className={classes.text}
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    id="RepoType"
-                    label="Book Type"
-                    name="RepoType"
-                    autoComplete="RepoType"
-                    autoFocus
-                  />
-                </Grid>
 
                 <Grid item alignItems="stretch" style={{ display: "flex" }}>
                   <div className={classes.btnGroup}>
-                    <Button
-                      id="btnReport"
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
+                    <CSVLink
+                      filename={"FinesDetails.csv"}
+                      data={filteredDateData}
+                      className="btn btn-primary m-2"
+                      data-toggle="tooltip"
+                      data-placement="top"
                     >
-                      Generate
-                    </Button>
+                      GENERATE
+                    </CSVLink>
                   </div>
                 </Grid>
               </Grid>

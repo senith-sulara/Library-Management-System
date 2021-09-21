@@ -21,7 +21,7 @@ import { useHistory } from "react-router-dom";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import { API_URL } from '../../utils/constants';
+import { API_URL } from "../../utils/constants";
 
 function PaperComponent(props) {
   return (
@@ -94,7 +94,7 @@ export default function AddReturnBook() {
   const [fine, setFine] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [errors, setErrors] = useState({ memberCode: "", bookCode:"" });
+  const [errors, setErrors] = useState({ memberCode: "", bookCode: "" });
 
   const handleMemberCode = (e) => {
     setMemberCode(e.target.value);
@@ -124,7 +124,7 @@ export default function AddReturnBook() {
     console.log(dif);
     let tot;
     if (dif > 10) {
-      tot = (dif-10) * 10;
+      tot = (dif - 10) * 10;
     } else {
       tot = 0;
     }
@@ -177,6 +177,17 @@ export default function AddReturnBook() {
       axios
         .post(`${API_URL}/api/return/add`, returnB)
         .then((res) => {
+          if (fine !== 0) {
+            const fineDetails = {
+              memberCode: memberCode,
+              borrowDate: borrowDate,
+              returnDate: returnDate,
+              fine: fine,
+            };
+            axios
+              .post(`${API_URL}/api/fine/add`, fineDetails)
+              .then((res) => {});
+          }
           if (res.data.success) {
             setMemberCode("");
             setBookCode("");
@@ -201,17 +212,15 @@ export default function AddReturnBook() {
         bookCode: bookCode,
       };
 
-      axios
-        .post(`${API_URL}/api/return/getDate`, object)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data === {}) {
-            setOpen(true);
-            setErrorMsg("Please check member code and book code again.");
-          } else {
-            setBorrowDate(res.data.borrowDate);
-          }
-        });
+      axios.post(`${API_URL}/api/return/getDate`, object).then((res) => {
+        console.log(res.data);
+        if (res.data === {}) {
+          setOpen(true);
+          setErrorMsg("Please check member code and book code again.");
+        } else {
+          setBorrowDate(res.data.borrowDate);
+        }
+      });
     }
   };
   return (
@@ -306,9 +315,11 @@ export default function AddReturnBook() {
             </Button>
           </div>
           {errors.memberCode ? (
-              <span className="error">{errors.memberCode}</span>
-            ):(<></>)}
-            {/* {errors.bookCode.length > 0 && (
+            <span className="error">{errors.memberCode}</span>
+          ) : (
+            <></>
+          )}
+          {/* {errors.bookCode.length > 0 && (
               <span className="error">{errors.bookCode}</span>
             )} */}
           <TextField
