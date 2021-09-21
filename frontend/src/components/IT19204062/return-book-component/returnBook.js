@@ -21,6 +21,7 @@ import { useHistory } from "react-router-dom";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
+import { API_URL } from '../../utils/constants';
 
 function PaperComponent(props) {
   return (
@@ -174,7 +175,7 @@ export default function AddReturnBook() {
         fine: fine,
       };
       axios
-        .post("http://localhost:8070/api/return/add", returnB)
+        .post(`${API_URL}/api/return/add`, returnB)
         .then((res) => {
           if (res.data.success) {
             setMemberCode("");
@@ -201,7 +202,7 @@ export default function AddReturnBook() {
       };
 
       axios
-        .post("http://localhost:8070/api/return/getDate", object)
+        .post(`${API_URL}/api/return/getDate`, object)
         .then((res) => {
           console.log(res.data);
           if (res.data === {}) {

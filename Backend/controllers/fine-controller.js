@@ -9,4 +9,14 @@ const addFine = async (req, res) => {
   });
 };
 
+const getFineDetails = async (req, res) => {
+  await Fine.find().exec(function (err, fines) {
+    if (err) {
+      console.log("Error retrieving");
+    } else {
+      res.json(fines);
+    }
+  });
+}
 exports.addFine = addFine;
+exports.getFineDetails = getFineDetails;

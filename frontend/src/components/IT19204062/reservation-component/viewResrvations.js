@@ -3,13 +3,14 @@ import MaterialTable from "material-table";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import "../css/reservation.css";
+import { API_URL } from '../../utils/constants';
 
 export default function ViewReservations() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:8070/api/reservation/getReservations")
+      .get(`${API_URL}/api/reservation/getReservations`)
       .then((res) => {
         console.log(res.data);
         setData(res.data);

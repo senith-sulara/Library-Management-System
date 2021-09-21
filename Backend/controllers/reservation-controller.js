@@ -14,7 +14,6 @@ const getReservations = async (req, res) => {
     if (err) {
       console.log("Error retrieving");
     } else {
-      console.log(reservations);
       res.json(reservations);
     }
   });
