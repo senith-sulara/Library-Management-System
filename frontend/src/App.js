@@ -1,10 +1,10 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import NavBar from './components/IT19143828/navBar/navBar.js';
-import Home from './components/IT19143828/home/home.js';
-import View from './components/IT19143828/bookM/view';
-import AddBook from './components/IT19143828/addBook/addBook';
+import NavBar from './components/senith/navBar/navBar.js';
+import Home from './components/senith/home/home.js';
+import View from './components/senith/bookM/view';
+import AddBook from './components/senith/addBook/addBook';
 import Reports from "./components/report-component/reports";
 
 
