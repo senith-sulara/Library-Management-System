@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     // flexBasis: '33.33%',
     flexShrink: 0,
     margin: "auto",
+    
     // backgroundColor: theme.palette.primary.main,
   },
   // secondaryHeading: {
@@ -47,8 +48,14 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
     width: "100%",
   },
-  expandedPanel: {
+  // expandedPanel: {
+  //   color: "#ffffff",
+  // },
+  panel: {
     backgroundColor: theme.palette.secondary.main,
+    color: "#ffffff",
+  },
+  icn: {
     color: "#ffffff",
   },
   repo: {
@@ -57,6 +64,17 @@ const useStyles = makeStyles((theme) => ({
   sub: {
     width: "100%",
   },
+  accord: {
+    width:"600px",
+    paddingTop: "20px"
+  },
+  cont: {
+    paddingLeft: "50px",
+    backgroundColor: 'rgba(1, 1, 74, 0.2)',
+  },
+  csv: {
+    paddingLeft: "100px"
+  }
 }));
 
 const Reports = (props) => {
@@ -152,22 +170,24 @@ const [bookDetails, setBookDetails] = useState([]);
 
       <div className={classes.root}>
         <Accordion
+          className={classes.accord}
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
           marginTop="10px"
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
           >
-            <AssignmentIcon />
+            <AssignmentIcon/>
 
             <Typography className={classes.heading}>Book Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>
@@ -181,7 +201,7 @@ const [bookDetails, setBookDetails] = useState([]);
                     label="Book Author"
                     name="Repoauthor"
                     autoComplete="Repoauthor"
-                    InputLabelProps={{ shrink: true }}
+                    // InputLabelProps={{ shrink: true }}
                     onChange={(e) => handleAuthor(e)}
                     autoFocus
                   />
@@ -248,6 +268,7 @@ const [bookDetails, setBookDetails] = useState([]);
               {/* </Grid> */}
               <div className={classes.btnGroup}>
               <CSVLink
+                  className={classes.csv}
                   filename={"BookDetails.csv"}
                   data={bookDetails}
                   className="btn btn-primary m-2"
@@ -261,12 +282,14 @@ const [bookDetails, setBookDetails] = useState([]);
           </AccordionDetails>
         </Accordion>
         <Accordion
+        className={classes.accord}
           expanded={expanded === "panel2"}
           onChange={handleChange("panel2")}
           marginTop="10px"
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+          className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -276,7 +299,7 @@ const [bookDetails, setBookDetails] = useState([]);
             <Typography className={classes.heading}>Staff Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>
@@ -352,11 +375,13 @@ const [bookDetails, setBookDetails] = useState([]);
           </AccordionDetails>
         </Accordion>
         <Accordion
+        className={classes.accord}
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -366,7 +391,7 @@ const [bookDetails, setBookDetails] = useState([]);
             <Typography className={classes.heading}>Borrow Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>
@@ -442,11 +467,13 @@ const [bookDetails, setBookDetails] = useState([]);
           </AccordionDetails>
         </Accordion>
         <Accordion
+        className={classes.accord}
           expanded={expanded === "panel4"}
           onChange={handleChange("panel4")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -456,7 +483,7 @@ const [bookDetails, setBookDetails] = useState([]);
             <Typography className={classes.heading}>Member Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>
@@ -532,11 +559,13 @@ const [bookDetails, setBookDetails] = useState([]);
           </AccordionDetails>
         </Accordion>
         <Accordion
+        className={classes.accord}
           expanded={expanded === "panel5"}
           onChange={handleChange("panel5")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -547,7 +576,7 @@ const [bookDetails, setBookDetails] = useState([]);
               Fine List Reports
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>

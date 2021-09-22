@@ -7,8 +7,6 @@ import View from './components/senith/bookM/view';
 import AddBook from './components/senith/addBook/addBook';
 
 import Reports from "./components/report-component/reports";
-
-import Reports from "./components/senith/reports/reports";
 import AddStaff from './components/pasidu/staff/addStaff';
 import ViewStaff from './components/pasidu/staff/viewStaff';
 import SignIn from './components/pasidu/staff/login';
