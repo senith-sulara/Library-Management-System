@@ -149,9 +149,9 @@ const Editable = (props) => {
         
       <MaterialTable
         title=
-        {<><Button id="btnAdd" variant="contained" color="primary" href="/insertBook" >
+        {<Button id="btnAdd" variant="contained" color="primary" href="/insertBook" >
         Add new Book
-      </Button></>}
+      </Button>}
         columns={columns}
         data={data}
         editable={{
