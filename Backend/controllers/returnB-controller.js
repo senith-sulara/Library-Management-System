@@ -1,5 +1,5 @@
 const { ReturnB } = require("../models/returnB-model");
-const Barrow = require("../models/Barrow");
+const Borrow = require("../models/Borrow");
 
 const addReturnB = async (req, res) => {
   const returnB = new ReturnB(req.body);
@@ -16,7 +16,7 @@ const getDate = async (req, res) => {
   var members = [];
   var borrowDate;
 
-  members = await Barrow.find({ mid: memberCode });
+  members = await Borrow.find({ mid: memberCode });
 
   members.forEach((item) => {
     let books = item.books;
@@ -27,8 +27,19 @@ const getDate = async (req, res) => {
     });
   });
 
-  res.json({ borrowDate:borrowDate });
+  res.json({ borrowDate: borrowDate });
+};
+
+const getReturns = async (req, res) => {
+  await Borrow.find().exec(function (err, returns) {
+    if (err) {
+      console.log("Error retrieving");
+    } else {
+      res.json(returns);
+    }
+  });
 };
 
 exports.addReturnB = addReturnB;
 exports.getDate = getDate;
+exports.getReturns = getReturns;

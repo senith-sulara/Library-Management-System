@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import MaterialTable from "material-table";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
-import "../css/reservation.css";
+import "../css/style.css";
 import { API_URL } from '../../utils/constants';
 
-export default function ViewReservations() {
+export default function ViewReturnBooks() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -27,8 +27,9 @@ export default function ViewReservations() {
 
   return (
     <div>
+        <br/>
       <h1 id="h12" align="center">
-        Reservation Management
+        Return Book Management
       </h1>
       <div className="tbl">
         <MaterialTable
@@ -38,9 +39,10 @@ export default function ViewReservations() {
                 id="btnAdd"
                 variant="contained"
                 color="primary"
-                href="/addReservation"
+                href="/addReturnBook"
+                style={{width:'250px'}}
               >
-                Add new Reservation
+                Add Return Book Details
               </Button>
             </>
           }

@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import axios from "axios";
-import "../css/reservation.css";
+import "../css/style.css";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";

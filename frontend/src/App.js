@@ -12,8 +12,9 @@ import SignIn from './components/pasidu/staff/login';
 import Profile from './components/pasidu/staff/userProfile';
 import Footer from './components/pasidu/comman/footer';
 import AddReservation from "./components/IT19204062/reservation-component/addReservation";
-import ViewReservations from "./components/IT19204062/reservation-component/viewResrvations";
-import AddReturnBook from './components/IT19204062/return-book-component/returnBook';
+import ViewReservations from "./components/IT19204062/reservation-component/viewReservations";
+import AddReturnBook from './components/IT19204062/return-book-component/addReturnBook';
+import ViewReturnBooks from './components/IT19204062/return-book-component/viewReturnBook';
 import AddMember from "./components/kaveena/addMember";
 import MemberTable from "./components/kaveena/viewMember";
 import AddBarrow from "./components/pasidu/barrow/addBarrow";
@@ -38,6 +39,7 @@ function App() {
             <Route path="/addReservation" component={AddReservation} />
             <Route path="/viewReservation" component={ViewReservations} />
             <Route path="/addReturnBook" component={AddReturnBook} />
+            <Route path="/viewReturnBooks" component={ViewReturnBooks} />
             <Route path="/addMember" component={AddMember} />
             <Route path="/viewMember" component={MemberTable} />
             <Route path="/addBarrow" component={AddBarrow} />
