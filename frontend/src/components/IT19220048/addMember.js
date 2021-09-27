@@ -6,8 +6,6 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Alert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
 import Dropzone from "react-dropzone";
 import axios from "axios";
 import "./Member.css";
@@ -131,8 +129,6 @@ const InsertMember = (props) => {
   const [memberCode, setMemberCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  // const [openErr, setOpenErr] = useState(false);
-  // const [openSucc, setOpenSucc] = useState(false);
   const [open, setOpen] = useState(false);
 
   const onDrop = (images) => {
@@ -214,13 +210,6 @@ const InsertMember = (props) => {
     Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
     return valid;
   };
-
-  // const handleInputChange = (event) => {
-  //   setState({
-  //     ...state,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
 
   const validRefCodeRegex = RegExp(/^[A-Za-z][A-Za-z0-9 -]*$/);
 

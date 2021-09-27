@@ -2,8 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Reports from "./components/report-component/reports";
-import AddMember from "./components/kaveena/addMember";
-import MemberTable from "./components/kaveena/viewMember";
+import AddMember from "./components/IT19220048/addMember";
+import MemberTable from "./components/IT19220048/viewMember";
 function App() {
   return (
     <div>

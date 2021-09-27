@@ -15,6 +15,7 @@ const Editable = (props) => {
   const [successMsg, setSuccessMsg] = useState([]);
   const [issucc, setIssucc] = useState(false);
 
+  //get function
   useEffect(() => {
     const getFileList = async () => {
       try {
