@@ -131,6 +131,7 @@ const [bookDetails, setBookDetails] = useState([]);
 
   ////////////////////////////////////////////////////////
 
+  // Retrive all book details t ogenerate report
   const retrieveBookDetails = () => {
     setBookDetails([]);
     axios.get(`${API_URL}/BookDetails/getAllBooks`).then((res) => {
@@ -153,12 +154,12 @@ const [bookDetails, setBookDetails] = useState([]);
     setAuthor(e.target.value);
   };
 
+//Filter Data
+
   const generateBookReport = () => {
     console.log(bookDetails);
-    var filteredbookData = bookDetails.filter(function (objt) {
-      return objt.Author <= author;
-      
-    });
+    var filteredbookData = bookDetails.filter((item =>
+      item.Author.includes(author)));
     setFilteredAuthorData(filteredbookData);
   };
 
