@@ -31,7 +31,7 @@ const getDate = async (req, res) => {
 };
 
 const getReturns = async (req, res) => {
-  await Borrow.find().exec(function (err, returns) {
+  await ReturnB.find().exec(function (err, returns) {
     if (err) {
       console.log("Error retrieving");
     } else {
