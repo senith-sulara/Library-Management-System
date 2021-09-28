@@ -34,3 +34,10 @@
 .error{
     color: crimson;
 }
+
+body{
+    height: 150%;
+  }
+#btnReport{
+    background: rgb(10, 204, 10);
+}

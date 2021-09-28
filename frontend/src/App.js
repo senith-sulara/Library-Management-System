@@ -5,6 +5,8 @@ import NavBar from './components/senith/navBar/navBar.js';
 import Home from './components/senith/home/home.js';
 import View from './components/senith/bookM/view';
 import AddBook from './components/senith/addBook/addBook';
+
+import Reports from "./components/report-component/reports";
 import AddStaff from './components/pasidu/staff/addStaff';
 import ViewStaff from './components/pasidu/staff/viewStaff';
 import SignIn from './components/pasidu/staff/login';
@@ -17,6 +19,7 @@ import MemberTable from "./components/kaveena/viewMember";
 import AddBarrow from "./components/pasidu/barrow/addBarrow";
 import Barrow from "./components/pasidu/barrow/barrowHome";
 
+
 function App() {
   return (
     <div>
@@ -28,6 +31,9 @@ function App() {
             <Route path="/" component={Home}  exact/>
             <Route path="/book" component={View}  />
             <Route path="/insertBook" component={AddBook}  />
+
+            <Route path="/reports" component={Reports} />
+
             <Route path="/staff" component={ViewStaff}  />
             <Route path="/addStaff" component={AddStaff}  />
             <Route path="/signin" component={SignIn}  />
@@ -36,8 +42,10 @@ function App() {
             <Route path="/viewReservation" component={ViewReservations} />
             <Route path="/addMember" component={AddMember} />
             <Route path="/viewMember" component={MemberTable} />
+
             <Route path="/addBarrow" component={AddBarrow} />
             <Route path="/barrow" component={Barrow} />
+
           </Switch>
         </section>
         <Footer/>
