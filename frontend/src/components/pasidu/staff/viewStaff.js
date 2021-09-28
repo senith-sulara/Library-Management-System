@@ -32,6 +32,7 @@ const Editable = (props) => {
     const [errorMsg, setErrorMsg] = useState('');
     const [open, setOpen] = useState(false); 
     const[successMsg, setSuccessMsg] = useState('');
+    const [iserror, setIserror] = useState(false);
 
     useEffect(() => {
         const getFileList = async () => {
@@ -74,6 +75,54 @@ const Editable = (props) => {
   
       setOpen(false);
     };
+
+     /////////////////////////update rows
+  const api = axios.create({
+    baseURL: `http://localhost:8070`,
+  });
+
+  const handleRowUpdate = (newData, oldData, resolve) => {
+    //validation
+    let errorList = [];
+    if (newData.id === "") {
+      errorList.push("Please enter ID");
+    }
+    if (newData.name === "") {
+      errorList.push("Please enter nammeID");
+    } 
+    if (newData.contact === "") {
+      errorList.push("Please enter phone number");
+    }
+    if (newData.email === "") {
+      errorList.push("Please enter email");
+    }
+    if (newData.address === "") {
+      errorList.push("Please enter address");
+    }
+
+    if (errorList.length < 1) {
+      api
+          .put("/staff/" + newData._id, newData)
+          .then((res) => {
+            const dataUpdate = [...data];
+            const index = oldData.tableData.id;
+            dataUpdate[index] = newData;
+            setData([...dataUpdate]);
+            resolve();
+            setIserror(false);
+          })
+          .catch((error) => {
+            setErrorMsg(["Update failed! Server error"]);
+            setIserror(true);
+            resolve();
+          });
+      } else {
+        setErrorMsg(errorList);
+        setIserror(true);
+        resolve();
+    }
+  };
+
     return (
       
       <div>
@@ -133,29 +182,7 @@ const Editable = (props) => {
           //   }),
           onRowUpdate: (newData, oldData) =>
             new Promise((resolve, reject) => {
-              const dataUpdate = [...data];
-              const index = oldData.tableData.id;
-              setTimeout(() => {
-                dataUpdate[index] = newData;
-                setData([...dataUpdate]);
-                console.log(newData);
-                console.log(newData._id);
-                try {
-                  const { data } =  axios.put(`${API_URL}/staff/updateStaff/${newData._id}`,{
-                    method: "PUT",
-                    headers: {
-                        Accept: "application/json"
-                    },
-                    body: newData
-                }) 
-                  setErrorMsg('');
-                } catch (error) {
-                  error.response && setErrorMsg(error.response.data);
-                  console.log(error);
-          
-                }
-                resolve();
-              }, 2000)
+              handleRowUpdate(newData,oldData,resolve);
             }),
           onRowDelete: oldData =>
             new Promise((resolve, reject) => {
