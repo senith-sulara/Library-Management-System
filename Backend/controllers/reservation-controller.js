@@ -19,5 +19,43 @@ const getReservations = async (req, res) => {
   });
 };
 
+const updateReservation = async (req, res) => {
+  const { memberName, memberCode, email, bookName, bookCode } = req.body;
+
+  const reservationId = req.params.id;
+  let reservation;
+  try {
+    reservation = await Reservation.findById(reservationId);
+  } catch (err) {
+    console.log("Error updating");
+  }
+
+  reservation.memberName = memberName;
+  reservation.memberCode = memberCode;
+  reservation.email = email;
+  reservation.bookName = bookName;
+  reservation.bookCode = bookCode;
+
+  await reservation.save((err) => {
+    if (err) return res.status(400).json({ success: false, err });
+    return res.status(200).json({ success: true });
+  });
+};
+
+const deleteReservation = async (req, res) => {
+  const reservationId = req.params.id;
+
+  const reservation = await Reservation.findById(reservationId);
+  if (!reservation) {
+    console.log("Error deleting");
+  }
+  await reservation.remove((err) => {
+    if (err) return res.status(400).json({ success: false, err });
+    return res.status(200).json({ success: true });
+  });
+};
+
 exports.addReservation = addReservation;
 exports.getReservations = getReservations;
+exports.updateReservation = updateReservation;
+exports.deleteReservation = deleteReservation;
