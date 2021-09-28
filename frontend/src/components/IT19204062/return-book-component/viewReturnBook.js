@@ -3,31 +3,29 @@ import MaterialTable from "material-table";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
 import "../css/style.css";
-import { API_URL } from '../../utils/constants';
+import { API_URL } from "../../utils/constants";
 
 export default function ViewReturnBooks() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/api/reservation/getReservations`)
-      .then((res) => {
-        console.log(res.data);
-        setData(res.data);
-      });
+    axios.get(`${API_URL}/api/return/getReturns`).then((res) => {
+      console.log(res.data);
+      setData(res.data);
+    });
   }, []);
 
   let fields = [
-    { title: "Member Name", field: "memberName" },
     { title: "Member Code", field: "memberCode" },
-    { title: "Email", field: "email" },
-    { title: "Book Name", field: "bookName" },
     { title: "Book Code", field: "bookCode" },
+    { title: "Borrow Date", field: "borrowDate" },
+    { title: "Return Date", field: "returnDate" },
+    { title: "Fine", field: "fine" },
   ];
 
   return (
     <div>
-        <br/>
+      <br />
       <h1 id="h12" align="center">
         Return Book Management
       </h1>
@@ -40,7 +38,7 @@ export default function ViewReturnBooks() {
                 variant="contained"
                 color="primary"
                 href="/addReturnBook"
-                style={{width:'250px'}}
+                style={{ width: "250px" }}
               >
                 Add Return Book Details
               </Button>
