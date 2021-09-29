@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express'); 
-const Barrow = require('../models/Barrow'); 
+const Barrow = require('../models/Borrow'); 
 const Router = express.Router();
 
 /**

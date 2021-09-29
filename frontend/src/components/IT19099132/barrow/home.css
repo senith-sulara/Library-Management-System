@@ -1,0 +1,98 @@
+/* Float four columns side by side */
+body::-webkit-scrollbar {
+  display: none;
+}
+body {
+  overflow-x: hidden;
+}
+.column1 {
+  float: left;
+  width: 32%;
+  padding: 0 10px;
+}
+
+.column0 {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+/* Remove extra left and right margins, due to padding */
+.row1 {
+  margin: 0 -5px;
+}
+
+/* Clear floats after the columns */
+.row1:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Remove extra left and right margins, due to padding */
+.row2 {
+  margin: 0 -5px;
+}
+
+/* Clear floats after the columns */
+.row2:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 976px) {
+  .column1,
+  .column0 {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+.center-text {
+  text-align: center;
+  margin-top: 25px;
+}
+
+/*---------------------------------------------------------*/
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  width: 400px;
+  height: 210px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+  margin-top: 50px;
+  /* background-color: rgba(224, 191, 247, 0.733); */
+  margin-bottom: 10px;
+}
+
+.title {
+  color: grey;
+  font-size: 18px;
+}
+
+#btnH {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+/* a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+  } */
+
+button:hover,
+a:hover {
+  opacity: 0.7;
+}

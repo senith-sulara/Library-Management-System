@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL } from "../utils/constants";
-import "./Member.css";
+import { API_URL } from "../../utils/constants";
+import "./viewBook.css";
 import MaterialTable from "material-table";
 import Button from "@material-ui/core/Button";
-import Footer from "../IT19099132/common/footer";
+import { Grid } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 
 const Editable = (props) => {
@@ -15,11 +15,11 @@ const Editable = (props) => {
   const [successMsg, setSuccessMsg] = useState([]);
   const [issucc, setIssucc] = useState(false);
 
-  //get function
+  //get all book details
   useEffect(() => {
     const getFileList = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/member/getAllMembers`);
+        const { data } = await axios.get(`${API_URL}/bookDetails/getAllBooks`);
         setErrorMsg("");
         setData(data);
         console.log(data);
@@ -41,16 +41,17 @@ const Editable = (props) => {
       render: (rowData) => (
         <img
           style={{ height: 50, width: 50, borderRadius: "10%" }}
+          // src={`http://localhost:8070/${rowData.file_path}`}
           src={rowData.avatar}
         />
       ),
     },
-    { title: "Name", field: "Fname" },
-    { title: "NIC", field: "nic" },
-    { title: "Phone", field: "phone" },
-    { title: "Email ", field: "email" },
-    { title: "Address ", field: "address" },
-    { title: "Member Code", field: "memberCode" },
+    { title: "Title", field: "title" },
+    { title: "Author", field: "author" },
+    { title: "Publisher", field: "publisher" },
+    { title: "Reference Code", field: "refCode" },
+    { title: "Rack Number", field: "rackNo" },
+    { title: "Number Of Copies", field: "noOfCopies", type: "numeric" },
   ]);
 
   /////////////////////////update rows
@@ -61,25 +62,22 @@ const Editable = (props) => {
   const handleRowUpdate = (newData, oldData, resolve) => {
     //validation
     let errorList = [];
-    if (newData.Fname === "") {
-      errorList.push("Please enter Name");
+    if (newData.title === "") {
+      errorList.push("Please enter title");
     }
-    if (newData.nic === "") {
-      errorList.push("Please enter NIC");
+    if (newData.author === "") {
+      errorList.push("Please enter author");
     }
-    if (newData.phone === "") {
-      errorList.push("Please enter phone number");
+    if (newData.publisher === "") {
+      errorList.push("Please enter publisher");
     }
-    if (newData.email === "") {
-      errorList.push("Please enter email");
-    }
-    if (newData.address === "") {
-      errorList.push("Please enter address");
+    if (newData.noOfCopies === "") {
+      errorList.push("Please enter noOfCopies");
     }
 
     if (errorList.length < 1) {
       api
-        .put("/member/" + newData._id, newData)
+        .put("/bookDetails/" + newData._id, newData)
         .then((res) => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -104,7 +102,7 @@ const Editable = (props) => {
 
   const handleRowDelete = (oldData, resolve) => {
     api
-      .delete("/member/" + oldData._id)
+      .delete("/bookDetails/" + oldData._id)
       .then((res) => {
         const dataDelete = [...data];
         const index = oldData.tableData.id;
@@ -123,13 +121,10 @@ const Editable = (props) => {
 
   return (
     <div>
-      <h3 className="h12">
-        <br />
-        <center>
-          <b> Member Management </b>
-        </center>
-      </h3>
-
+      <br /><br/>
+      <h1 id="h12" align="center">
+        Book Management
+      </h1>
       <div className="tbl">
         <div>
           {iserror && (
@@ -151,16 +146,14 @@ const Editable = (props) => {
 
         <MaterialTable
           title={
-            <>
-              <Button
-                id="btnAdd"
-                variant="contained"
-                color="primary"
-                href="/addMember"
-              >
-                Add New Member
-              </Button>
-            </>
+            <Button
+              id="btnAdd"
+              variant="contained"
+              color="primary"
+              href="/insertBook"
+            >
+              Add new Book
+            </Button>
           }
           columns={columns}
           data={data}
@@ -180,12 +173,10 @@ const Editable = (props) => {
               backgroundColor: "rgba(8, 9, 80, 0.363)",
               color: "rgba(0, 0, 0)",
             },
-
             actionsColumnIndex: -1,
           }}
         />
       </div>
-      <Footer />
     </div>
   );
 };

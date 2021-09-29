@@ -1,0 +1,21 @@
+.sideContainer {
+  width: 260px;
+  min-height: 108%;
+  background-color: #02032b;
+  padding: 10px 10px 5px 10px;
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.247);
+  background-image: "url(https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlicmFyeXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80)";
+  background-repeat: "no-repeat";
+  background-size: "cover";
+  background-position: "center";
+}
+.btnList {
+  width: 100%;
+  padding: 15px 3px 15px 3px;
+  border: 0px;
+  background-color: #291e91;
+  margin-bottom: 10px;
+  color: blanchedalmond;
+  border-radius: 0.05rem;
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.247);
+}
