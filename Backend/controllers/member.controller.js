@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const multer = require('multer');
 const Members = require('../models/member.model');
@@ -51,33 +52,33 @@ Router.get('/getAllMembers', async (req, res) => {
 });
 
 // //Update
-// Router.put("/:id", upload.single("image"), async (req, res) => {
-//   try {
-//     let member = await Members.findById(req.params.id);
-//     // Delete image from cloudinary
-//     await cloudinary.uploader.destroy(member.cloudinary_id);
-//     // Upload image to cloudinary
-//     let result;
-//     if (req.file) {
-//       result = await cloudinary.uploader.upload(req.file.path);
-//     }
-//     const data = {
-//       Fname: req.body.Fname || member.Fname,
-//       Lname: req.body.Lname || member.Lname,
-//       nic: req.body.nic || member.nic,
-//       email: req.body.email || member.email,
-//       address: req.body.address || member.address,
-//       phone: req.body.phone || member.phone,
-//       memberCode: req.body.memberCode || member.memberCode,
-//       avatar: result?.secure_url || member.avatar,
-//       cloudinary_id: result?.public_id || member.cloudinary_id,
-//     };
-//     member = await Members.findByIdAndUpdate(req.params.id, data, { new: true });
-//     res.json(member);
-//   } catch (e) {
-//     res.status(400).json({ msg: e.message, success: false });
-//   }
-// });
+Router.put("/:id", upload.single("image"), async (req, res) => {
+  try {
+    let member = await Members.findById(req.params.id);
+    // Delete image from cloudinary
+    await cloudinary.uploader.destroy(member.cloudinary_id);
+    // Upload image to cloudinary
+    let result;
+    if (req.file) {
+      result = await cloudinary.uploader.upload(req.file.path);
+    }
+    const data = {
+      Fname: req.body.Fname || member.Fname,
+      Lname: req.body.Lname || member.Lname,
+      nic: req.body.nic || member.nic,
+      email: req.body.email || member.email,
+      address: req.body.address || member.address,
+      phone: req.body.phone || member.phone,
+      memberCode: req.body.memberCode || member.memberCode,
+      // avatar: result?.secure_url || member.avatar,
+      // cloudinary_id: result?.public_id || member.cloudinary_id,
+    };
+    member = await Members.findByIdAndUpdate(req.params.id, data, { new: true });
+    res.json(member);
+  } catch (e) {
+    res.status(400).json({ msg: e.message, success: false });
+  }
+});
 
 //////////////////////////////////////
 
