@@ -126,6 +126,7 @@ const InsertBaroow= (props) => {
   useEffect(()=>{ 
     setUser(JSON.parse(localStorage.getItem('user')));
     console.log("data " + user.formData.eid);
+    state.eid = user.formData.eid;
   },[]);
 
   const handleOnSubmit = async (event) => {
@@ -133,11 +134,11 @@ const InsertBaroow= (props) => {
     setOpen(true);
     try {
       const { eid, mid, borrowDate, returnDate, note } = state;
-      if (eid.trim() !== '' && mid.trim() !== '' && borrowDate.trim() !== ' '  && returnDate.trim() !== ' ' && note.trim() !== '' ){
+      if (  mid.trim() !== '' && eid.trim() !== '' && borrowDate.trim() !== ' '  && returnDate.trim() !== ' ' && note.trim() !== '' ){
          
           const formData = new FormData(); 
-          formData.append('eid', eid);
-          formData.append('mid', user.mid);
+          formData.append('eid',eid);
+          formData.append('mid', mid);
           formData.append('books', inputList);
           formData.append('borrowDate', borrowDate);
           formData.append('returnDate', returnDate);
@@ -242,7 +243,7 @@ const reload = () =>{
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Borrow Book
+            Add borrow book details
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
@@ -326,7 +327,7 @@ const reload = () =>{
               id="eid" 
               name="eid"
               autoComplete="eid" 
-              type="hidden"
+              hidden
               value={user.formData.eid || ''} 
               onChange={handleInputChange}
             />
@@ -347,14 +348,15 @@ const reload = () =>{
             {errors.mid.length > 0 && 
                 <span className='error'>{errors.mid}</span>}
             
-
+            <br/>
+            <br/>
+                <span  >Borrow date</span>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="borrowDate"
-              label="Borrow date"
+              id="borrowDate" 
               name="borrowDate"
               autoComplete="borrowDate"
               type="date"
@@ -365,14 +367,16 @@ const reload = () =>{
             {errors.borrowDate.length > 0 && 
                 <span className='error'>{errors.borrowDate}</span>}
             
+            <br/>
+            <br/>
+                <span  >Return date</span>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="returnDate"
-              type="date"
-              label="Return date"
+              type="date" 
               name="returnDate"
               autoComplete="returnDate"
               autoFocus

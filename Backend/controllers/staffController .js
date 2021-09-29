@@ -36,7 +36,16 @@ const Router = express.Router();
     }
 });
 
+
+/**
+ * Add staff member controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
+
 Router.post(  '/addStaff', upload.single('images'), async (req, res) => {
+
     try {
       const result = await cloudinary.uploader.upload(req.file.path);
       const { eid,name, email, address, contact, password} = req.body;
@@ -63,8 +72,15 @@ Router.post(  '/addStaff', upload.single('images'), async (req, res) => {
   }
 );
 
- 
- 
+
+
+
+/**
+ * get all staff member controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
 
 Router.get('/getAllStaff', async (req, res) => {
   try {
@@ -78,21 +94,14 @@ Router.get('/getAllStaff', async (req, res) => {
   }
 });
 
-Router.put('/updateStaff/:id', async (req, res) =>{
-  const id = req.params.id;
-  const {status} = req.body;
-  const updateStaff = {
-      status
-  }
-  console.log("updateStaff: ", updateStaff);
-  const update = await Staff.findByIdAndUpdate(id, updateStaff)
-      .then(() => {
-          res.status(200).send({status: "Staff member details Updated"})
-      }).catch((err) => {
-          console.log(err);
-          res.status(500).send({status: " Error", error:err.message});
-      })
-});
+
+
+/**
+ *search staff member by name controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
 
 Router.get('/searchStaff/:key', async (req, res) =>{
   try{
@@ -116,6 +125,13 @@ Router.get('/searchStaff/:key', async (req, res) =>{
   }
 });
 
+/**
+ *get staff member by id controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
+
 Router.get('/getstaffmember/:id', async (req, res) => {
   try {
     let id = req.params.id; 
@@ -127,31 +143,47 @@ Router.get('/getstaffmember/:id', async (req, res) => {
   }
 });
 
-// Router.get('/getstaffmember/:id', async (req, res) =>{
-//   try{
-//     let id = req.params.id;
-//     console.log(id);
-//     const member = await Staff.find(eid,id)
-//     .then(() => { 
-//         if (err) {
-//           return next(err);
-//         }
-    
-//         data = {
-//           status: "success",
-//           code: 200,
-//           data: member,
-//         };
-//         res.json(data);
-//     }).catch((err) => {
-//         console.log(err);
-//         res.status(500).send({status: " Error", error:err.message});
-//     })
-//   }catch (error) {
-//     res.status(400).send('Error while getting staff member Details. Try again later.');
-//   }
-// });
 
+/**
+ * update staff member controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
+
+Router.put("/:id", upload.single("image"), async (req, res) => {
+  try {
+    let staff = await Staff.findById(req.params.id);
+    // Delete image from cloudinary
+    await cloudinary.uploader.destroy(staff.cloudinary_id);
+    // Upload image to cloudinary
+    let result;
+    if (req.file) {
+      result = await cloudinary.uploader.upload(req.file.path);
+    }
+    const data = {
+      name: req.body.name || staff.name,
+      contact: req.body.contact || staff.contact, 
+      email: req.body.email || staff.email,
+      address: req.body.address || staff.address, 
+      eid: req.body.eid || staff.eid,
+      // avatar: result?.secure_url || member.avatar,
+      // cloudinary_id: result?.public_id || member.cloudinary_id,
+    };
+    staff = await Staff.findByIdAndUpdate(req.params.id, data, { new: true });
+    res.json(staff);
+  } catch (e) {
+    res.status(400).json({ msg: e.message, success: false });
+  }
+});
+
+
+/**
+ * delete staff member controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
 
   Router.delete('/deleteStaff/:id', async (req, res) => {
     try {

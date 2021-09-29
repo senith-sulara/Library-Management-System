@@ -27,7 +27,7 @@ export default function Home() {
 {/*----------------- */}
     <div className="column1">
     <div className="card">
-    <a href="/book">
+    <a href="/viewbarrow">
   <img src={BarrowList} alt="John" style={{ width: '200px', height: '200px', margin: '5px'}}/>
   <button id="btnH">Borrow Book List</button></a>
 </div>
