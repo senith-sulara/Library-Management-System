@@ -83,6 +83,10 @@ const Reports = (props) => {
   const [fineDetails, setFineDetails] = useState([]);
   const [returnDate, setReturnDate] = useState(null);
   const [filteredDateData, setFilteredDateData] = useState([]);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   ////////////////////
   const [bookDetails, setBookDetails] = useState([]);
   const [author, setAuthor] = useState(null);
@@ -92,6 +96,10 @@ const Reports = (props) => {
   const [memberDetails, setMemberDetails] = useState([]);
   const [Fname, setName] = useState(null);
   const [filteredNameData, setFilteredNameData] = useState([]);
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   useEffect(() => {
     retrieveFineDetails();
   }, []);
@@ -160,7 +168,11 @@ const Reports = (props) => {
   const handleAuthor = (e) => {
     setAuthor(e.target.value);
   };
+<<<<<<< Updated upstream
   
+=======
+
+>>>>>>> Stashed changes
   //Filter Data
 
   const generateBookReport = () => {
@@ -561,6 +573,7 @@ const Reports = (props) => {
                     </Button>
                   </div>
                 </Grid>
+<<<<<<< Updated upstream
 
                 <Grid item alignItems="stretch" style={{ display: "flex" }}>
                   <div className={classes.btnGroup}>
@@ -591,21 +604,28 @@ const Reports = (props) => {
                     autoFocus
                   />
                 </Grid>
+=======
+>>>>>>> Stashed changes
 
                 <Grid item alignItems="stretch" style={{ display: "flex" }}>
                   <div className={classes.btnGroup}>
-                    <Button
-                      id="btnReport"
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
+                    <CSVLink
+                      filename={"MemberDetails.csv"}
+                      data={filteredNameData}
+                      className="btn btn-primary m-2"
+                      data-toggle="tooltip"
+                      data-placement="top"
                     >
-                      Generate
-                    </Button>
+                      GENERATE
+                    </CSVLink>
                   </div>
                 </Grid>
+<<<<<<< Updated upstream
               </Grid> */}
+=======
+              </Grid>
+
+>>>>>>> Stashed changes
               <div className={classes.btnGroup}>
                 <CSVLink
                   className={classes.csv}
