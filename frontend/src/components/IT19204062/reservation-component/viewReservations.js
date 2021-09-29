@@ -5,6 +5,8 @@ import Button from "@material-ui/core/Button";
 import "../css/style.css";
 import { API_URL } from "../../utils/constants";
 import Alert from "@material-ui/lab/Alert";
+import EmailIcon from '@material-ui/icons/Email';
+import emailjs from "emailjs-com";
 
 export default function ViewReservations() {
   const [data, setData] = useState([]);
@@ -140,6 +142,11 @@ export default function ViewReservations() {
                 handleRowDelete(oldData, resolve);
               }),
           }}
+          actions={[sendMail => ({
+            icon: EmailIcon,
+            tooltip: 'Send Email',
+            // onClick: () => sendEmail(data),
+          })]}
           options={{
             headerStyle: {
               backgroundColor: "rgba(8, 9, 80, 0.363)",
