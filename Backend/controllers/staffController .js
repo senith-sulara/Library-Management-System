@@ -36,7 +36,16 @@ const Router = express.Router();
     }
 });
 
+
+/**
+ * Add staff member controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
+
 Router.post(  '/addStaff', upload.single('images'), async (req, res) => {
+
     try {
       const result = await cloudinary.uploader.upload(req.file.path);
       const { eid,name, email, address, contact, password} = req.body;
@@ -63,8 +72,15 @@ Router.post(  '/addStaff', upload.single('images'), async (req, res) => {
   }
 );
 
- 
- 
+
+
+
+/**
+ * get all staff member controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
 
 Router.get('/getAllStaff', async (req, res) => {
   try {
@@ -78,7 +94,14 @@ Router.get('/getAllStaff', async (req, res) => {
   }
 });
 
- 
+
+
+/**
+ *search staff member by name controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
 
 Router.get('/searchStaff/:key', async (req, res) =>{
   try{
@@ -102,6 +125,13 @@ Router.get('/searchStaff/:key', async (req, res) =>{
   }
 });
 
+/**
+ *get staff member by id controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
+
 Router.get('/getstaffmember/:id', async (req, res) => {
   try {
     let id = req.params.id; 
@@ -113,7 +143,14 @@ Router.get('/getstaffmember/:id', async (req, res) => {
   }
 });
 
- //Update
+
+/**
+ * update staff member controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
+
 Router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     let staff = await Staff.findById(req.params.id);
@@ -140,10 +177,14 @@ Router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-//////////////////////////////////////
 
-//Delete
- 
+/**
+ * delete staff member controller
+ * @param req
+ * @param res
+ * @returns {Promise<any>}
+ */
+
   Router.delete('/deleteStaff/:id', async (req, res) => {
     try {
       console.log(req.params.id);

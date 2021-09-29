@@ -126,6 +126,7 @@ const InsertBaroow= (props) => {
   useEffect(()=>{ 
     setUser(JSON.parse(localStorage.getItem('user')));
     console.log("data " + user.formData.eid);
+    state.eid = user.formData.eid;
   },[]);
 
   const handleOnSubmit = async (event) => {
@@ -133,11 +134,11 @@ const InsertBaroow= (props) => {
     setOpen(true);
     try {
       const { eid, mid, borrowDate, returnDate, note } = state;
-      if (eid.trim() !== '' && mid.trim() !== '' && borrowDate.trim() !== ' '  && returnDate.trim() !== ' ' && note.trim() !== '' ){
+      if (  mid.trim() !== '' && eid.trim() !== '' && borrowDate.trim() !== ' '  && returnDate.trim() !== ' ' && note.trim() !== '' ){
          
           const formData = new FormData(); 
-          formData.append('eid', eid);
-          formData.append('mid', user.mid);
+          formData.append('eid',eid);
+          formData.append('mid', mid);
           formData.append('books', inputList);
           formData.append('borrowDate', borrowDate);
           formData.append('returnDate', returnDate);
@@ -326,7 +327,7 @@ const reload = () =>{
               id="eid" 
               name="eid"
               autoComplete="eid" 
-              type="hidden"
+              hidden
               value={user.formData.eid || ''} 
               onChange={handleInputChange}
             />

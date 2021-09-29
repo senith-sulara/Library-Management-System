@@ -36,28 +36,30 @@ const Editable = (props) => {
     const [iserror, setIserror] = useState(false);
     let [user,setUser] = useState(null); 
 
-    useEffect(()=>{ 
-      const getUserData=()=>{
-        setUser(JSON.parse(localStorage.getItem('user')));  
-      };
-      getUserData();
-    },[]);
-    
+  let tableData = useState([
+    { title: 'Staff member Id', field: 'eid' },
+    { title: 'Member Id', field: 'mid'}, 
+    { title: 'Borrow Date', field: 'borrowDate' },
+    { title: 'Return Date', field: 'returnDate' }, 
+    { title: 'Note', field: 'note' },
+    { title: 'Books', field: '' , 
+    render: rowData => ( 
+      <>
+      {rowData.books.map(function(book, i){return <li key={i}>{book.bookId}</li>})}
+      </>
+    ),
+      },
+  ]);
 
-    const logOut = () => {    
-      localStorage.clear();
-      user=null;
-      history.push('/signin');
-      window.location.reload();
-      setAnchorEl(null);
-    };
-
+  
     useEffect(() => {
         const getFileList = async () => {
           try {
-            const { data } = await axios.get(`${API_URL}/staff/getAllStaff`);
+            const { data } = await axios.get(`${API_URL}/barrow/getAllBarrow`);
             setErrorMsg('');
             setData(data);
+            console.log(data);
+            console.log(data[0].books[0]);
           } catch (error) {
             error.response && setErrorMsg(error.response.data);
             console.log(error);
@@ -69,23 +71,11 @@ const Editable = (props) => {
     
         console.log(data);
       }, []);
-        
-    const [columns, setColumns] = useState([
-      { title: 'Id', field: 'eid' },
-      { title: 'Image', field: 'proPic',editable:false, 
-        render: rowData => (
-        <img
-          style={{ height: 50, width:50}} 
-          src={rowData.proPic}
-        />
-      ),
-      },
-      { title: 'name', field: 'name' },
-      { title: 'email', field: 'email' },
-      { title: 'address', field: 'address' },
-      { title: 'contact number', field: 'contact' }, 
-    ]);
+ 
 
+    const [columns, setColumns] = tableData
+    
+    
     const handleClose = (event, reason) => {
       if (reason === 'clickaway') {
         return;
@@ -102,35 +92,33 @@ const Editable = (props) => {
   const handleRowUpdate = (newData, oldData, resolve) => {
     //validation
     let errorList = [];
-    if (newData.id === "") {
-      errorList.push("Please enter ID");
+    if (newData.eid === "") {
+      errorList.push("Please Staff ID");
     }
-    if (newData.name === "") {
-      errorList.push("Please enter name");
+    if (newData.mid === "") {
+      errorList.push("Please member Id");
     } 
-    if (newData.contact === "") {
-      errorList.push("Please enter phone number");
+    if (newData.returnDate === "") {
+      errorList.push("Please enter return date");
     }
-    if (newData.email === "") {
-      errorList.push("Please enter email");
+    if (newData.borrowDate === "") {
+      errorList.push("Please borrow date");
     }
-    if (newData.address === "") {
-      errorList.push("Please enter address");
+    if (newData.Note === "") {
+      errorList.push("Please enter note");
     }
 
     if (errorList.length < 1) {
       api
-          .put("/staff/" + newData._id, newData)
+          .put("/barrow/" + newData._id, newData)
           .then((res) => {
             const dataUpdate = [...data];
             const index = oldData.tableData.id;
             dataUpdate[index] = newData;
             setData([...dataUpdate]);
             resolve();
-            setIserror(false);
-            if(user.formData.proPic == oldData.id){
-              localStorage.setItem('user',JSON.stringify('newData'));
-            }
+            setOpen(false);
+            
           })
           .catch((error) => {
             setErrorMsg(["Update failed! Server error"]);
@@ -138,8 +126,7 @@ const Editable = (props) => {
             resolve();
           });
       } else {
-        setErrorMsg(errorList);
-        setIserror(true);
+        setErrorMsg(errorList); 
         resolve();
         setOpen(true);
     }
@@ -183,12 +170,12 @@ const Editable = (props) => {
         </DialogActions>
       </Dialog>
         
-        <h1 id="h12" align="center">Staff Management</h1>
+        <h1 id="h12" align="center">Barrow book list</h1>
         
         <div className="tbl">
         
       <MaterialTable
-        title={<Button id="btnAdd" variant="contained" color="primary" href="/addstaff" >
+        title={<Button id="btnAdd" variant="contained" color="primary" href="/addbarrow" >
         Add new  
       </Button>}
         columns={columns}
@@ -209,12 +196,10 @@ const Editable = (props) => {
                 setData([...dataDelete]);
                 try {
                   const { data } = axios.delete(
-                    `${API_URL}/staff/deleteStaff/${oldData._id}`
+                    `${API_URL}/barrow/deleteBarrow/${oldData._id}`
                   );
                   setErrorMsg("");
-                  if(user.formData.proPic == oldData.id){
-                   logOut();
-                  }
+                   
                 } catch (error) {
                   error.response && setErrorMsg(error.response.data);
                   console.log(error);
@@ -224,6 +209,7 @@ const Editable = (props) => {
               }, 2000)
             }),
         }}
+        
         options={{
           headerStyle: {
             backgroundColor: 'rgba(8, 9, 80, 0.363)',
