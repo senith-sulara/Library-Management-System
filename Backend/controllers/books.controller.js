@@ -93,8 +93,8 @@ Router.put("/:id", upload.single("image"), async (req, res) => {
       refCode: req.body.refCode || book.refCode,
       rackNo: req.body.rackNo || book.rackNo,
       noOfCopies: req.body.noOfCopies || book.noOfCopies,
-      avatar: result?.secure_url || book.avatar,
-      cloudinary_id: result?.public_id || book.cloudinary_id,
+      // avatar: result?.secure_url || book.avatar,
+      // cloudinary_id: result?.public_id || book.cloudinary_id,
     };
     book = await Books.findByIdAndUpdate(req.params.id, data, { new: true });
     res.json(book);

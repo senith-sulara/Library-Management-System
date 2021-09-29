@@ -84,8 +84,11 @@ const Reports = (props) => {
   const [returnDate, setReturnDate] = useState(null);
   const [filteredDateData, setFilteredDateData] = useState([]);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
 
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   ////////////////////
   const [bookDetails, setBookDetails] = useState([]);
@@ -97,8 +100,11 @@ const Reports = (props) => {
   const [Fname, setName] = useState(null);
   const [filteredNameData, setFilteredNameData] = useState([]);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
 
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   useEffect(() => {
     retrieveFineDetails();
@@ -169,9 +175,13 @@ const Reports = (props) => {
     setAuthor(e.target.value);
   };
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   
 =======
 
+>>>>>>> Stashed changes
+=======
+  
 >>>>>>> Stashed changes
   //Filter Data
 
@@ -574,6 +584,9 @@ const Reports = (props) => {
                   </div>
                 </Grid>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 
                 <Grid item alignItems="stretch" style={{ display: "flex" }}>
                   <div className={classes.btnGroup}>
@@ -604,6 +617,7 @@ const Reports = (props) => {
                     autoFocus
                   />
                 </Grid>
+<<<<<<< Updated upstream
 =======
 >>>>>>> Stashed changes
 
@@ -625,6 +639,23 @@ const Reports = (props) => {
 =======
               </Grid>
 
+>>>>>>> Stashed changes
+=======
+
+                <Grid item alignItems="stretch" style={{ display: "flex" }}>
+                  <div className={classes.btnGroup}>
+                    <Button
+                      id="btnReport"
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                    >
+                      Generate
+                    </Button>
+                  </div>
+                </Grid>
+              </Grid> */}
 >>>>>>> Stashed changes
               <div className={classes.btnGroup}>
                 <CSVLink
