@@ -1,34 +1,60 @@
-import React, { useEffect, useState } from "react";
-import MaterialTable from "material-table";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API_URL } from "../utils/constants";
+import "./Member.css";
+import MaterialTable from "material-table";
 import Button from "@material-ui/core/Button";
-import "../css/reservation.css";
 
-export default function ViewReservations() {
+const Editable = (props) => {
+  const { useState } = React;
   const [data, setData] = useState([]);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8070/api/reservation/getReservations")
-      .then((res) => {
-        console.log(res.data);
-        setData(res.data);
-      });
+    const getFileList = async () => {
+      try {
+        const { data } = await axios.get(`${API_URL}/member/getAllMembers`);
+        setErrorMsg("");
+        setData(data);
+        console.log(data);
+      } catch (error) {
+        error.response && setErrorMsg(error.response.data);
+        console.log(error);
+      }
+    };
+
+    getFileList();
+
+    console.log(data);
   }, []);
 
-  let fields = [
-    { title: "Member Name", field: "memberName" },
-    { title: "Member Code", field: "memberCode" },
-    { title: "Email", field: "email" },
-    { title: "Book Name", field: "bookName" },
-    { title: "Book Code", field: "bookCode" },
-  ];
+  const [columns, setColumns] = useState([
+    {
+      title: "Image",
+      field: "avatar",
+      render: (rowData) => (
+        <img
+          style={{ height: 50, width: 50, borderRadius: "50%" }}
+          src={rowData.avatar}
+        />
+      ),
+    },
+    { title: "Name", field: "Fname" },
+    { title: "NIC", field: "nic" },
+    { title: "Phone", field: "phone" },
+    { title: "Email ", field: "email" },
+    { title: "Address ", field: "address" },
+  ]);
 
   return (
     <div>
-      <h1 id="h12" align="center">
-        Reservation Management
-      </h1>
+      <h3 className="h12">
+        <br />
+        <center>
+          <b> Member Management </b>
+        </center>
+      </h3>
+
       <div className="tbl">
         <MaterialTable
           title={
@@ -37,13 +63,13 @@ export default function ViewReservations() {
                 id="btnAdd"
                 variant="contained"
                 color="primary"
-                href="/addReservation"
+                href="/addMember"
               >
-                Add new Reservation
+                Add New Member
               </Button>
             </>
           }
-          columns={fields}
+          columns={columns}
           data={data}
           editable={{
             onRowUpdate: (newData, oldData) =>
@@ -74,10 +100,13 @@ export default function ViewReservations() {
               backgroundColor: "rgba(8, 9, 80, 0.363)",
               color: "rgba(0, 0, 0)",
             },
+
             actionsColumnIndex: -1,
           }}
         />
       </div>
     </div>
   );
-}
+};
+
+export default Editable;

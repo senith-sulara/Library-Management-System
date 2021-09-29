@@ -36,7 +36,6 @@ const Router = express.Router();
     }
 });
 
-
 /**
  * Add staff member controller
  * @param req
@@ -74,13 +73,13 @@ Router.post(  '/addStaff', upload.single('images'), async (req, res) => {
 
 
 
-
 /**
  * get all staff member controller
  * @param req
  * @param res
  * @returns {Promise<any>}
  */
+
 
 Router.get('/getAllStaff', async (req, res) => {
   try {
@@ -124,6 +123,7 @@ Router.get('/searchStaff/:key', async (req, res) =>{
     res.status(400).send('Error while getting staff member Details. Try again later.');
   }
 });
+
 
 /**
  *get staff member by id controller

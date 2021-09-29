@@ -9,7 +9,30 @@ import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import axios from "axios";
-import "../css/reservation.css";
+import "../css/style.css";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Draggable from "react-draggable";
+import { useHistory } from "react-router-dom";
+import CheckIcon from "@material-ui/icons/Check";
+import ClearIcon from "@material-ui/icons/Clear";
+import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
+import { API_URL } from '../../utils/constants';
+
+function PaperComponent(props) {
+  return (
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
+      <Paper {...props} />
+    </Draggable>
+  );
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddReservation() {
+  let history = useHistory();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [memberName, setMemberName] = useState("");
@@ -70,6 +94,7 @@ export default function AddReservation() {
   const [bookCode, setBookCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [errors, setErrors] = useState({email:'', memberCode:'', bookCode:''});
 
   const handleMemberName = (e) => {
     setMemberName(e.target.value);
@@ -97,8 +122,43 @@ export default function AddReservation() {
     }
     setOpen(false);
   };
+  const clear = () => {
+    setMemberName("");
+    setMemberCode("");
+    setBookName("");
+    setBookCode("");
+    setEmail("");
+  };
+  const validate = () =>{
+    let errors = {};
+    let isValid = true;
+
+    if (memberCode.length !== 6) {
+      isValid = false;
+       errors["memberCode"] = "Please enter valid member code";
+    }
+
+    if (bookCode.length !== 6) {
+      isValid = false;
+       errors["bookCode"] = "Please enter valid book code";
+    }
+
+    if (typeof email !== "undefined") {
+        
+      var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+      if (!pattern.test(email)) {
+        isValid = false;
+        errors["email"] = "Please enter valid email address.";
+      }
+    }
+    setErrors(errors);
+
+    return isValid;
+}
 
   const onSubmit = () => {
+    if(validate()){
+    setOpen(true);
     const reservation = {
       memberName: memberName,
       memberCode: memberCode,
@@ -107,7 +167,7 @@ export default function AddReservation() {
       bookCode: bookCode,
     };
     axios
-      .post("http://localhost:8070/api/reservation/add", reservation)
+      .post(`${API_URL}/api/reservation/add`, reservation)
       .then((res) => {
         if (res.data.success) {
           setMemberName("");
@@ -115,14 +175,15 @@ export default function AddReservation() {
           setBookName("");
           setBookCode("");
           setEmail("");
-          alert("Successfully inserted");
+          setSuccessMsg("Successfully inserted");
         } else {
-          alert("Please try again");
+          setErrorMsg("Please try again");
         }
       })
       .catch((err) => {
         console.log(err);
       });
+    }
   };
 
   return (
@@ -135,16 +196,47 @@ export default function AddReservation() {
             Insert New Reservation
           </Typography>
           <div className={classes.alert}>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-              <Alert onClose={handleClose} severity="error">
-                {errorMsg}
-              </Alert>
-            </Snackbar>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-              <Alert onClose={handleClose} severity="success">
-                {successMsg}
-              </Alert>
-            </Snackbar>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              PaperComponent={PaperComponent}
+              aria-labelledby="draggable-dialog-title"
+            >
+              <DialogTitle
+                style={{
+                  cursor: "move",
+                  backgroundColor: "#02032b",
+                  color: "#ffffff",
+                }}
+                id="draggable-dialog-title"
+              >
+                <LocalLibraryIcon /> LMS
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  {successMsg != "" ? (
+                    <>
+                      <div style={{ color: "#008000" }}>
+                        <CheckIcon />
+                        {successMsg}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div style={{ color: "#aa202b" }}>
+                        <ClearIcon />
+                        {errorMsg}
+                      </div>
+                    </>
+                  )}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Ok
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
           <TextField
             variant="outlined"
@@ -172,6 +264,8 @@ export default function AddReservation() {
             onChange={(e) => handleMemberCode(e)}
             autoFocus
           />
+          {errors.memberCode ? (
+                <span className='error'>{errors.memberCode}</span>):(<></>)}
           <TextField
             variant="outlined"
             margin="normal"
@@ -185,6 +279,8 @@ export default function AddReservation() {
             onChange={(e) => handleEmail(e)}
             autoFocus
           />
+          {errors.email ? (
+                <span className='error'>{errors.email}</span>):(<></>)}
           <TextField
             variant="outlined"
             margin="normal"
@@ -211,12 +307,14 @@ export default function AddReservation() {
             onChange={(e) => handleBookCode(e)}
             autoFocus
           />
+          {errors.bookCode? ( 
+                <span className='error'>{errors.bookCode}</span>):(<></>)}
 
           <div className={classes.btnGroup}>
             <Button
               id="btnBack"
               type="button"
-              href="/book"
+              onClick={history.goBack}
               fullWidth
               variant="contained"
               color="primary"
@@ -243,6 +341,7 @@ export default function AddReservation() {
               variant="contained"
               color="secondary"
               className={classes.clear}
+              onClick={clear}
             >
               Clear
             </Button>

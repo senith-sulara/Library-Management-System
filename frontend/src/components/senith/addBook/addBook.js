@@ -167,6 +167,7 @@ const InsertBook= (props) => {
     }
   };
 
+
 //Insert data
   const handleOnSubmit = async (event) => {
     event.preventDefault();
@@ -212,6 +213,7 @@ const InsertBook= (props) => {
       // setOpenErr(true);
     }
   };
+
 
   //clear records
   const reload = () =>{ 

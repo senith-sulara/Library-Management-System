@@ -180,7 +180,9 @@ const InsertStaff= (props) => {
               'Content-Type': 'multipart/form-data'
             }
           });
+
           setSuccessMsg('upload Success'); 
+
         } else {
           setErrorMsg('Please select a file to add.');
         }
@@ -194,6 +196,7 @@ const InsertStaff= (props) => {
 const reload = () =>{ 
    setState(initialState);
 };
+
 
 
   const handleInputChange = (event) => {
@@ -285,7 +288,9 @@ const reload = () =>{
     setOpen(false);
   };
 
+
   const {errors} = state;
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -293,7 +298,9 @@ const reload = () =>{
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
+
             Add new staff member
+
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
@@ -348,6 +355,7 @@ const reload = () =>{
               value={state.eid || ''} 
               onChange={handleInputChange}
             />
+
             {errors.eid.length > 0 && 
                 <span className='error'>{errors.eid}</span>}
             
@@ -365,9 +373,10 @@ const reload = () =>{
               value={state.name || ''} 
               onChange={handleInputChange}
             />
+
             {errors.name.length > 0 && 
                 <span className='error'>{errors.name}</span>}
-            
+
 
             <TextField
               variant="outlined"
@@ -382,9 +391,10 @@ const reload = () =>{
               value={state.email || ''} 
               onChange={handleInputChange}
             />
+
             {errors.email.length > 0 && 
                 <span className='error'>{errors.email}</span>}
-            
+           
 
             <TextField
               variant="outlined"
@@ -399,9 +409,10 @@ const reload = () =>{
               value={state.contact || ''} 
               onChange={handleInputChange}
             />
+
             {errors.contact.length > 0 && 
                 <span className='error'>{errors.contact}</span>}
-            
+
 
             <TextField
               variant="outlined"
@@ -419,7 +430,7 @@ const reload = () =>{
             />     
             {errors.address.length > 0 && 
                 <span className='error'>{errors.address}</span>}
-             
+
 
             <TextField
               variant="outlined"
@@ -434,9 +445,10 @@ const reload = () =>{
               value={state.password || ''} 
               onChange={handleInputChange}
             />
+
             {errors.password.length > 0 && 
                 <span className='error'>{errors.password}</span>}
-             
+  
             
 
         <div className="upload-section">

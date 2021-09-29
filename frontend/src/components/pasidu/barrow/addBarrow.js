@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState, useRef} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -104,6 +104,7 @@ const initialState={
   borrowDate:' ',
   returnDate:' ',
   note: '', 
+
   errors: { 
     mid: '', 
     borrowDate:' ',
@@ -134,6 +135,7 @@ const InsertBaroow= (props) => {
     setOpen(true);
     try {
       const { eid, mid, borrowDate, returnDate, note } = state;
+
       if (  mid.trim() !== '' && eid.trim() !== '' && borrowDate.trim() !== ' '  && returnDate.trim() !== ' ' && note.trim() !== '' ){
          
           const formData = new FormData(); 
@@ -204,6 +206,7 @@ const reload = () =>{
     });
   };
 
+
   const {errors} = state;
   // const handleClick = () => {
   //   setOpen(true);
@@ -243,7 +246,9 @@ const reload = () =>{
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
+
             Add borrow book details
+
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
@@ -300,8 +305,7 @@ const reload = () =>{
               value={x.bookId}
               onChange={e => handleInput(e, i)}
             />
-            
-            
+
                 <div className={classes.btnGroup}>
                   {inputList.length !== 1 && <Button
                     className={classes.btn} 
@@ -345,12 +349,14 @@ const reload = () =>{
               value={state.mid || ''} 
               onChange={handleInputChange}
             />
+
             {errors.mid.length > 0 && 
                 <span className='error'>{errors.mid}</span>}
             
             <br/>
             <br/>
                 <span  >Borrow date</span>
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -364,6 +370,7 @@ const reload = () =>{
               value={state.borrowDate || ' '} 
               onChange={handleInputChange}
             />
+
             {errors.borrowDate.length > 0 && 
                 <span className='error'>{errors.borrowDate}</span>}
             
@@ -404,6 +411,7 @@ const reload = () =>{
             {errors.note.length > 0 && 
                 <span className='error'>{errors.note}</span>}
                
+
  
             
 

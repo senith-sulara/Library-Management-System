@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
     width: "100%",
   },
+
   // expandedPanel: {
   //   color: "#ffffff",
   // },
@@ -83,18 +84,17 @@ const Reports = (props) => {
   const [fineDetails, setFineDetails] = useState([]);
   const [returnDate, setReturnDate] = useState(null);
   const [filteredDateData, setFilteredDateData] = useState([]);
-  ////////////////////
   const [bookDetails, setBookDetails] = useState([]);
   const [author, setAuthor] = useState(null);
   const [filteredAuthorData, setFilteredAuthorData] = useState([]);
-
-  ////////////////////
   const [memberDetails, setMemberDetails] = useState([]);
   const [Fname, setName] = useState(null);
   const [filteredNameData, setFilteredNameData] = useState([]);
+
   useEffect(() => {
     retrieveFineDetails();
   }, []);
+
 
   useEffect(() => {
     retrieveBookDetails();
@@ -136,8 +136,6 @@ const Reports = (props) => {
     });
     setFilteredDateData(filteredData);
   };
-
-  ////////////////////////////////////////////////////////
 
   const retrieveBookDetails = () => {
     setBookDetails([]);
@@ -231,6 +229,7 @@ const Reports = (props) => {
             <Typography className={classes.heading}>Book Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
+
           <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
@@ -297,6 +296,7 @@ const Reports = (props) => {
                 </Grid> */}
 
               {/* <Grid item alignItems="stretch" style={{ display: "flex" }}>
+
                   <div className={classes.btnGroup}>
                     <Button
                       id="btnReport"
@@ -308,6 +308,7 @@ const Reports = (props) => {
                       Generate
                     </Button>
                   </div>
+
                 </Grid> */}
               {/* </Grid> */}
               <div className={classes.btnGroup}>
@@ -321,6 +322,7 @@ const Reports = (props) => {
                 >
                   Generate All Book Details Report
                 </CSVLink>
+
               </div>
             </Typography>
           </AccordionDetails>
@@ -420,6 +422,7 @@ const Reports = (props) => {
         </Accordion>
         <Accordion
           className={classes.accord}
+
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
         >
@@ -435,6 +438,7 @@ const Reports = (props) => {
             <Typography className={classes.heading}>Borrow Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
+
           <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
@@ -528,6 +532,7 @@ const Reports = (props) => {
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
           <AccordionDetails className={classes.cont}>
+
             <Typography>
               <Grid container>
                 <Grid item>
@@ -578,6 +583,7 @@ const Reports = (props) => {
               </Grid>
 
               {/* <Grid container>
+
                 <Grid item>
                   <TextField
                     className={classes.text}
@@ -605,6 +611,7 @@ const Reports = (props) => {
                     </Button>
                   </div>
                 </Grid>
+
               </Grid> */}
               <div className={classes.btnGroup}>
                 <CSVLink
@@ -617,6 +624,7 @@ const Reports = (props) => {
                 >
                   Generate All Member Details Report
                 </CSVLink>
+
               </div>
             </Typography>
           </AccordionDetails>
@@ -639,6 +647,7 @@ const Reports = (props) => {
               Fine List Reports
             </Typography>
           </AccordionSummary>
+
           <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>

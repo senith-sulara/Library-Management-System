@@ -69,7 +69,7 @@ const Editable = (props) => {
     
         console.log(data);
       }, []);
-        
+
     const [columns, setColumns] = useState([
       { title: 'Id', field: 'eid' },
       { title: 'Image', field: 'proPic',editable:false, 
@@ -194,6 +194,7 @@ const Editable = (props) => {
         columns={columns}
         data={data}
         editable={{
+
           
           onRowUpdate: (newData, oldData) =>
             new Promise((resolve, reject) => {

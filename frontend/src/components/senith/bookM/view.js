@@ -123,12 +123,10 @@ const Editable = (props) => {
       })
   }
 
-
     return (
       <div>
         <h1 id="h12" align="center">Book Management</h1>
         <div className="tbl">
-
         <div>
 
           {iserror &&    
