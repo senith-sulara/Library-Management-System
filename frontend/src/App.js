@@ -14,8 +14,8 @@ import Profile from './components/pasidu/staff/userProfile';
 import Footer from './components/pasidu/comman/footer';
 import AddReservation from "./components/nirasha/reservation-component/addReservation";
 import ViewReservations from "./components/nirasha/reservation-component/viewResrvations";
-import AddMember from "./components/kaveena/addMember";
-import MemberTable from "./components/kaveena/viewMember";
+import AddMember from "./components/IT19220048/addMember";
+import MemberTable from "./components/IT19220048/viewMember";
 import AddBarrow from "./components/pasidu/barrow/addBarrow";
 import Barrow from "./components/pasidu/barrow/barrowHome";
 

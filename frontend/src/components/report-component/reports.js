@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     // flexBasis: '33.33%',
     flexShrink: 0,
     margin: "auto",
-    
+
     // backgroundColor: theme.palette.primary.main,
   },
   // secondaryHeading: {
@@ -65,16 +65,16 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   accord: {
-    width:"600px",
-    paddingTop: "20px"
+    width: "600px",
+    paddingTop: "20px",
   },
   cont: {
     paddingLeft: "50px",
-    backgroundColor: 'rgba(1, 1, 74, 0.2)',
+    backgroundColor: "rgba(1, 1, 74, 0.2)",
   },
   csv: {
-    paddingLeft: "100px"
-  }
+    paddingLeft: "100px",
+  },
 }));
 
 const Reports = (props) => {
@@ -83,10 +83,15 @@ const Reports = (props) => {
   const [fineDetails, setFineDetails] = useState([]);
   const [returnDate, setReturnDate] = useState(null);
   const [filteredDateData, setFilteredDateData] = useState([]);
-////////////////////
-const [bookDetails, setBookDetails] = useState([]);
+  ////////////////////
+  const [bookDetails, setBookDetails] = useState([]);
   const [author, setAuthor] = useState(null);
   const [filteredAuthorData, setFilteredAuthorData] = useState([]);
+
+  ////////////////////
+  const [memberDetails, setMemberDetails] = useState([]);
+  const [Fname, setName] = useState(null);
+  const [filteredNameData, setFilteredNameData] = useState([]);
   useEffect(() => {
     retrieveFineDetails();
   }, []);
@@ -95,6 +100,9 @@ const [bookDetails, setBookDetails] = useState([]);
     retrieveBookDetails();
   }, []);
 
+  useEffect(() => {
+    retrieveMemberDetails();
+  }, []);
 
   const retrieveFineDetails = () => {
     setFineDetails([]);
@@ -131,7 +139,6 @@ const [bookDetails, setBookDetails] = useState([]);
 
   ////////////////////////////////////////////////////////
 
-  // Retrive all book details t ogenerate report
   const retrieveBookDetails = () => {
     setBookDetails([]);
     axios.get(`${API_URL}/BookDetails/getAllBooks`).then((res) => {
@@ -153,14 +160,50 @@ const [bookDetails, setBookDetails] = useState([]);
   const handleAuthor = (e) => {
     setAuthor(e.target.value);
   };
-
-//Filter Data
+  
+  //Filter Data
 
   const generateBookReport = () => {
     console.log(bookDetails);
-    var filteredbookData = bookDetails.filter((item =>
-      item.Author.includes(author)));
+    var filteredbookData = bookDetails.filter((item) =>
+      item.Author.includes(author)
+    );
     setFilteredAuthorData(filteredbookData);
+  };
+
+  ////////////////////////////////////////////////////////
+
+  //generate all member details method
+  const retrieveMemberDetails = () => {
+    setMemberDetails([]);
+    axios.get(`${API_URL}/member/getAllMembers`).then((res) => {
+      console.log(res.data);
+      res.data.forEach((item) => {
+        let object = {
+          Name: item.Fname,
+          NIC: item.nic,
+          Phone: item.phone,
+          Email: item.email,
+          Address: item.address,
+          MemberCode: item.memberCode,
+        };
+        memberDetails.push(object);
+      });
+      setMemberDetails(memberDetails);
+    });
+  };
+
+  const handleName = (e) => {
+    setName(e.target.value);
+  };
+
+  //filterd member details
+  const generateMemberReport = () => {
+    console.log(memberDetails);
+    var filteredNameData = memberDetails.filter((item) =>
+      item.Name.includes(Fname)
+    );
+    setFilteredNameData(filteredNameData);
   };
 
   return (
@@ -178,12 +221,12 @@ const [bookDetails, setBookDetails] = useState([]);
         >
           <AccordionSummary
             className={classes.panel}
-            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
           >
-            <AssignmentIcon/>
+            <AssignmentIcon />
 
             <Typography className={classes.heading}>Book Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
@@ -225,7 +268,7 @@ const [bookDetails, setBookDetails] = useState([]);
 
                 <Grid item alignItems="stretch" style={{ display: "flex" }}>
                   <div className={classes.btnGroup}>
-                  <CSVLink
+                    <CSVLink
                       filename={"BookDetails.csv"}
                       data={filteredAuthorData}
                       className="btn btn-primary m-2"
@@ -253,7 +296,7 @@ const [bookDetails, setBookDetails] = useState([]);
                   />
                 </Grid> */}
 
-                {/* <Grid item alignItems="stretch" style={{ display: "flex" }}>
+              {/* <Grid item alignItems="stretch" style={{ display: "flex" }}>
                   <div className={classes.btnGroup}>
                     <Button
                       id="btnReport"
@@ -268,7 +311,7 @@ const [bookDetails, setBookDetails] = useState([]);
                 </Grid> */}
               {/* </Grid> */}
               <div className={classes.btnGroup}>
-              <CSVLink
+                <CSVLink
                   className={classes.csv}
                   filename={"BookDetails.csv"}
                   data={bookDetails}
@@ -283,14 +326,14 @@ const [bookDetails, setBookDetails] = useState([]);
           </AccordionDetails>
         </Accordion>
         <Accordion
-        className={classes.accord}
+          className={classes.accord}
           expanded={expanded === "panel2"}
           onChange={handleChange("panel2")}
           marginTop="10px"
         >
           <AccordionSummary
-          className={classes.panel}
-            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -376,13 +419,13 @@ const [bookDetails, setBookDetails] = useState([]);
           </AccordionDetails>
         </Accordion>
         <Accordion
-        className={classes.accord}
+          className={classes.accord}
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
         >
           <AccordionSummary
             className={classes.panel}
-            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -468,13 +511,13 @@ const [bookDetails, setBookDetails] = useState([]);
           </AccordionDetails>
         </Accordion>
         <Accordion
-        className={classes.accord}
+          className={classes.accord}
           expanded={expanded === "panel4"}
           onChange={handleChange("panel4")}
         >
           <AccordionSummary
             className={classes.panel}
-            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -490,13 +533,16 @@ const [bookDetails, setBookDetails] = useState([]);
                 <Grid item>
                   <TextField
                     className={classes.text}
+                    type="Fname"
                     variant="outlined"
                     margin="normal"
                     fullWidth
-                    id="Repoauthor"
-                    label="Book Author"
-                    name="Repoauthor"
-                    autoComplete="Repoauthor"
+                    id="RepoFname"
+                    label="Member Name"
+                    name="RepoFname"
+                    autoComplete="RepoFname"
+                    // InputLabelProps={{ shrink: true }}
+                    onChange={(e) => handleName(e)}
                     autoFocus
                   />
                 </Grid>
@@ -509,14 +555,29 @@ const [bookDetails, setBookDetails] = useState([]);
                       fullWidth
                       variant="contained"
                       color="primary"
+                      onClick={() => generateMemberReport()}
                     >
-                      Generate
+                      Filter
                     </Button>
+                  </div>
+                </Grid>
+
+                <Grid item alignItems="stretch" style={{ display: "flex" }}>
+                  <div className={classes.btnGroup}>
+                    <CSVLink
+                      filename={"MemberDetails.csv"}
+                      data={filteredNameData}
+                      className="btn btn-primary m-2"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                    >
+                      GENERATE
+                    </CSVLink>
                   </div>
                 </Grid>
               </Grid>
 
-              <Grid container>
+              {/* <Grid container>
                 <Grid item>
                   <TextField
                     className={classes.text}
@@ -544,29 +605,30 @@ const [bookDetails, setBookDetails] = useState([]);
                     </Button>
                   </div>
                 </Grid>
-              </Grid>
+              </Grid> */}
               <div className={classes.btnGroup}>
-                <Button
-                  id="btnAllReport"
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
+                <CSVLink
+                  className={classes.csv}
+                  filename={"MemberDetails.csv"}
+                  data={memberDetails}
+                  className="btn btn-primary m-2"
+                  data-toggle="tooltip"
+                  data-placement="top"
                 >
-                  Generate All Book Details Report
-                </Button>
+                  Generate All Member Details Report
+                </CSVLink>
               </div>
             </Typography>
           </AccordionDetails>
         </Accordion>
         <Accordion
-        className={classes.accord}
+          className={classes.accord}
           expanded={expanded === "panel5"}
           onChange={handleChange("panel5")}
         >
           <AccordionSummary
             className={classes.panel}
-            expandIcon={<ExpandMoreIcon className={classes.icn}/>}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
