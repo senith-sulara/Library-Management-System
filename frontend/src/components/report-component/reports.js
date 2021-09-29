@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     // flexBasis: '33.33%',
     flexShrink: 0,
     margin: "auto",
+
     // backgroundColor: theme.palette.primary.main,
   },
   // secondaryHeading: {
@@ -47,8 +48,15 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
     width: "100%",
   },
-  expandedPanel: {
+
+  // expandedPanel: {
+  //   color: "#ffffff",
+  // },
+  panel: {
     backgroundColor: theme.palette.secondary.main,
+    color: "#ffffff",
+  },
+  icn: {
     color: "#ffffff",
   },
   repo: {
@@ -56,6 +64,17 @@ const useStyles = makeStyles((theme) => ({
   },
   sub: {
     width: "100%",
+  },
+  accord: {
+    width: "600px",
+    paddingTop: "20px",
+  },
+  cont: {
+    paddingLeft: "50px",
+    backgroundColor: "rgba(1, 1, 74, 0.2)",
+  },
+  csv: {
+    paddingLeft: "100px",
   },
 }));
 
@@ -65,9 +84,24 @@ const Reports = (props) => {
   const [fineDetails, setFineDetails] = useState([]);
   const [returnDate, setReturnDate] = useState(null);
   const [filteredDateData, setFilteredDateData] = useState([]);
+  const [bookDetails, setBookDetails] = useState([]);
+  const [author, setAuthor] = useState(null);
+  const [filteredAuthorData, setFilteredAuthorData] = useState([]);
+  const [memberDetails, setMemberDetails] = useState([]);
+  const [Fname, setName] = useState(null);
+  const [filteredNameData, setFilteredNameData] = useState([]);
 
   useEffect(() => {
     retrieveFineDetails();
+  }, []);
+
+
+  useEffect(() => {
+    retrieveBookDetails();
+  }, []);
+
+  useEffect(() => {
+    retrieveMemberDetails();
   }, []);
 
   const retrieveFineDetails = () => {
@@ -103,6 +137,73 @@ const Reports = (props) => {
     setFilteredDateData(filteredData);
   };
 
+  const retrieveBookDetails = () => {
+    setBookDetails([]);
+    axios.get(`${API_URL}/BookDetails/getAllBooks`).then((res) => {
+      console.log(res.data);
+      res.data.forEach((item) => {
+        let object = {
+          Title: item.title,
+          Author: item.author,
+          Publisher: item.publisher,
+          RefCode: item.refCode,
+          NoOfCopies: item.noOfCopies,
+        };
+        bookDetails.push(object);
+      });
+      setBookDetails(bookDetails);
+    });
+  };
+
+  const handleAuthor = (e) => {
+    setAuthor(e.target.value);
+  };
+  
+  //Filter Data
+
+  const generateBookReport = () => {
+    console.log(bookDetails);
+    var filteredbookData = bookDetails.filter((item) =>
+      item.Author.includes(author)
+    );
+    setFilteredAuthorData(filteredbookData);
+  };
+
+  ////////////////////////////////////////////////////////
+
+  //generate all member details method
+  const retrieveMemberDetails = () => {
+    setMemberDetails([]);
+    axios.get(`${API_URL}/member/getAllMembers`).then((res) => {
+      console.log(res.data);
+      res.data.forEach((item) => {
+        let object = {
+          Name: item.Fname,
+          NIC: item.nic,
+          Phone: item.phone,
+          Email: item.email,
+          Address: item.address,
+          MemberCode: item.memberCode,
+        };
+        memberDetails.push(object);
+      });
+      setMemberDetails(memberDetails);
+    });
+  };
+
+  const handleName = (e) => {
+    setName(e.target.value);
+  };
+
+  //filterd member details
+  const generateMemberReport = () => {
+    console.log(memberDetails);
+    var filteredNameData = memberDetails.filter((item) =>
+      item.Name.includes(Fname)
+    );
+    setFilteredNameData(filteredNameData);
+  };
+
   return (
     <div>
       <h1 id="h12" align="center">
@@ -111,12 +212,14 @@ const Reports = (props) => {
 
       <div className={classes.root}>
         <Accordion
+          className={classes.accord}
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
           marginTop="10px"
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -126,12 +229,14 @@ const Reports = (props) => {
             <Typography className={classes.heading}>Book Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
-          <AccordionDetails>
+
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>
                   <TextField
                     className={classes.text}
+                    type="author"
                     variant="outlined"
                     margin="normal"
                     fullWidth
@@ -139,6 +244,8 @@ const Reports = (props) => {
                     label="Book Author"
                     name="Repoauthor"
                     autoComplete="Repoauthor"
+                    // InputLabelProps={{ shrink: true }}
+                    onChange={(e) => handleAuthor(e)}
                     autoFocus
                   />
                 </Grid>
@@ -151,14 +258,29 @@ const Reports = (props) => {
                       fullWidth
                       variant="contained"
                       color="primary"
+                      onClick={() => generateBookReport()}
                     >
-                      Generate
+                      Filter
                     </Button>
+                  </div>
+                </Grid>
+
+                <Grid item alignItems="stretch" style={{ display: "flex" }}>
+                  <div className={classes.btnGroup}>
+                    <CSVLink
+                      filename={"BookDetails.csv"}
+                      data={filteredAuthorData}
+                      className="btn btn-primary m-2"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                    >
+                      GENERATE
+                    </CSVLink>
                   </div>
                 </Grid>
               </Grid>
 
-              <Grid container>
+              {/* <Grid container>
                 <Grid item>
                   <TextField
                     className={classes.text}
@@ -171,9 +293,10 @@ const Reports = (props) => {
                     autoComplete="RepoType"
                     autoFocus
                   />
-                </Grid>
+                </Grid> */}
 
-                <Grid item alignItems="stretch" style={{ display: "flex" }}>
+              {/* <Grid item alignItems="stretch" style={{ display: "flex" }}>
+
                   <div className={classes.btnGroup}>
                     <Button
                       id="btnReport"
@@ -185,29 +308,34 @@ const Reports = (props) => {
                       Generate
                     </Button>
                   </div>
-                </Grid>
-              </Grid>
+
+                </Grid> */}
+              {/* </Grid> */}
               <div className={classes.btnGroup}>
-                <Button
-                  id="btnAllReport"
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
+                <CSVLink
+                  className={classes.csv}
+                  filename={"BookDetails.csv"}
+                  data={bookDetails}
+                  className="btn btn-primary m-2"
+                  data-toggle="tooltip"
+                  data-placement="top"
                 >
                   Generate All Book Details Report
-                </Button>
+                </CSVLink>
+
               </div>
             </Typography>
           </AccordionDetails>
         </Accordion>
         <Accordion
+          className={classes.accord}
           expanded={expanded === "panel2"}
           onChange={handleChange("panel2")}
           marginTop="10px"
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -217,7 +345,7 @@ const Reports = (props) => {
             <Typography className={classes.heading}>Staff Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>
@@ -293,11 +421,14 @@ const Reports = (props) => {
           </AccordionDetails>
         </Accordion>
         <Accordion
+          className={classes.accord}
+
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -307,7 +438,8 @@ const Reports = (props) => {
             <Typography className={classes.heading}>Borrow Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
-          <AccordionDetails>
+
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>
@@ -383,11 +515,13 @@ const Reports = (props) => {
           </AccordionDetails>
         </Accordion>
         <Accordion
+          className={classes.accord}
           expanded={expanded === "panel4"}
           onChange={handleChange("panel4")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -397,19 +531,23 @@ const Reports = (props) => {
             <Typography className={classes.heading}>Member Reports</Typography>
             {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails className={classes.cont}>
+
             <Typography>
               <Grid container>
                 <Grid item>
                   <TextField
                     className={classes.text}
+                    type="Fname"
                     variant="outlined"
                     margin="normal"
                     fullWidth
-                    id="Repoauthor"
-                    label="Book Author"
-                    name="Repoauthor"
-                    autoComplete="Repoauthor"
+                    id="RepoFname"
+                    label="Member Name"
+                    name="RepoFname"
+                    autoComplete="RepoFname"
+                    // InputLabelProps={{ shrink: true }}
+                    onChange={(e) => handleName(e)}
                     autoFocus
                   />
                 </Grid>
@@ -422,14 +560,30 @@ const Reports = (props) => {
                       fullWidth
                       variant="contained"
                       color="primary"
+                      onClick={() => generateMemberReport()}
                     >
-                      Generate
+                      Filter
                     </Button>
+                  </div>
+                </Grid>
+
+                <Grid item alignItems="stretch" style={{ display: "flex" }}>
+                  <div className={classes.btnGroup}>
+                    <CSVLink
+                      filename={"MemberDetails.csv"}
+                      data={filteredNameData}
+                      className="btn btn-primary m-2"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                    >
+                      GENERATE
+                    </CSVLink>
                   </div>
                 </Grid>
               </Grid>
 
-              <Grid container>
+              {/* <Grid container>
+
                 <Grid item>
                   <TextField
                     className={classes.text}
@@ -457,27 +611,32 @@ const Reports = (props) => {
                     </Button>
                   </div>
                 </Grid>
-              </Grid>
+
+              </Grid> */}
               <div className={classes.btnGroup}>
-                <Button
-                  id="btnAllReport"
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
+                <CSVLink
+                  className={classes.csv}
+                  filename={"MemberDetails.csv"}
+                  data={memberDetails}
+                  className="btn btn-primary m-2"
+                  data-toggle="tooltip"
+                  data-placement="top"
                 >
-                  Generate All Book Details Report
-                </Button>
+                  Generate All Member Details Report
+                </CSVLink>
+
               </div>
             </Typography>
           </AccordionDetails>
         </Accordion>
         <Accordion
+          className={classes.accord}
           expanded={expanded === "panel5"}
           onChange={handleChange("panel5")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            className={classes.panel}
+            expandIcon={<ExpandMoreIcon className={classes.icn} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
             classes={{ expanded: classes.expandedPanel }}
@@ -488,7 +647,8 @@ const Reports = (props) => {
               Fine List Reports
             </Typography>
           </AccordionSummary>
-          <AccordionDetails>
+
+          <AccordionDetails className={classes.cont}>
             <Typography>
               <Grid container>
                 <Grid item>

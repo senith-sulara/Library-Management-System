@@ -13,7 +13,10 @@ import staff from '../images/staffM.png'
 export default function Home() {
     return (
       <div>
+
+  
       <div className="row1">
+         {/* Member mangement */}
       <div className="column1">
               <div className="card">
   <a href="/viewMember">
@@ -22,6 +25,8 @@ export default function Home() {
 </div>
 </div>     
 {/*----------------- */}
+
+ {/* Borrow mangement */}
     <div className="column1">
     <div className="card">
     <a href="/barrow">
@@ -31,6 +36,9 @@ export default function Home() {
     </div>
 
 {/*----------------- */}
+
+{/* Book mangement */}
+
     <div className="column1">
     <div className="card">
     <a href="/book">
@@ -40,6 +48,8 @@ export default function Home() {
     </div>
 
 {/*----------------- */}
+
+{/* Staff mangement */}
 <div className="column1">
     <div className="card">
     <a href="/staff">
@@ -49,6 +59,7 @@ export default function Home() {
     </div>
 
 {/*----------------- */}
+{/* Report mangement */}
     <div className="column1">
     <div className="card">
     <a href="/reports">
@@ -58,6 +69,7 @@ export default function Home() {
     </div>
 
 {/*----------------- */}
+{/* Reservation mangement */}
 <div className="column1">
     <div className="card">
     <a href="/viewReservation">

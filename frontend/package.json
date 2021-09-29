@@ -10,7 +10,6 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/styles": "^4.11.4",
-    "@mui/icons-material": "^5.0.1",
     "@progress/kendo-licensing": "^1.2.0",
     "@progress/kendo-react-form": "^4.8.0",
     "@testing-library/jest-dom": "^5.14.1",

@@ -99,7 +99,15 @@ const initialState={
   address: '',
   email:'',
   contact:'',
-  password: '', 
+  password: '',
+   errors: {
+    eid:'',
+    name: '',
+    address: '',
+    email:'',
+    contact:'',
+    password: '',
+  }
 };
 const InsertStaff= (props) => {
   let history = useHistory();
@@ -114,7 +122,15 @@ const InsertStaff= (props) => {
     address: '',
     email:'',
     contact:'',
-    password: ''
+    password: '', 
+    errors: {
+      eid:'',
+      name: '',
+      address: '',
+      email:'',
+      contact:'',
+      password: '',
+    }
   });
   const [errorMsg, setErrorMsg] = useState('');
   const[successMsg, setSuccessMsg] = useState('');
@@ -158,15 +174,15 @@ const InsertStaff= (props) => {
           formData.append('contact', contact);
           formData.append('password', password);
 
-
-          setErrorMsg('');
+ 
           await axios.post(`${API_URL}/staff/addStaff`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           });
-          setSuccessMsg('upload Success')
-          // props.history.push('/home');
+
+          setSuccessMsg('upload Success'); 
+
         } else {
           setErrorMsg('Please select a file to add.');
         }
@@ -180,7 +196,80 @@ const InsertStaff= (props) => {
 const reload = () =>{ 
    setState(initialState);
 };
+
+
+
   const handleInputChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = state.errors;
+    const validEID = RegExp(/\d{6}/); 
+    const validContact = RegExp(/^\d{10}$/);
+    const validEmail = RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+    const validPassword = RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
+    const validName = RegExp(/[A-Za-z-]*$/);
+
+    switch (name) {
+      case 'eid': 
+        errors.eid = 
+          value.length < 6
+            ? 'Employee ID must be 6 characters long! Ex:- LS0000'
+            : '';
+          if(validEID.test(value)){
+            errors.eid ='Enter valid Employee ID! Ex:- LS0000';
+          }
+        break;
+      case 'name': 
+        errors.name = 
+          value.length <= 0
+            ? 'Name Can not be empty! Ex :- Jhon will'
+            : '';
+            
+          if(!validName.test(value)){
+            errors.name ='Enter valid Name! Ex:- Jhon will';
+          }
+        break;
+        case 'address': 
+        errors.address = 
+          value.length <= 0
+            ? 'Address can not be empty! Ex :- No: 0, Frist lane ,Colombo 5'
+            : '';
+          
+        break; 
+      case 'email': 
+        errors.email = 
+        value.length <= 0
+            ? 'Email can not be empty! Ex :- jhon@mail.com'
+            : '';  
+            if(!validEmail.test(value)){
+              errors.email ='Enter valid Email ! Ex:- jhon@mail.com';
+            }
+        break;
+        case 'contact': 
+        errors.contact = 
+          value.length <= 0
+            ? 'Contact can not be empty! Ex :- 0000000000'
+            : '';
+            if(!validContact.test(value)){
+              errors.contact ='Enter valid contact details ! Ex:- 0000000000';
+            }
+            else if(value.length > 10 || value.length < 10){
+              errors.contact ='Contact number must be 10 digit long ! Ex:- 0000000000';
+            }
+        break;
+        case 'password': 
+        errors.password = 
+          value.length <= 0
+            ? 'Password can not be empty!'
+            : '';
+            
+            if(!validPassword.test(value)){
+              errors.password ='Password must be cantain 1 Capital letter , 1 special charectar , 1 digit and 8 charectars long  ! Ex:- A@1aaaaa';
+            }
+        break;
+      default:
+        break;
+    }
     setState({
       ...state,
       [event.target.name]: event.target.value
@@ -200,6 +289,8 @@ const reload = () =>{
   };
 
 
+  const {errors} = state;
+
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -207,7 +298,9 @@ const reload = () =>{
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Insert New Staff Member
+
+            Add new staff member
+
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
@@ -263,6 +356,10 @@ const reload = () =>{
               onChange={handleInputChange}
             />
 
+            {errors.eid.length > 0 && 
+                <span className='error'>{errors.eid}</span>}
+            
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -276,6 +373,10 @@ const reload = () =>{
               value={state.name || ''} 
               onChange={handleInputChange}
             />
+
+            {errors.name.length > 0 && 
+                <span className='error'>{errors.name}</span>}
+
 
             <TextField
               variant="outlined"
@@ -291,6 +392,10 @@ const reload = () =>{
               onChange={handleInputChange}
             />
 
+            {errors.email.length > 0 && 
+                <span className='error'>{errors.email}</span>}
+           
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -305,20 +410,27 @@ const reload = () =>{
               onChange={handleInputChange}
             />
 
+            {errors.contact.length > 0 && 
+                <span className='error'>{errors.contact}</span>}
+
+
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="address"
-              label="address"
+              label="Address"
               name="address"
               autoComplete="address"
               multiline
               autoFocus
               value={state.address || ''} 
               onChange={handleInputChange}
-            />      
+            />     
+            {errors.address.length > 0 && 
+                <span className='error'>{errors.address}</span>}
+
 
             <TextField
               variant="outlined"
@@ -333,6 +445,10 @@ const reload = () =>{
               value={state.password || ''} 
               onChange={handleInputChange}
             />
+
+            {errors.password.length > 0 && 
+                <span className='error'>{errors.password}</span>}
+  
             
 
         <div className="upload-section">

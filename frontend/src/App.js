@@ -19,6 +19,8 @@ import AddMember from "./components/kaveena/addMember";
 import MemberTable from "./components/kaveena/viewMember";
 import AddBarrow from "./components/pasidu/barrow/addBarrow";
 import Barrow from "./components/pasidu/barrow/barrowHome";
+import ViewBarrow from "./components/pasidu/barrow/viewBarrows";
+
 
 function App() {
   return (
@@ -44,9 +46,10 @@ function App() {
             <Route path="/viewMember" component={MemberTable} />
             <Route path="/addBarrow" component={AddBarrow} />
             <Route path="/barrow" component={Barrow} />
+            <Route path="/viewbarrow" component={ViewBarrow} />
           </Switch>
         </section>
-        {/* <Footer/> */}
+        <Footer/>
         {/* </userContext.Provider> */}
       </Router>
            

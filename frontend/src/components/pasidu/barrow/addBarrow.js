@@ -104,6 +104,14 @@ const initialState={
   borrowDate:' ',
   returnDate:' ',
   note: '', 
+
+  errors: { 
+    mid: '', 
+    borrowDate:' ',
+    books: [],
+    returnDate:' ',
+    note: '',
+  }
 };
 const InsertBaroow= (props) => {
   let history = useHistory();
@@ -113,16 +121,25 @@ const InsertBaroow= (props) => {
   const[successMsg, setSuccessMsg] = useState('');
   const [open, setOpen] = useState(false);
   const [inputList, setInputList] = useState([{ bookId: "" }]);
+  const localUser = JSON.parse(localStorage.getItem('user')) || null;
+  let [user,setUser] = useState(localUser); 
  
+  useEffect(()=>{ 
+    setUser(JSON.parse(localStorage.getItem('user')));
+    console.log("data " + user.formData.eid);
+    state.eid = user.formData.eid;
+  },[]);
+
   const handleOnSubmit = async (event) => {
     event.preventDefault();
     setOpen(true);
     try {
       const { eid, mid, borrowDate, returnDate, note } = state;
-      if (eid.trim() !== '' && mid.trim() !== '' && borrowDate.trim() !== ' '  && returnDate.trim() !== ' ' && note.trim() !== '' ){
+
+      if (  mid.trim() !== '' && eid.trim() !== '' && borrowDate.trim() !== ' '  && returnDate.trim() !== ' ' && note.trim() !== '' ){
          
           const formData = new FormData(); 
-          formData.append('eid', eid);
+          formData.append('eid',eid);
           formData.append('mid', mid);
           formData.append('books', inputList);
           formData.append('borrowDate', borrowDate);
@@ -150,12 +167,47 @@ const reload = () =>{
    setState(initialState);
 };
   const handleInputChange = (event) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    let errors = state.errors;
+
+    switch (name) {
+      case 'mid': 
+        errors.mid = 
+          value.length < 6
+            ? 'Member Id must be 6 characters long! ex :- LM0000'
+            : '';
+        break;
+      case 'borrowDate': 
+        errors.borrowDate = 
+          value.length <= 0
+            ? 'Borrow date can not be empty! ex :- 20202.20.20'
+            : '';
+        break;
+        case 'returnDate': 
+        errors.returnDate = 
+          value.length <= 0
+            ? 'Return date can not be empty! ex :- 20202.20.20'
+            : '';
+        break; 
+      case 'note': 
+        errors.note = 
+        value.length <= 0
+            ? 'Enter barrow note'
+            : '';
+        break; 
+      default:
+        break;
+    }
+
     setState({
       ...state,
       [event.target.name]: event.target.value
     });
   };
 
+
+  const {errors} = state;
   // const handleClick = () => {
   //   setOpen(true);
   // };
@@ -170,7 +222,7 @@ const reload = () =>{
 
   // handle input change
   const handleInput = (e, index) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; 
     const list = [...inputList];
     list[index][name] = value;
     setInputList(list); 
@@ -194,7 +246,9 @@ const reload = () =>{
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
-            Borrow Book
+
+            Add borrow book details
+
           </Typography>
           <form className={classes.form} noValidate onSubmit={handleOnSubmit}>
           <div className={classes.alert}>
@@ -251,7 +305,7 @@ const reload = () =>{
               value={x.bookId}
               onChange={e => handleInput(e, i)}
             />
-            
+
                 <div className={classes.btnGroup}>
                   {inputList.length !== 1 && <Button
                     className={classes.btn} 
@@ -270,17 +324,15 @@ const reload = () =>{
             );
       })} 
       
-       <TextField
-              variant="outlined"
+       <TextField 
               margin="normal"
               required
               fullWidth
-              id="eid"
-              label="Employee ID"
+              id="eid" 
               name="eid"
-              autoComplete="eid"
-              autoFocus
-              value={state.eid || ''} 
+              autoComplete="eid" 
+              hidden
+              value={user.formData.eid || ''} 
               onChange={handleInputChange}
             />
 
@@ -298,13 +350,19 @@ const reload = () =>{
               onChange={handleInputChange}
             />
 
+            {errors.mid.length > 0 && 
+                <span className='error'>{errors.mid}</span>}
+            
+            <br/>
+            <br/>
+                <span  >Borrow date</span>
+
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="borrowDate"
-              label="Borrow date"
+              id="borrowDate" 
               name="borrowDate"
               autoComplete="borrowDate"
               type="date"
@@ -313,20 +371,28 @@ const reload = () =>{
               onChange={handleInputChange}
             />
 
+            {errors.borrowDate.length > 0 && 
+                <span className='error'>{errors.borrowDate}</span>}
+            
+            <br/>
+            <br/>
+                <span  >Return date</span>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
               id="returnDate"
-              type="date"
-              label="Return date"
+              type="date" 
               name="returnDate"
               autoComplete="returnDate"
               autoFocus
               value={state.returnDate || ' '} 
               onChange={handleInputChange}
             />
+            {errors.returnDate.length > 0 && 
+                <span className='error'>{errors.returnDate}</span>}
+            
 
             <TextField
               variant="outlined"
@@ -341,7 +407,11 @@ const reload = () =>{
               autoFocus
               value={state.note || ''} 
               onChange={handleInputChange}
-            />      
+            />   
+            {errors.note.length > 0 && 
+                <span className='error'>{errors.note}</span>}
+               
+
  
             
 

@@ -53,6 +53,24 @@ Router.get('/getAllBooks', async (req, res) => {
   }
 });
 
+Router.get('/getAllBooks/:title', async (req, res) => {
+  try {
+    var regex = new RegExp(req.params.title, "i")
+    ,   query = { description: regex };
+    const files = await Books.find(query, function(err, books){if (err) {
+      res.json(err);
+  }
+
+  res.json(books);});
+    const sortedByCreationDate = files.sort(
+      (a, b) => b.createdAt - a.createdAt
+    );
+    res.send(sortedByCreationDate);
+  } catch (error) {
+    res.status(400).send('Error while getting list of Books. Try again later.');
+  }
+});
+
 
 
 ////////////////////////////////////

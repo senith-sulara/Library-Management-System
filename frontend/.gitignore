@@ -1,1 +1,4 @@
 /node_modules
+/_cacache
+/_locks
+/_logs
