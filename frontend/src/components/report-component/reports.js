@@ -28,17 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    // flexBasis: '33.33%',
     flexShrink: 0,
     margin: "auto",
-
-    // backgroundColor: theme.palette.primary.main,
   },
-  // secondaryHeading: {
-  //   fontSize: theme.typography.pxToRem(15),
-  //   color: theme.palette.text.primary,
-  //   alignItems: 'center',
-  // },
   btnGroup: {
     display: "flex",
     "& > *": {
@@ -93,18 +85,19 @@ const Reports = (props) => {
   const [memberDetails, setMemberDetails] = useState([]);
   const [Fname, setName] = useState(null);
   const [filteredNameData, setFilteredNameData] = useState([]);
+  const [staffDetails, setstaffDetails] = useState([]);
+  const [filteredstaffDetails, setFilteredstaffDetails] = useState([]);
+  const [EmployeeId, setEmployeeId] = useState(null);
+  const [borrowDetails, setborrowDetails] = useState([]);
+  const [filteredborrowDetails, setFilteredborrowDetails] = useState([]);
+  const [MemberId, setMemberId] = useState(null);
 
   useEffect(() => {
     retrieveFineDetails();
-  }, []);
-
-
-  useEffect(() => {
     retrieveBookDetails();
-  }, []);
-
-  useEffect(() => {
     retrieveMemberDetails();
+    retrieveStaffDetails();
+    retrieveBarrowfDetails();
   }, []);
 
   const retrieveFineDetails = () => {
@@ -161,7 +154,7 @@ const Reports = (props) => {
   const handleAuthor = (e) => {
     setAuthor(e.target.value);
   };
-  
+
   //Filter Data
 
   const generateBookReport = () => {
@@ -171,8 +164,6 @@ const Reports = (props) => {
     );
     setFilteredAuthorData(filteredbookData);
   };
-
-  ////////////////////////////////////////////////////////
 
   //generate all member details method
   const retrieveMemberDetails = () => {
@@ -207,26 +198,11 @@ const Reports = (props) => {
     setFilteredNameData(filteredNameData);
   };
 
-//////////////////////////////////////////
-/////////////////////////////////////////
-///////////staff report/////////////////
-////////////////////////////////////////
-///////////////////////////////////////
-
-  const [staffDetails, setstaffDetails] = useState([]); 
-  const [filteredstaffDetails, setFilteredstaffDetails] = useState([]);
-  const [EmployeeId, setEmployeeId] = useState(null);
-
-  useEffect(() => {
-    retrieveStaffDetails();
-  }, []);
-
-  
+  //staff report
   const handleStaff = (e) => {
     setEmployeeId(e.target.value);
   };
 
- 
   // Retrive all staff details  ogenerate report
   const retrieveStaffDetails = () => {
     setstaffDetails(null);
@@ -246,24 +222,22 @@ const Reports = (props) => {
     });
   };
 
- 
-
-//Filter staff member Data
+  //Filter staff member Data
 
   const generateStaffMemberReport = () => {
     console.log(staffDetails);
     return new Promise((resolve) => {
-      setFilteredstaffDetails([])
-      var filteredStaffData = staffDetails.filter((item =>
-        item.EmployeeId.includes(EmployeeId)));
-        setFilteredstaffDetails(filteredStaffData);
+      setFilteredstaffDetails([]);
+      var filteredStaffData = staffDetails.filter((item) =>
+        item.EmployeeId.includes(EmployeeId)
+      );
+      setFilteredstaffDetails(filteredStaffData);
       resolve();
-    });      
+    });
   };
 
-
   //staff member pdf export
-  const exportStaffPDF = (tableData , type) => {
+  const exportStaffPDF = (tableData, type) => {
     const unit = "pt";
     const size = "A4"; // Use A1, A2, A3 or A4
     const orientation = "portrait"; // portrait or landscape
@@ -275,138 +249,148 @@ const Reports = (props) => {
     //title of pdf
     const title = "Staff member report";
     //headers
-    const headers = [["Employee ID","Name","E- mail","Address", "Contact number"]];
+    const headers = [
+      ["Employee ID", "Name", "E- mail", "Address", "Contact number"],
+    ];
 
     //data
-    if(type == "all"){
-      tableData =staffDetails.map(elt=> [elt.EmployeeId, elt.Name, elt.Email, elt.Address, elt.Contact]);
-
-    }else{ 
-      tableData =filteredstaffDetails.map(elt=>  [elt.EmployeeId, elt.Name, elt.Email, elt.Address, elt.Contact]);
+    if (type == "all") {
+      tableData = staffDetails.map((elt) => [
+        elt.EmployeeId,
+        elt.Name,
+        elt.Email,
+        elt.Address,
+        elt.Contact,
+      ]);
+    } else {
+      tableData = filteredstaffDetails.map((elt) => [
+        elt.EmployeeId,
+        elt.Name,
+        elt.Email,
+        elt.Address,
+        elt.Contact,
+      ]);
     }
     let content = {
       startY: 50,
       head: headers,
-      body: tableData
+      body: tableData,
     };
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
     //save name
-    doc.save("StaffMemberReport.pdf")
-  }
-//////////////////////////////////////////
-/////////////////////////////////////////
-///////////End staff report//////////////
-////////////////////////////////////////
-///////////////////////////////////////
-
-//////////////////////////////////////////
-/////////////////////////////////////////
-///////////Borrow report/////////////////
-////////////////////////////////////////
-///////////////////////////////////////
-
-const [borrowDetails, setborrowDetails] = useState([]); 
-const [filteredborrowDetails, setFilteredborrowDetails] = useState([]); 
-const [MemberId, setMemberId] = useState(null);
-
-useEffect(() => {
-  retrieveBarrowfDetails();
-}, []);
- 
-const handleMemberId = (e) => {
-  setMemberId(e.target.value);
-};
-
-
-// Retrive all staff details  ogenerate report
-const retrieveBarrowfDetails = () => {
-  setborrowDetails(null);
-  axios.get(`${API_URL}/barrow/getAllBarrow`).then((res) => {
-    console.log(res.data);
-    res.data.forEach((item) => {
-      let object = {
-        EmployeeId: item.eid,
-        MemberID: item.mid,
-        ReturnDate: item.returnDate,
-        BorrowDate: item.borrowDate,
-        Note: item.note,
-        Books:item.books
-      };
-       
-     console.log(object);
-     borrowDetails.push(object);
-    });
-    setborrowDetails(borrowDetails);
-  });
-};
-
-
-
-//Filter staff member borrow Data
-
-const generateBarrowStaffReport = () => {
-  console.log(borrowDetails);
-  return new Promise((resolve) => {
-    setFilteredborrowDetails(null)
-    var filteredBarrowData = borrowDetails.filter((item =>
-      item.EmployeeId.includes(EmployeeId)));
-      setFilteredborrowDetails(filteredBarrowData);
-    resolve();
-  });      
-};
-
-
-//Filter staff member borrow Data
-
-const generateBarrowMemberReport = () => {
-  console.log(borrowDetails);
-  return new Promise((resolve) => {
-    setFilteredborrowDetails(null)
-    var filteredBarrowData = borrowDetails.filter((item =>
-      item.MemberID.includes(MemberId)));
-      setFilteredborrowDetails(filteredBarrowData);
-    resolve();
-  });      
-};
-
-//staff member pdf export
-const exportBarrowPDF = (tableData , type) => {
-  const unit = "pt";
-  const size = "A4"; // Use A1, A2, A3 or A4
-  const orientation = "portrait"; // portrait or landscape
-  const marginLeft = 40;
-  const doc = new jsPDF(orientation, unit, size);
-  doc.setFontSize(15);
-  console.log(tableData);
-
-  //title of pdf
-  const title = "Borrow Book report";
-  //headers
-  const headers = [["Issued By","Member Id","Borrowed date","Return date", "Books", "Note"]];
-
-  //data
-  if(type == "all"){
-    tableData =borrowDetails.map(elt=> [elt.EmployeeId, elt.MemberID, elt.BorrowDate, elt.ReturnDate, elt.Books, elt.Note]);
-
-  }else{ 
-    tableData =filteredborrowDetails.map(elt=>  [elt.EmployeeId, elt.MemberID, elt.BorrowDate, elt.ReturnDate, elt.Books, elt.Note]);
-  }
-  let content = {
-    startY: 50,
-    head: headers,
-    body: tableData
+    doc.save("StaffMemberReport.pdf");
   };
-  doc.text(title, marginLeft, 40);
-  doc.autoTable(content);
-  //save name
-  doc.save("BorrowBookReport.pdf")
-}
-//////////////////////////////////////////
-/////////////////////////////////////////
-///////////End Borrow report//////////////
-////////////////////////////////////////
-///////////////////////////////////////
+
+  //Borrow repor
+  const handleMemberId = (e) => {
+    setMemberId(e.target.value);
+  };
+
+  // Retrive all staff details  ogenerate report
+  const retrieveBarrowfDetails = () => {
+    setborrowDetails(null);
+    axios.get(`${API_URL}/barrow/getAllBarrow`).then((res) => {
+      console.log(res.data);
+      res.data.forEach((item) => {
+        let object = {
+          EmployeeId: item.eid,
+          MemberID: item.mid,
+          ReturnDate: item.returnDate,
+          BorrowDate: item.borrowDate,
+          Note: item.note,
+          Books: item.books,
+        };
+
+        console.log(object);
+        borrowDetails.push(object);
+      });
+      setborrowDetails(borrowDetails);
+    });
+  };
+
+  //Filter staff member borrow Data
+
+  const generateBarrowStaffReport = () => {
+    console.log(borrowDetails);
+    return new Promise((resolve) => {
+      setFilteredborrowDetails(null);
+      var filteredBarrowData = borrowDetails.filter((item) =>
+        item.EmployeeId.includes(EmployeeId)
+      );
+      setFilteredborrowDetails(filteredBarrowData);
+      resolve();
+    });
+  };
+
+  //Filter staff member borrow Data
+
+  const generateBarrowMemberReport = () => {
+    console.log(borrowDetails);
+    return new Promise((resolve) => {
+      setFilteredborrowDetails(null);
+      var filteredBarrowData = borrowDetails.filter((item) =>
+        item.MemberID.includes(MemberId)
+      );
+      setFilteredborrowDetails(filteredBarrowData);
+      resolve();
+    });
+  };
+
+  //staff member pdf export
+  const exportBarrowPDF = (tableData, type) => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+    const marginLeft = 40;
+    const doc = new jsPDF(orientation, unit, size);
+    doc.setFontSize(15);
+    console.log(tableData);
+
+    //title of pdf
+    const title = "Borrow Book report";
+    //headers
+    const headers = [
+      [
+        "Issued By",
+        "Member Id",
+        "Borrowed date",
+        "Return date",
+        "Books",
+        "Note",
+      ],
+    ];
+
+    //data
+    if (type == "all") {
+      tableData = borrowDetails.map((elt) => [
+        elt.EmployeeId,
+        elt.MemberID,
+        elt.BorrowDate,
+        elt.ReturnDate,
+        elt.Books,
+        elt.Note,
+      ]);
+    } else {
+      tableData = filteredborrowDetails.map((elt) => [
+        elt.EmployeeId,
+        elt.MemberID,
+        elt.BorrowDate,
+        elt.ReturnDate,
+        elt.Books,
+        elt.Note,
+      ]);
+    }
+    let content = {
+      startY: 50,
+      head: headers,
+      body: tableData,
+    };
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    //save name
+    doc.save("BorrowBookReport.pdf");
+  };
 
   return (
     <div>
@@ -483,38 +467,6 @@ const exportBarrowPDF = (tableData , type) => {
                   </div>
                 </Grid>
               </Grid>
-
-              {/* <Grid container>
-                <Grid item>
-                  <TextField
-                    className={classes.text}
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    id="RepoType"
-                    label="Book Type"
-                    name="RepoType"
-                    autoComplete="RepoType"
-                    autoFocus
-                  />
-                </Grid> */}
-
-              {/* <Grid item alignItems="stretch" style={{ display: "flex" }}>
-
-                  <div className={classes.btnGroup}>
-                    <Button
-                      id="btnReport"
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                    >
-                      Generate
-                    </Button>
-                  </div>
-
-                </Grid> */}
-              {/* </Grid> */}
               <div className={classes.btnGroup}>
                 <CSVLink
                   className={classes.csv}
@@ -526,7 +478,6 @@ const exportBarrowPDF = (tableData , type) => {
                 >
                   Generate All Book Details Report
                 </CSVLink>
-
               </div>
             </Typography>
           </AccordionDetails>
@@ -547,7 +498,6 @@ const exportBarrowPDF = (tableData , type) => {
             <AssignmentIcon />
 
             <Typography className={classes.heading}>Staff Reports</Typography>
-            {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
           <AccordionDetails className={classes.cont}>
             <Typography>
@@ -563,12 +513,11 @@ const exportBarrowPDF = (tableData , type) => {
                     label="Staff Id "
                     name="staffId"
                     autoComplete="staffId"
-                    // InputLabelProps={{ shrink: true }}
                     onChange={(e) => handleStaff(e)}
                     autoFocus
                   />
-                </Grid>  
-                
+                </Grid>
+
                 <Grid item alignItems="stretch" style={{ display: "flex" }}>
                   <div className={classes.btnGroup}>
                     <Button
@@ -579,18 +528,21 @@ const exportBarrowPDF = (tableData , type) => {
                       color="primary"
                       onClick={async function fnAsync() {
                         await generateStaffMemberReport();
-                        exportStaffPDF(filteredstaffDetails,"eid");
-                      } }
+                        exportStaffPDF(filteredstaffDetails, "eid");
+                      }}
                     >
                       GENERATE
                     </Button>
                   </div>
-                </Grid> 
+                </Grid>
               </Grid>
 
-              <div className={classes.btnGroup}> 
-                <Button onClick={()=>exportStaffPDF(staffDetails,"all")}  className={classes.csv}>
-                   Generate All Staff Details Report
+              <div className={classes.btnGroup}>
+                <Button
+                  onClick={() => exportStaffPDF(staffDetails, "all")}
+                  className={classes.csv}
+                >
+                  Generate All Staff Details Report
                 </Button>
               </div>
             </Typography>
@@ -598,7 +550,6 @@ const exportBarrowPDF = (tableData , type) => {
         </Accordion>
         <Accordion
           className={classes.accord}
-
           expanded={expanded === "panel3"}
           onChange={handleChange("panel3")}
         >
@@ -612,7 +563,6 @@ const exportBarrowPDF = (tableData , type) => {
             <AssignmentIcon />
 
             <Typography className={classes.heading}>Borrow Reports</Typography>
-            {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
 
           <AccordionDetails className={classes.cont}>
@@ -643,8 +593,8 @@ const exportBarrowPDF = (tableData , type) => {
                       color="primary"
                       onClick={async function fnAsync() {
                         await generateBarrowMemberReport();
-                        exportBarrowPDF(filteredborrowDetails,"mid");
-                      } }
+                        exportBarrowPDF(filteredborrowDetails, "mid");
+                      }}
                     >
                       Generate
                     </Button>
@@ -667,8 +617,8 @@ const exportBarrowPDF = (tableData , type) => {
                     onChange={(e) => handleStaff(e)}
                     autoFocus
                   />
-                </Grid>  
-                
+                </Grid>
+
                 <Grid item alignItems="stretch" style={{ display: "flex" }}>
                   <div className={classes.btnGroup}>
                     <Button
@@ -679,18 +629,21 @@ const exportBarrowPDF = (tableData , type) => {
                       color="primary"
                       onClick={async function fnAsync() {
                         await generateBarrowStaffReport();
-                        exportBarrowPDF(filteredborrowDetails,"eid");
-                      } }
+                        exportBarrowPDF(filteredborrowDetails, "eid");
+                      }}
                     >
                       GENERATE
                     </Button>
                   </div>
-                </Grid> 
+                </Grid>
               </Grid>
 
-              <div className={classes.btnGroup}> 
-                <Button onClick={()=> exportBarrowPDF (borrowDetails,"all")}  className={classes.csv}>
-                   Generate All Staff Details Report
+              <div className={classes.btnGroup}>
+                <Button
+                  onClick={() => exportBarrowPDF(borrowDetails, "all")}
+                  className={classes.csv}
+                >
+                  Generate All Staff Details Report
                 </Button>
               </div>
             </Typography>
@@ -711,10 +664,8 @@ const exportBarrowPDF = (tableData , type) => {
             <AssignmentIcon />
 
             <Typography className={classes.heading}>Member Reports</Typography>
-            {/* <Typography className={classes.secondaryHeading}>Book Reports</Typography> */}
           </AccordionSummary>
           <AccordionDetails className={classes.cont}>
-
             <Typography>
               <Grid container>
                 <Grid item>
@@ -728,7 +679,6 @@ const exportBarrowPDF = (tableData , type) => {
                     label="Member Name"
                     name="RepoFname"
                     autoComplete="RepoFname"
-                    // InputLabelProps={{ shrink: true }}
                     onChange={(e) => handleName(e)}
                     autoFocus
                   />
@@ -763,38 +713,6 @@ const exportBarrowPDF = (tableData , type) => {
                   </div>
                 </Grid>
               </Grid>
-
-              {/* <Grid container>
-
-                <Grid item>
-                  <TextField
-                    className={classes.text}
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    id="RepoType"
-                    label="Book Type"
-                    name="RepoType"
-                    autoComplete="RepoType"
-                    autoFocus
-                  />
-                </Grid>
-
-                <Grid item alignItems="stretch" style={{ display: "flex" }}>
-                  <div className={classes.btnGroup}>
-                    <Button
-                      id="btnReport"
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                    >
-                      Generate
-                    </Button>
-                  </div>
-                </Grid>
-
-              </Grid> */}
               <div className={classes.btnGroup}>
                 <CSVLink
                   className={classes.csv}
@@ -806,7 +724,6 @@ const exportBarrowPDF = (tableData , type) => {
                 >
                   Generate All Member Details Report
                 </CSVLink>
-
               </div>
             </Typography>
           </AccordionDetails>

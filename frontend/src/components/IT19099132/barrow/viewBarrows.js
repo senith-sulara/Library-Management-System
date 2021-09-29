@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../../utils/constants";
 import "../../IT19143828/bookM/viewBook.css";
 import MaterialTable from "material-table";
 import Button from "@material-ui/core/Button";
-import SideBar from "../comman/sideBar";
 import Paper from "@material-ui/core/Paper";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import { useHistory } from "react-router-dom";
-//dialog box import
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -29,15 +26,11 @@ function PaperComponent(props) {
   );
 }
 const Editable = (props) => {
-  let history = useHistory();
   const { useState } = React;
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [data, setData] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
   const [open, setOpen] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
-  const [iserror, setIserror] = useState(false);
-  let [user, setUser] = useState(null);
 
   let tableData = useState([
     { title: "Staff member Id", field: "eid" },
@@ -74,8 +67,7 @@ const Editable = (props) => {
 
     getFileList();
 
-    console.log(data);
-  }, []);
+  },[]);
 
   const [columns, setColumns] = tableData;
 
@@ -93,6 +85,7 @@ const Editable = (props) => {
   });
 
   const handleRowUpdate = (newData, oldData, resolve) => {
+    setSuccessMsg("");
     //validation
     let errorList = [];
     if (newData.eid === "") {
@@ -154,7 +147,7 @@ const Editable = (props) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {successMsg != "" ? (
+            {successMsg !== "" ? (
               <>
                 <div style={{ color: "#008000" }}>
                   <CheckIcon />

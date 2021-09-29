@@ -1,8 +1,6 @@
-import { Card, Typography } from "@material-ui/core";
-import MenuBook from "@material-ui/icons/MenuBook";
+import { Typography } from "@material-ui/core";
 import React from "react";
 import "./home.css";
-
 import BarrowList from "../image/icon-book.png";
 import BarrowBook from "../image/PngItem_3784071.png";
 import ReturnBook from "../image/return-book.png";

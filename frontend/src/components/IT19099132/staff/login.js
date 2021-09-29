@@ -4,16 +4,12 @@ import {
   Avatar,
   Button,
   Paper,
-  Select,
-  IconButton,
   Grid,
   Typography,
-  InputAdornment,
   Container,
-  TextField,
 } from "@material-ui/core";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import loginStyle from "./loginStyle";
 import "./backStyle.css";
 import axios from "axios";

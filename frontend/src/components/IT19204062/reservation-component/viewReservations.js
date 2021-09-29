@@ -6,7 +6,7 @@ import "../css/style.css";
 import { API_URL } from "../../utils/constants";
 import Alert from "@material-ui/lab/Alert";
 import EmailIcon from '@material-ui/icons/Email';
-import emailjs from "emailjs-com";
+// import emailjs from "emailjs-com";
 
 export default function ViewReservations() {
   const [data, setData] = useState([]);

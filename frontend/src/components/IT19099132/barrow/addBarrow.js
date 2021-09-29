@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -120,7 +120,7 @@ const InsertBaroow = (props) => {
     setUser(JSON.parse(localStorage.getItem("user")));
     console.log("data " + user.formData.eid);
     state.eid = user.formData.eid;
-  }, []);
+  }, [user.formData.eid, state]);
 
   const handleOnSubmit = async (event) => {
     event.preventDefault();
@@ -260,7 +260,7 @@ const InsertBaroow = (props) => {
                 </DialogTitle>
                 <DialogContent>
                   <DialogContentText>
-                    {successMsg != "" ? (
+                    {successMsg !== "" ? (
                       <>
                         <div style={{ color: "#008000" }}>
                           <CheckIcon />

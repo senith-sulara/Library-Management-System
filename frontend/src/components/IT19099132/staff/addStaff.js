@@ -1,23 +1,13 @@
 import React, { useState, useRef } from "react";
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Alert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert from "@material-ui/lab/Alert";
 import Dropzone from "react-dropzone";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
 import axios from "axios";
@@ -213,7 +203,7 @@ const InsertStaff = (props) => {
     let errors = state.errors;
     const validEID = RegExp(/\d{6}/);
     const validContact = RegExp(/^\d{10}$/);
-    const validEmail = RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
+    const validEmail = RegExp(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/);
     const validPassword = RegExp(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
     );
@@ -323,7 +313,7 @@ const InsertStaff = (props) => {
                 </DialogTitle>
                 <DialogContent>
                   <DialogContentText>
-                    {successMsg != "" ? (
+                    {successMsg !== "" ? (
                       <>
                         <div style={{ color: "#008000" }}>
                           <CheckIcon />

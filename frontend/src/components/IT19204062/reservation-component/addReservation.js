@@ -6,11 +6,8 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Alert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
 import axios from "axios";
 import "../css/style.css";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -214,7 +211,7 @@ export default function AddReservation() {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  {successMsg != "" ? (
+                  {successMsg !== "" ? (
                     <>
                       <div style={{ color: "#008000" }}>
                         <CheckIcon />

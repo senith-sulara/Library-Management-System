@@ -6,8 +6,6 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Alert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
 import axios from "axios";
 import "../css/style.css";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -251,7 +249,7 @@ export default function AddReturnBook() {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  {successMsg != "" ? (
+                  {successMsg !== "" ? (
                     <>
                       <div style={{ color: "#008000" }}>
                         <CheckIcon />
