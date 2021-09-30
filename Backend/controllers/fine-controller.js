@@ -17,6 +17,6 @@ const getFineDetails = async (req, res) => {
       res.json(fines);
     }
   });
-}
+};
 exports.addFine = addFine;
 exports.getFineDetails = getFineDetails;

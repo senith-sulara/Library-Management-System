@@ -1,5 +1,5 @@
 const { ReturnB } = require("../models/returnB-model");
-const Borrow = require("../models/Borrow");
+const Borrow = require("../models/borrow-model");
 
 const addReturnB = async (req, res) => {
   const returnB = new ReturnB(req.body);

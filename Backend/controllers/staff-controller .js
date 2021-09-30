@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const multer = require('multer');
-const Staff = require('../models/staff');
+const Staff = require('../models/staff-model');
 // const jwt = require("jsonwebtoken");
 const cloudinary = require("../utils/cloudinary"); 
 const upload = require("../utils/multer");

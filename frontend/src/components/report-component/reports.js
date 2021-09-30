@@ -394,10 +394,10 @@ const Reports = (props) => {
 
   return (
     <div>
+      <br /> <br />
       <h1 id="h12" align="center">
-        Generate reports
+        Generate Reports
       </h1>
-
       <div className={classes.root}>
         <Accordion
           className={classes.accord}
