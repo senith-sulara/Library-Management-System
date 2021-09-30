@@ -21,7 +21,7 @@ const Editable = (props) => {
       try {
         const { data } = await axios.get(`${API_URL}/bookDetails/getAllBooks`, {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
         setErrorMsg("");
@@ -83,7 +83,7 @@ const Editable = (props) => {
       api
         .put("/bookDetails/" + newData._id, newData, {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         })
         .then((res) => {
