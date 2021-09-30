@@ -11,15 +11,15 @@ const returnBSchema = mongoose.Schema(
     },
 
     borrowDate: {
-        type: String,
+      type: String,
     },
 
     returnDate: {
-        type: String,
+      type: String,
     },
 
     fine: {
-        type: String,
+      type: String,
     },
   },
   { timesamps: true }

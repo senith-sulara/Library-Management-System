@@ -173,7 +173,11 @@ export default function AddReturnBook() {
         fine: fine,
       };
       axios
-        .post(`${API_URL}/api/return/add`, returnB)
+        .post(`${API_URL}/api/return/add`, returnB, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then((res) => {
           if (fine !== 0) {
             const fineDetails = {
@@ -183,7 +187,11 @@ export default function AddReturnBook() {
               fine: fine,
             };
             axios
-              .post(`${API_URL}/api/fine/add`, fineDetails)
+              .post(`${API_URL}/api/fine/add`, fineDetails, {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+              })
               .then((res) => {});
           }
           if (res.data.success) {
@@ -210,15 +218,21 @@ export default function AddReturnBook() {
         bookCode: bookCode,
       };
 
-      axios.post(`${API_URL}/api/return/getDate`, object).then((res) => {
-        console.log(res.data);
-        if (res.data === {}) {
-          setOpen(true);
-          setErrorMsg("Please check member code and book code again.");
-        } else {
-          setBorrowDate(res.data.borrowDate);
-        }
-      });
+      axios
+        .post(`${API_URL}/api/return/getDate`, object, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data === {}) {
+            setOpen(true);
+            setErrorMsg("Please check member code and book code again.");
+          } else {
+            setBorrowDate(res.data.borrowDate);
+          }
+        });
     }
   };
   return (

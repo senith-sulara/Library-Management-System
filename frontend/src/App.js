@@ -27,25 +27,31 @@ function App() {
       <Router>
         <NavBar />
         <section>
-          <Switch>
-            <Route path="/" component={Home} exact />
-            <Route path="/book" component={View} />
-            <Route path="/insertBook" component={AddBook} />
-            <Route path="/reports" component={Reports} />
-            <Route path="/staff" component={ViewStaff} />
-            <Route path="/addStaff" component={AddStaff} />
-            <Route path="/signin" component={SignIn} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/addReservation" component={AddReservation} />
-            <Route path="/viewReservation" component={ViewReservations} />
-            <Route path="/addReturnBook" component={AddReturnBook} />
-            <Route path="/viewReturnBooks" component={ViewReturnBooks} />
-            <Route path="/addMember" component={AddMember} />
-            <Route path="/viewMember" component={MemberTable} />
-            <Route path="/addBarrow" component={AddBarrow} />
-            <Route path="/barrow" component={Barrow} />
-            <Route path="/viewbarrow" component={ViewBarrow} />
-          </Switch>
+          {localStorage.getItem("token") ? (
+            <Switch>
+              <Route path="/home" component={Home} exact />
+              <Route path="/book" component={View} />
+              <Route path="/insertBook" component={AddBook} />
+              <Route path="/reports" component={Reports} />
+              <Route path="/staff" component={ViewStaff} />
+              <Route path="/addStaff" component={AddStaff} />
+              <Route path="/profile" component={Profile} />
+              <Route path="/addReservation" component={AddReservation} />
+              <Route path="/viewReservation" component={ViewReservations} />
+              <Route path="/addReturnBook" component={AddReturnBook} />
+              <Route path="/viewReturnBooks" component={ViewReturnBooks} />
+              <Route path="/addMember" component={AddMember} />
+              <Route path="/viewMember" component={MemberTable} />
+              <Route path="/addBarrow" component={AddBarrow} />
+              <Route path="/barrow" component={Barrow} />
+              <Route path="/viewbarrow" component={ViewBarrow} />
+              <Route path="/" component={SignIn} />
+            </Switch>
+          ) : (
+            <Switch>
+              <Route path="/" component={SignIn} />
+            </Switch>
+          )}
         </section>
         <Footer />
       </Router>

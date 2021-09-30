@@ -19,7 +19,11 @@ const Editable = (props) => {
   useEffect(() => {
     const getFileList = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/member/getAllMembers`);
+        const { data } = await axios.get(`${API_URL}/member/getAllMembers`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         setErrorMsg("");
         setData(data);
         console.log(data);
@@ -79,7 +83,11 @@ const Editable = (props) => {
 
     if (errorList.length < 1) {
       api
-        .put("/member/" + newData._id, newData)
+        .put("/member/" + newData._id, newData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then((res) => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -104,7 +112,11 @@ const Editable = (props) => {
 
   const handleRowDelete = (oldData, resolve) => {
     api
-      .delete("/member/" + oldData._id)
+      .delete("/member/" + oldData._id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       .then((res) => {
         const dataDelete = [...data];
         const index = oldData.tableData.id;

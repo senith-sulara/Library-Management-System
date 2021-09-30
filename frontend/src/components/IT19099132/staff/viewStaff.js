@@ -47,7 +47,7 @@ const Editable = (props) => {
   const logOut = () => {
     localStorage.clear();
     user = null;
-    history.push("/signin");
+    history.push("/");
     window.location.reload();
     setAnchorEl(null);
   };
@@ -55,7 +55,11 @@ const Editable = (props) => {
   useEffect(() => {
     const getFileList = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/staff/getAllStaff`);
+        const { data } = await axios.get(`${API_URL}/staff/getAllStaff`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         setErrorMsg("");
         setData(data);
       } catch (error) {
@@ -119,7 +123,11 @@ const Editable = (props) => {
 
     if (errorList.length < 1) {
       api
-        .put("/staff/" + newData._id, newData)
+        .put("/staff/" + newData._id, newData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then((res) => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -220,7 +228,12 @@ const Editable = (props) => {
                   setData([...dataDelete]);
                   try {
                     const { data } = axios.delete(
-                      `${API_URL}/staff/deleteStaff/${oldData._id}`
+                      `${API_URL}/staff/deleteStaff/${oldData._id}`,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        },
+                      }
                     );
                     setErrorMsg("");
                     if (user.formData.proPic == oldData.id) {

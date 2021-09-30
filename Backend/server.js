@@ -2,8 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const checkAuth = require("./middleware/auth");
 const BookRoute = require("./controllers/books-controller");
 const StaffRoute = require("./controllers/staff-controller ");
+const staffLoginRoute = require("./controllers/staffLogin-controller");
 const reservationRoute = require("./routes/reservation-routes");
 const returnBRoute = require("./routes/returnB-routes");
 const fineRoute = require("./routes/fine-routes");
@@ -38,6 +40,8 @@ mongoose.connection.once("open", () => {
   console.log("Database Synced");
 });
 
+app.use("/staffLogin", staffLoginRoute);
+app.use(checkAuth);
 app.use("/BookDetails", BookRoute);
 app.use("/staff", StaffRoute);
 app.use("/api/reservation", reservationRoute);

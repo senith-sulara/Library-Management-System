@@ -54,7 +54,11 @@ const Editable = (props) => {
   useEffect(() => {
     const getFileList = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/barrow/getAllBarrow`);
+        const { data } = await axios.get(`${API_URL}/barrow/getAllBarrow`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
         setErrorMsg("");
         setData(data);
         console.log(data);
@@ -66,8 +70,7 @@ const Editable = (props) => {
     };
 
     getFileList();
-
-  },[]);
+  }, []);
 
   const [columns, setColumns] = tableData;
 
@@ -106,7 +109,11 @@ const Editable = (props) => {
 
     if (errorList.length < 1) {
       api
-        .put("/barrow/" + newData._id, newData)
+        .put("/barrow/" + newData._id, newData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then((res) => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -204,7 +211,12 @@ const Editable = (props) => {
                   setData([...dataDelete]);
                   try {
                     const { data } = axios.delete(
-                      `${API_URL}/barrow/deleteBarrow/${oldData._id}`
+                      `${API_URL}/barrow/deleteBarrow/${oldData._id}`,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        },
+                      }
                     );
                     setErrorMsg("");
                   } catch (error) {

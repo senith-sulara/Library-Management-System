@@ -56,10 +56,12 @@ const SignIn = () => {
     e.preventDefault();
     console.log(formData);
     try {
-      await axios.post(`${API_URL}/staff/signin`, formData);
+      await axios.post(`${API_URL}/staffLogin/signin`, formData).then((res) => {
+        localStorage.setItem("token", res.data.token);
+      });
       try {
         const { data } = await axios.get(
-          `${API_URL}/staff/getstaffmember/${formData.eid}`
+          `${API_URL}/staffLogin/getstaffmember/${formData.eid}`
         );
         setData(data[0]);
         console.log(data[0].name);
@@ -68,7 +70,7 @@ const SignIn = () => {
       } catch (error) {
         console.log(error);
       }
-      history.push("/");
+      history.push("/home");
       console.log(formData);
       window.location.reload();
     } catch (error) {

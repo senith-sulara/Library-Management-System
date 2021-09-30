@@ -186,6 +186,7 @@ const InsertMember = (props) => {
           await axios.post(`${API_URL}/member/insert`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           });
           setSuccessMsg("User added Successfully. Member Code is LM" + mCode);

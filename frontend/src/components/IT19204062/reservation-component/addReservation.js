@@ -18,7 +18,7 @@ import { useHistory } from "react-router-dom";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import LocalLibraryIcon from "@material-ui/icons/LocalLibrary";
-import { API_URL } from '../../utils/constants';
+import { API_URL } from "../../utils/constants";
 
 function PaperComponent(props) {
   return (
@@ -91,7 +91,11 @@ export default function AddReservation() {
   const [bookCode, setBookCode] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [errors, setErrors] = useState({email:'', memberCode:'', bookCode:''});
+  const [errors, setErrors] = useState({
+    email: "",
+    memberCode: "",
+    bookCode: "",
+  });
 
   const handleMemberName = (e) => {
     setMemberName(e.target.value);
@@ -126,23 +130,24 @@ export default function AddReservation() {
     setBookCode("");
     setEmail("");
   };
-  const validate = () =>{
+  const validate = () => {
     let errors = {};
     let isValid = true;
 
     if (memberCode.length !== 6) {
       isValid = false;
-       errors["memberCode"] = "Please enter valid member code";
+      errors["memberCode"] = "Please enter valid member code";
     }
 
     if (bookCode.length !== 6) {
       isValid = false;
-       errors["bookCode"] = "Please enter valid book code";
+      errors["bookCode"] = "Please enter valid book code";
     }
 
     if (typeof email !== "undefined") {
-        
-      var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+      var pattern = new RegExp(
+        /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
+      );
       if (!pattern.test(email)) {
         isValid = false;
         errors["email"] = "Please enter valid email address.";
@@ -151,35 +156,39 @@ export default function AddReservation() {
     setErrors(errors);
 
     return isValid;
-}
+  };
 
   const onSubmit = () => {
-    if(validate()){
-    setOpen(true);
-    const reservation = {
-      memberName: memberName,
-      memberCode: memberCode,
-      email: email,
-      bookName: bookName,
-      bookCode: bookCode,
-    };
-    axios
-      .post(`${API_URL}/api/reservation/add`, reservation)
-      .then((res) => {
-        if (res.data.success) {
-          setMemberName("");
-          setMemberCode("");
-          setBookName("");
-          setBookCode("");
-          setEmail("");
-          setSuccessMsg("Successfully inserted");
-        } else {
-          setErrorMsg("Please try again");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (validate()) {
+      setOpen(true);
+      const reservation = {
+        memberName: memberName,
+        memberCode: memberCode,
+        email: email,
+        bookName: bookName,
+        bookCode: bookCode,
+      };
+      axios
+        .post(`${API_URL}/api/reservation/add`, reservation, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((res) => {
+          if (res.data.success) {
+            setMemberName("");
+            setMemberCode("");
+            setBookName("");
+            setBookCode("");
+            setEmail("");
+            setSuccessMsg("Successfully inserted");
+          } else {
+            setErrorMsg("Please try again");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -262,7 +271,10 @@ export default function AddReservation() {
             autoFocus
           />
           {errors.memberCode ? (
-                <span className='error'>{errors.memberCode}</span>):(<></>)}
+            <span className="error">{errors.memberCode}</span>
+          ) : (
+            <></>
+          )}
           <TextField
             variant="outlined"
             margin="normal"
@@ -276,8 +288,7 @@ export default function AddReservation() {
             onChange={(e) => handleEmail(e)}
             autoFocus
           />
-          {errors.email ? (
-                <span className='error'>{errors.email}</span>):(<></>)}
+          {errors.email ? <span className="error">{errors.email}</span> : <></>}
           <TextField
             variant="outlined"
             margin="normal"
@@ -304,8 +315,11 @@ export default function AddReservation() {
             onChange={(e) => handleBookCode(e)}
             autoFocus
           />
-          {errors.bookCode? ( 
-                <span className='error'>{errors.bookCode}</span>):(<></>)}
+          {errors.bookCode ? (
+            <span className="error">{errors.bookCode}</span>
+          ) : (
+            <></>
+          )}
 
           <div className={classes.btnGroup}>
             <Button

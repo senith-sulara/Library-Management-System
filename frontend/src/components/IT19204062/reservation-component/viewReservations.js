@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import "../css/style.css";
 import { API_URL } from "../../utils/constants";
 import Alert from "@material-ui/lab/Alert";
-import EmailIcon from '@material-ui/icons/Email';
+import EmailIcon from "@material-ui/icons/Email";
 // import emailjs from "emailjs-com";
 
 export default function ViewReservations() {
@@ -16,10 +16,16 @@ export default function ViewReservations() {
   const [issucc, setIssucc] = useState(false);
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/reservation/getReservations`).then((res) => {
-      console.log(res.data);
-      setData(res.data);
-    });
+    axios
+      .get(`${API_URL}/api/reservation/getReservations`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+      });
   }, []);
 
   const handleRowUpdate = (newData, oldData, resolve) => {
@@ -43,7 +49,11 @@ export default function ViewReservations() {
 
     if (errorList.length < 1) {
       axios
-        .put(`${API_URL}/api/reservation/update/` + newData._id, newData)
+        .put(`${API_URL}/api/reservation/update/` + newData._id, newData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then((res) => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -67,7 +77,11 @@ export default function ViewReservations() {
 
   const handleRowDelete = (oldData, resolve) => {
     axios
-      .delete(`${API_URL}/api/reservation/delete/` + oldData._id)
+      .delete(`${API_URL}/api/reservation/delete/` + oldData._id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       .then((res) => {
         const dataDelete = [...data];
         const index = oldData.tableData.id;
@@ -94,7 +108,7 @@ export default function ViewReservations() {
 
   return (
     <div>
-      <br/>
+      <br />
       <h1 id="h12" align="center">
         Reservation Management
       </h1>
@@ -142,11 +156,13 @@ export default function ViewReservations() {
                 handleRowDelete(oldData, resolve);
               }),
           }}
-          actions={[sendMail => ({
-            icon: EmailIcon,
-            tooltip: 'Send Email',
-            // onClick: () => sendEmail(data),
-          })]}
+          actions={[
+            (sendMail) => ({
+              icon: EmailIcon,
+              tooltip: "Send Email",
+              // onClick: () => sendEmail(data),
+            }),
+          ]}
           options={{
             headerStyle: {
               backgroundColor: "rgba(8, 9, 80, 0.363)",

@@ -102,19 +102,25 @@ const Reports = (props) => {
 
   const retrieveFineDetails = () => {
     setFineDetails([]);
-    axios.get(`${API_URL}/api/fine/getFineDetails`).then((res) => {
-      console.log(res.data);
-      res.data.forEach((item) => {
-        let object = {
-          MemberCode: item.memberCode,
-          BorrowDate: item.borrowDate,
-          ReturnDate: item.returnDate,
-          Amount: item.fine,
-        };
-        fineDetails.push(object);
+    axios
+      .get(`${API_URL}/api/fine/getFineDetails`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        res.data.forEach((item) => {
+          let object = {
+            MemberCode: item.memberCode,
+            BorrowDate: item.borrowDate,
+            ReturnDate: item.returnDate,
+            Amount: item.fine,
+          };
+          fineDetails.push(object);
+        });
+        setFineDetails(fineDetails);
       });
-      setFineDetails(fineDetails);
-    });
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -135,20 +141,26 @@ const Reports = (props) => {
 
   const retrieveBookDetails = () => {
     setBookDetails([]);
-    axios.get(`${API_URL}/BookDetails/getAllBooks`).then((res) => {
-      console.log(res.data);
-      res.data.forEach((item) => {
-        let object = {
-          Title: item.title,
-          Author: item.author,
-          Publisher: item.publisher,
-          RefCode: item.refCode,
-          NoOfCopies: item.noOfCopies,
-        };
-        bookDetails.push(object);
+    axios
+      .get(`${API_URL}/BookDetails/getAllBooks`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        res.data.forEach((item) => {
+          let object = {
+            Title: item.title,
+            Author: item.author,
+            Publisher: item.publisher,
+            RefCode: item.refCode,
+            NoOfCopies: item.noOfCopies,
+          };
+          bookDetails.push(object);
+        });
+        setBookDetails(bookDetails);
       });
-      setBookDetails(bookDetails);
-    });
   };
 
   const handleAuthor = (e) => {
@@ -168,21 +180,27 @@ const Reports = (props) => {
   //generate all member details method
   const retrieveMemberDetails = () => {
     setMemberDetails([]);
-    axios.get(`${API_URL}/member/getAllMembers`).then((res) => {
-      console.log(res.data);
-      res.data.forEach((item) => {
-        let object = {
-          Name: item.Fname,
-          NIC: item.nic,
-          Phone: item.phone,
-          Email: item.email,
-          Address: item.address,
-          MemberCode: item.memberCode,
-        };
-        memberDetails.push(object);
+    axios
+      .get(`${API_URL}/member/getAllMembers`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        res.data.forEach((item) => {
+          let object = {
+            Name: item.Fname,
+            NIC: item.nic,
+            Phone: item.phone,
+            Email: item.email,
+            Address: item.address,
+            MemberCode: item.memberCode,
+          };
+          memberDetails.push(object);
+        });
+        setMemberDetails(memberDetails);
       });
-      setMemberDetails(memberDetails);
-    });
   };
 
   const handleName = (e) => {
@@ -206,20 +224,26 @@ const Reports = (props) => {
   // Retrive all staff details  ogenerate report
   const retrieveStaffDetails = () => {
     setstaffDetails(null);
-    axios.get(`${API_URL}/staff/getAllStaff`).then((res) => {
-      console.log(res.data);
-      res.data.forEach((item) => {
-        let object = {
-          EmployeeId: item.eid,
-          Name: item.name,
-          Email: item.email,
-          Address: item.addree,
-          Contact: item.contact,
-        };
-        staffDetails.push(object);
+    axios
+      .get(`${API_URL}/staff/getAllStaff`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        res.data.forEach((item) => {
+          let object = {
+            EmployeeId: item.eid,
+            Name: item.name,
+            Email: item.email,
+            Address: item.addree,
+            Contact: item.contact,
+          };
+          staffDetails.push(object);
+        });
+        setstaffDetails(staffDetails);
       });
-      setstaffDetails(staffDetails);
-    });
   };
 
   //Filter staff member Data
@@ -290,23 +314,29 @@ const Reports = (props) => {
   // Retrive all staff details  ogenerate report
   const retrieveBarrowfDetails = () => {
     setborrowDetails(null);
-    axios.get(`${API_URL}/barrow/getAllBarrow`).then((res) => {
-      console.log(res.data);
-      res.data.forEach((item) => {
-        let object = {
-          EmployeeId: item.eid,
-          MemberID: item.mid,
-          ReturnDate: item.returnDate,
-          BorrowDate: item.borrowDate,
-          Note: item.note,
-          Books: item.books,
-        };
+    axios
+      .get(`${API_URL}/barrow/getAllBarrow`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        res.data.forEach((item) => {
+          let object = {
+            EmployeeId: item.eid,
+            MemberID: item.mid,
+            ReturnDate: item.returnDate,
+            BorrowDate: item.borrowDate,
+            Note: item.note,
+            Books: item.books,
+          };
 
-        console.log(object);
-        borrowDetails.push(object);
+          console.log(object);
+          borrowDetails.push(object);
+        });
+        setborrowDetails(borrowDetails);
       });
-      setborrowDetails(borrowDetails);
-    });
   };
 
   //Filter staff member borrow Data

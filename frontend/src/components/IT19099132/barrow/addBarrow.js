@@ -148,6 +148,7 @@ const InsertBaroow = (props) => {
         await axios.post(`${API_URL}/barrow/addBarrow`, state, {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
         setSuccessMsg("upload Success");

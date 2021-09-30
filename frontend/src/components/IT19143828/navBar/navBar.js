@@ -135,7 +135,7 @@ export default function NavBar() {
   const logOut = () => {
     localStorage.clear();
     user = null;
-    history.push("/signin");
+    history.push("/");
     window.location.reload();
     setAnchorEl(null);
   };
@@ -173,7 +173,7 @@ export default function NavBar() {
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="menu"
-                href="/"
+                href="/home"
               >
                 <LocalLibraryIcon />
               </IconButton>

@@ -97,7 +97,12 @@ const Profile = (props) => {
       try {
         const eid = user.formData.eid;
         const { data } = await axios.get(
-          `${API_URL}/staff/getstaffmember/${eid}`
+          `${API_URL}/staff/getstaffmember/${eid}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
         );
         setErrorMsg("");
         setData(data);

@@ -19,7 +19,11 @@ const Editable = (props) => {
   useEffect(() => {
     const getFileList = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}/bookDetails/getAllBooks`);
+        const { data } = await axios.get(`${API_URL}/bookDetails/getAllBooks`, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
         setErrorMsg("");
         setData(data);
         console.log(data);
@@ -77,7 +81,11 @@ const Editable = (props) => {
 
     if (errorList.length < 1) {
       api
-        .put("/bookDetails/" + newData._id, newData)
+        .put("/bookDetails/" + newData._id, newData, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
         .then((res) => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -102,7 +110,11 @@ const Editable = (props) => {
 
   const handleRowDelete = (oldData, resolve) => {
     api
-      .delete("/bookDetails/" + oldData._id)
+      .delete("/bookDetails/" + oldData._id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       .then((res) => {
         const dataDelete = [...data];
         const index = oldData.tableData.id;
@@ -121,7 +133,8 @@ const Editable = (props) => {
 
   return (
     <div>
-      <br /><br/>
+      <br />
+      <br />
       <h1 id="h12" align="center">
         Book Management
       </h1>

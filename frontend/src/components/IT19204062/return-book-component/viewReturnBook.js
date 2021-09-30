@@ -14,10 +14,16 @@ export default function ViewReturnBooks() {
   const [issucc, setIssucc] = useState(false);
 
   useEffect(() => {
-    axios.get(`${API_URL}/api/return/getReturns`).then((res) => {
-      console.log(res.data);
-      setData(res.data);
-    });
+    axios
+      .get(`${API_URL}/api/return/getReturns`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+      });
   }, []);
 
   const handleRowUpdate = (newData, oldData, resolve) => {
@@ -32,7 +38,11 @@ export default function ViewReturnBooks() {
 
     if (errorList.length < 1) {
       axios
-        .put(`${API_URL}/api/return/update/` + newData._id, newData)
+        .put(`${API_URL}/api/return/update/` + newData._id, newData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then((res) => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -56,7 +66,11 @@ export default function ViewReturnBooks() {
 
   const handleRowDelete = (oldData, resolve) => {
     axios
-      .delete(`${API_URL}/api/return/delete/` + oldData._id)
+      .delete(`${API_URL}/api/return/delete/` + oldData._id, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
       .then((res) => {
         const dataDelete = [...data];
         const index = oldData.tableData.id;

@@ -200,6 +200,7 @@ const InsertBook = (props) => {
             await axios.post(`${API_URL}/BookDetails/insert`, formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
               },
             });
             setSuccessMsg("upload Success");
@@ -314,7 +315,7 @@ const InsertBook = (props) => {
       <Grid item xs={false} sm={4} md={6} className={classes.image} />
       <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
         <div className={classes.paper}>
-          <br/>
+          <br />
           <Typography component="h1" variant="h5">
             Insert New Book
           </Typography>

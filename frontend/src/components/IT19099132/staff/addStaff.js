@@ -179,6 +179,7 @@ const InsertStaff = (props) => {
           await axios.post(`${API_URL}/staff/addStaff`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
           });
 
