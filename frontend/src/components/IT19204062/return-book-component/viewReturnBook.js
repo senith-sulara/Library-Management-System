@@ -17,7 +17,7 @@ export default function ViewReturnBooks() {
     axios
       .get(`${API_URL}/api/return/getReturns`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {
@@ -26,6 +26,7 @@ export default function ViewReturnBooks() {
       });
   }, []);
 
+  //update details
   const handleRowUpdate = (newData, oldData, resolve) => {
     //validation
     let errorList = [];
@@ -40,7 +41,7 @@ export default function ViewReturnBooks() {
       axios
         .put(`${API_URL}/api/return/update/` + newData._id, newData, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((res) => {
@@ -64,11 +65,12 @@ export default function ViewReturnBooks() {
     }
   };
 
+  //delete details
   const handleRowDelete = (oldData, resolve) => {
     axios
       .delete(`${API_URL}/api/return/delete/` + oldData._id, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {

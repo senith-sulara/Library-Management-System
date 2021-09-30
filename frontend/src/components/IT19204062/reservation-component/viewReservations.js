@@ -6,7 +6,8 @@ import "../css/style.css";
 import { API_URL } from "../../utils/constants";
 import Alert from "@material-ui/lab/Alert";
 import EmailIcon from "@material-ui/icons/Email";
-// import emailjs from "emailjs-com";
+import { EmailForm } from "./sendEmail";
+import Modal from "./Modal";
 
 export default function ViewReservations() {
   const [data, setData] = useState([]);
@@ -14,20 +15,22 @@ export default function ViewReservations() {
   const [iserror, setIserror] = useState(false);
   const [successMsg, setSuccessMsg] = useState([]);
   const [issucc, setIssucc] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [emailData, setEmailData] = useState();
 
   useEffect(() => {
     axios
       .get(`${API_URL}/api/reservation/getReservations`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       });
   }, []);
 
+  //update details
   const handleRowUpdate = (newData, oldData, resolve) => {
     //validation
     let errorList = [];
@@ -51,7 +54,7 @@ export default function ViewReservations() {
       axios
         .put(`${API_URL}/api/reservation/update/` + newData._id, newData, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((res) => {
@@ -75,11 +78,12 @@ export default function ViewReservations() {
     }
   };
 
+  //delete details
   const handleRowDelete = (oldData, resolve) => {
     axios
       .delete(`${API_URL}/api/reservation/delete/` + oldData._id, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then((res) => {
@@ -96,6 +100,12 @@ export default function ViewReservations() {
         setIserror(true);
         resolve();
       });
+  };
+
+  //to send emails
+  const openEmailModal = (data) => {
+    setEmailData(data);
+    setOpenModal(true);
   };
 
   let fields = [
@@ -157,10 +167,10 @@ export default function ViewReservations() {
               }),
           }}
           actions={[
-            (sendMail) => ({
+            (oldData) => ({
               icon: EmailIcon,
               tooltip: "Send Email",
-              // onClick: () => sendEmail(data),
+              onClick: () => openEmailModal(oldData),
             }),
           ]}
           options={{
@@ -172,6 +182,13 @@ export default function ViewReservations() {
           }}
         />
       </div>
+      <Modal
+        title="Send Email "
+        openPopup={openModal}
+        setOpenPopup={setOpenModal}
+      >
+        <EmailForm setOpenModal={setOpenModal} emailData={emailData} />
+      </Modal>
     </div>
   );
 }

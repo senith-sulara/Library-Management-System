@@ -1,5 +1,6 @@
 const { Fine } = require("../models/fine-model");
 
+//add fine details
 const addFine = async (req, res) => {
   const fine = new Fine(req.body);
 
@@ -9,6 +10,7 @@ const addFine = async (req, res) => {
   });
 };
 
+//get fine details for report generate
 const getFineDetails = async (req, res) => {
   await Fine.find().exec(function (err, fines) {
     if (err) {

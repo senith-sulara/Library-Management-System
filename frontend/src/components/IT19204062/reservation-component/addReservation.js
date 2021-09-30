@@ -130,6 +130,8 @@ export default function AddReservation() {
     setBookCode("");
     setEmail("");
   };
+
+  //validations for the form
   const validate = () => {
     let errors = {};
     let isValid = true;
@@ -138,12 +140,10 @@ export default function AddReservation() {
       isValid = false;
       errors["memberCode"] = "Please enter valid member code";
     }
-
     if (bookCode.length !== 6) {
       isValid = false;
       errors["bookCode"] = "Please enter valid book code";
     }
-
     if (typeof email !== "undefined") {
       var pattern = new RegExp(
         /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
@@ -154,10 +154,10 @@ export default function AddReservation() {
       }
     }
     setErrors(errors);
-
     return isValid;
   };
 
+  //submit the form
   const onSubmit = () => {
     if (validate()) {
       setOpen(true);
@@ -171,7 +171,7 @@ export default function AddReservation() {
       axios
         .post(`${API_URL}/api/reservation/add`, reservation, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((res) => {
@@ -270,10 +270,8 @@ export default function AddReservation() {
             onChange={(e) => handleMemberCode(e)}
             autoFocus
           />
-          {errors.memberCode ? (
-            <span className="error">{errors.memberCode}</span>
-          ) : (
-            <></>
+          {errors.memberCode && (
+            <span className="error">{errors.memberCode}</span> 
           )}
           <TextField
             variant="outlined"

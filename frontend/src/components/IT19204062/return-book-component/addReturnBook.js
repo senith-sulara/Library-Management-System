@@ -117,6 +117,7 @@ export default function AddReturnBook() {
   const diffDays = (date, otherDate) =>
     Math.ceil(Math.abs(date - otherDate) / (1000 * 60 * 60 * 24));
 
+  //calculate fine
   const calFine = () => {
     var dif = diffDays(new Date(borrowDate), new Date(returnDate));
     console.log(dif);
@@ -136,6 +137,7 @@ export default function AddReturnBook() {
     setOpen(false);
   };
 
+  //clear fields
   const clear = () => {
     setMemberCode("");
     setBookCode("");
@@ -144,6 +146,7 @@ export default function AddReturnBook() {
     setFine("");
   };
 
+  //validations
   const validate = () => {
     let errors = {};
     let isValid = true;
@@ -162,6 +165,7 @@ export default function AddReturnBook() {
     return isValid;
   };
 
+  //save details
   const onSubmit = () => {
     if (validate()) {
       setOpen(true);
@@ -175,7 +179,7 @@ export default function AddReturnBook() {
       axios
         .post(`${API_URL}/api/return/add`, returnB, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((res) => {
@@ -189,7 +193,7 @@ export default function AddReturnBook() {
             axios
               .post(`${API_URL}/api/fine/add`, fineDetails, {
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem('token')}`,
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
               })
               .then((res) => {});
@@ -211,6 +215,7 @@ export default function AddReturnBook() {
     }
   };
 
+  //get borrowed date
   const checkDates = () => {
     if (validate()) {
       const object = {
@@ -221,7 +226,7 @@ export default function AddReturnBook() {
       axios
         .post(`${API_URL}/api/return/getDate`, object, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((res) => {

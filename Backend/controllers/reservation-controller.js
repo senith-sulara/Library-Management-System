@@ -1,5 +1,6 @@
 const { Reservation } = require("../models/reservation-model");
 
+//add reservation details
 const addReservation = async (req, res) => {
   const reservation = new Reservation(req.body);
 
@@ -9,6 +10,7 @@ const addReservation = async (req, res) => {
   });
 };
 
+//retrieve reservation details
 const getReservations = async (req, res) => {
   await Reservation.find().exec(function (err, reservations) {
     if (err) {
@@ -19,6 +21,7 @@ const getReservations = async (req, res) => {
   });
 };
 
+//update reservation details
 const updateReservation = async (req, res) => {
   const { memberName, memberCode, email, bookName, bookCode } = req.body;
 
@@ -42,6 +45,7 @@ const updateReservation = async (req, res) => {
   });
 };
 
+//delete reservation details
 const deleteReservation = async (req, res) => {
   const reservationId = req.params.id;
 

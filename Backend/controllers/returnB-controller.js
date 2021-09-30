@@ -1,6 +1,7 @@
 const { ReturnB } = require("../models/returnB-model");
 const Borrow = require("../models/borrow-model");
 
+//add return book details
 const addReturnB = async (req, res) => {
   const returnB = new ReturnB(req.body);
 
@@ -10,6 +11,7 @@ const addReturnB = async (req, res) => {
   });
 };
 
+//get borrowed date of the relevant book according to the member id
 const getDate = async (req, res) => {
   const { memberCode, bookCode } = req.body;
 
@@ -30,6 +32,7 @@ const getDate = async (req, res) => {
   res.json({ borrowDate: borrowDate });
 };
 
+//retrieve return book details 
 const getReturns = async (req, res) => {
   await ReturnB.find().exec(function (err, returns) {
     if (err) {
@@ -40,6 +43,7 @@ const getReturns = async (req, res) => {
   });
 };
 
+// update return book details
 const updateReturns = async (req, res) => {
   const { memberCode, bookCode } = req.body;
 
@@ -60,6 +64,7 @@ const updateReturns = async (req, res) => {
   });
 };
 
+//delete return book details
 const deleteReturns = async (req, res) => {
   const id = req.params.id;
 
