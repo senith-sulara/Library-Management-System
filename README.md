@@ -1,7 +1,8 @@
 # Group-ID:  2021S2_REG_WE_36
+-----------------------------------------------------------------
 # Library-Management-System
-
-                     # Group Details
+-----------------------------------------------------------------
+# Group Details
    
 | Name  | Student ID | Username |
 | ------------- | ------------- | ------------- |
@@ -19,9 +20,10 @@ Library Management System is a web application designed to manage activities in 
 # Technologies
 
 MERN STACK
------------------------------------------------------------------
 
-                      # How to get start with the app	
+-----------------------------------------------------------------
+# How to get start with the app	
+
 Prerequisites:
 1.	Install VS code
 2.	Install git
