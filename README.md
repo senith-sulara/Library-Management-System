@@ -11,17 +11,17 @@
 | Chamudini H.A.N  | IT19204062  | nirasha9806  |
 
 -----------------------------------------------------------------
-#Project Description
+# Project Description
 
 Library Management System is a web application designed to manage activities in a library. A librarian uses the system as the admin to manage activities related to library members, book details,books issue and book returns, and book reservations.
 
 -----------------------------------------------------------------
-#Technologies
+# Technologies
 
-MERN Stack
+MERN STACK
 -----------------------------------------------------------------
 
-                      #How to get start with the app	
+                      # How to get start with the app	
 Prerequisites:
 1.	Install VS code
 2.	Install git
