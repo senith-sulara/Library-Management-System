@@ -40,5 +40,5 @@ Procedure of setting up prerequisites and run the project:
 9.	Type "npm install" and click Enter
 10.	After the installation type "npm start" and click enter. Then frontend will start and application will display on the web browser.
 11.	Log in to the system using below credentials.
-EID: LS0000
-Password: 1Asd@asd
+//EID: LS0000
+//Password: 1Asd@asd
